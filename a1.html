@@ -4,234 +4,372 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A1 — Eesti Keel Online</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f6faf7;
-  color: #183c32;
-}
-
-header {
-  background: white;
-  padding: 20px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-header a {
-  color: #168064;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.hero {
-  background: #dff5e9;
-  padding: 55px 20px;
-  text-align: center;
-}
-
-.hero h1 { font-size: 42px; }
-
-.hero p {
-  color: #60776d;
-  font-size: 17px;
-}
-
-.container {
-  max-width: 850px;
-  margin: auto;
-  padding: 35px 20px;
-}
-
-.lesson {
-  background: white;
-  padding: 25px;
-  margin-bottom: 20px;
-  border-radius: 16px;
-  box-shadow: 0 3px 15px #00000008;
-}
-
-.lesson h2 { color: #168064; }
-
-.example {
-  background: #eaf5ee;
-  padding: 13px;
-  border-radius: 10px;
-  margin: 12px 0;
-}
-
-button {
-  background: #168064;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-size: 15px;
-  margin-top: 10px;
-}
-
-button:hover { background: #10664f; }
-
-select {
-  padding: 11px;
-  border: 1px solid #b9d5c5;
-  border-radius: 8px;
-  font-size: 15px;
-  margin: 10px 0;
-  max-width: 100%;
-}
-
-.result {
-  margin-top: 12px;
-  font-weight: bold;
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  background: #183c32;
-  color: white;
-}
-
-@media(max-width: 600px) {
-  .hero h1 { font-size: 32px; }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8f6;color:#203b31}
+header{background:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #00000009}
+.logo{font-size:20px;font-weight:bold;color:#168064}
+header a{color:#168064;text-decoration:none;font-weight:bold}
+.hero{background:linear-gradient(130deg,#d9f3e5,#effaf3);padding:55px 20px;text-align:center}
+.hero h1{font-size:40px;margin:10px}
+.hero p{color:#61766b;line-height:1.6}
+.tag{background:white;padding:8px 15px;border-radius:30px;color:#168064}
+.container{max-width:900px;margin:auto;padding:30px 18px}
+.progress{background:white;padding:20px;border-radius:15px;margin-bottom:25px}
+.progress-line{height:10px;background:#e5eee8;border-radius:10px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;width:0;background:#168064;transition:.3s}
+.lesson{background:white;padding:26px;border-radius:17px;margin-bottom:22px;box-shadow:0 4px 18px #00000008}
+.lesson h2{color:#168064;margin-top:0}
+.lesson p{line-height:1.7}
+.example{background:#eaf6ee;padding:15px;border-radius:12px;margin:15px 0;line-height:1.9}
+.tip{background:#fff7df;border-left:4px solid #e7b83c;padding:13px;border-radius:7px;margin:15px 0;line-height:1.6}
+.word{display:flex;justify-content:space-between;gap:12px;padding:9px 3px;border-bottom:1px solid #edf1ee}
+.quiz-question{padding:18px 0;border-bottom:1px solid #edf1ee}
+.quiz-question p{font-weight:bold;line-height:1.5}
+.answer{display:block;padding:12px;margin:8px 0;border:1px solid #dce8df;border-radius:10px;cursor:pointer;transition:.15s}
+.answer:hover{background:#f1f8f3}
+.answer input{margin-right:9px}
+.answer.correct{background:#e0f7e8;border:2px solid #25a45b;color:#176b3b}
+.answer.wrong{background:#ffe7e7;border:2px solid #df5555;color:#a52828}
+.feedback{font-size:14px;margin-top:10px;line-height:1.6}
+.feedback.good{color:#168348}
+.feedback.bad{color:#c03939}
+button{background:#168064;color:white;border:0;border-radius:10px;padding:14px 22px;font-size:15px;font-weight:bold;cursor:pointer}
+button:hover{background:#10664f}
+button:disabled{opacity:.5;cursor:default}
+#result{margin-top:20px;padding:18px;border-radius:12px;line-height:1.7}
+footer{background:#183c32;color:white;text-align:center;padding:28px;margin-top:30px}
+@media(max-width:600px){.hero h1{font-size:31px}.lesson{padding:19px}header{gap:10px;flex-wrap:wrap}}
 </style>
 </head>
-
 <body>
 
 <header>
-  <strong>🇪🇪 Eesti Keel Online</strong>
-  <a href="index.html">← На главную</a>
+<div class="logo">🇪🇪 Eesti Keel Online</div>
+<a href="index.html">← Главная</a>
 </header>
 
 <div class="hero">
-  <h1>Уровень A1 🇪🇪</h1>
-  <p>Начни изучать эстонский язык с самых основ!</p>
+<span class="tag">Уровень A1 · Начальный</span>
+<h1>Начни говорить по-эстонски! 🇪🇪</h1>
+<p>Изучай новые слова, понимай грамматику и проверяй свои знания.</p>
 </div>
 
 <main class="container">
 
-  <div class="lesson">
-    <h2>1. Tervitused — Приветствия</h2>
-    <p>Начнём с самых простых слов, которые нужны каждый день.</p>
+<div class="progress">
+<strong>📚 Твой учебный прогресс</strong>
+<p id="progressText">Пройдено уроков: 0 из 4</p>
+<div class="progress-line"><div class="progress-fill" id="progressFill"></div></div>
+</div>
 
-    <div class="example">
-      <p><b>Tere!</b> — Привет!</p>
-      <p><b>Tere hommikust!</b> — Доброе утро!</p>
-      <p><b>Head aega!</b> — До свидания!</p>
-      <p><b>Aitäh!</b> — Спасибо!</p>
-      <p><b>Palun!</b> — Пожалуйста!</p>
-    </div>
-  </div>
+<!-- УРОК 1 -->
+<section class="lesson">
+<h2>👋 Урок 1. Tervitused — Приветствия</h2>
+<p>Начнём с самого простого! В эстонском языке есть несколько способов поздороваться. Некоторые используются с друзьями, другие — в более официальной обстановке.</p>
 
-  <div class="lesson">
-    <h2>2. Mina olen — Я являюсь</h2>
-    <p>В эстонском языке глагол <b>olema</b> означает «быть».</p>
+<div class="example">
+<div class="word"><b>Tere!</b><span>Привет! / Здравствуйте!</span></div>
+<div class="word"><b>Tere hommikust!</b><span>Доброе утро!</span></div>
+<div class="word"><b>Tere päevast!</b><span>Добрый день!</span></div>
+<div class="word"><b>Tere õhtust!</b><span>Добрый вечер!</span></div>
+<div class="word"><b>Head aega!</b><span>До свидания!</span></div>
+<div class="word"><b>Nägemist!</b><span>До встречи!</span></div>
+<div class="word"><b>Aitäh!</b><span>Спасибо!</span></div>
+<div class="word"><b>Palun!</b><span>Пожалуйста!</span></div>
+</div>
 
-    <div class="example">
-      <p><b>Mina olen Aisha.</b> — Я Аиша.</p>
-      <p><b>Sina oled õpilane.</b> — Ты ученик.</p>
-      <p><b>Tema on õpetaja.</b> — Он/она учитель.</p>
-    </div>
+<p><b>Как познакомиться?</b></p>
+<div class="example">
+<p><b>Mis su nimi on?</b> — Как тебя зовут?</p>
+<p><b>Minu nimi on Aisha.</b> — Меня зовут Аиша.</p>
+<p><b>Meeldiv tutvuda!</b> — Приятно познакомиться!</p>
+<p><b>Kuidas läheb?</b> — Как дела?</p>
+<p><b>Hästi, aitäh!</b> — Хорошо, спасибо!</p>
+</div>
 
-    <p><b>Запомни:</b></p>
-    <ul>
-      <li>Mina olen — я</li>
-      <li>Sina oled — ты</li>
-      <li>Tema on — он/она</li>
-    </ul>
-  </div>
+<div class="tip">💡 Запомни: слово Tere подходит практически для любого обычного приветствия. Его можно использовать и с друзьями, и со взрослыми.</div>
+</section>
 
-  <div class="lesson">
-    <h2>3. Isikulised asesõnad — Личные местоимения</h2>
+<!-- УРОК 2 -->
+<section class="lesson">
+<h2>👤 Урок 2. Isikulised asesõnad — Местоимения</h2>
+<p>Местоимения помогают нам не повторять имена людей. Например, вместо «Аиша учится. Аиша читает» можно сказать «Аиша учится. Она читает».</p>
 
-    <div class="example">
-      <p>Mina — Я</p>
-      <p>Sina — Ты</p>
-      <p>Tema — Он / Она</p>
-      <p>Meie — Мы</p>
-      <p>Teie — Вы</p>
-      <p nem="x">Nemad — Они</p>
-    </div>
-  </div>
+<div class="example">
+<div class="word"><b>Mina</b><span>Я</span></div>
+<div class="word"><b>Sina</b><span>Ты</span></div>
+<div class="word"><b>Tema</b><span>Он / Она</span></div>
+<div class="word"><b>Meie</b><span>Мы</span></div>
+<div class="word"><b>Teie</b><span>Вы</span></div>
+<div class="word"><b nem="x">Nemad</b><span>Они</span></div>
+</div>
 
-  <div class="lesson">
-    <h2>4. Kontrolli oma teadmisi — Проверь знания</h2>
-    <p><b>Вопрос 1.</b> Как переводится слово Aitäh?</p>
+<p><b>Примеры в предложениях:</b></p>
+<div class="example">
+<p>Mina olen õpilane. — Я ученица.</p>
+<p>Sina oled sõber. — Ты друг.</p>
+<p>Tema elab Eestis. — Он/она живёт в Эстонии.</p>
+<p>Meie õpime eesti keelt. — Мы учим эстонский.</p>
+</div>
 
-    <select id="q1">
-      <option value="">Выбери ответ</option>
-      <option value="hello">Привет</option>
-      <option value="thanks">Спасибо</option>
-      <option value="bye">До свидания</option>
-    </select>
+<div class="tip">💡 В разговорной речи часто используют сокращённые формы: ma (я), sa (ты), ta (он/она), me (мы), te (вы), nad (они).</div>
+</section>
 
-    <p><b>Вопрос 2.</b> Как будет «Я» на эстонском?</p>
+<!-- УРОК 3 -->
+<section class="lesson">
+<h2>🔤 Урок 3. Tegusõna OLEMA — Глагол «быть»</h2>
+<p>Это один из самых важных глаголов в эстонском языке. Он нужен, когда мы рассказываем о себе, своей семье, профессии или состоянии.</p>
 
-    <select id="q2">
-      <option value="">Выбери ответ</option>
-      <option value="sina">Sina</option>
-      <option value="mina">Mina</option>
-      <option value="tema">Tema</option>
-    </select>
+<p>Глагол <b>olema</b> изменяется в зависимости от того, кто выполняет действие.</p>
 
-    <p><b>Вопрос 3.</b> Выбери правильный вариант: «Ты ученик».</p>
+<div class="example">
+<div class="word"><b>Mina olen</b><span>Я есть / являюсь</span></div>
+<div class="word"><b>Sina oled</b><span>Ты есть / являешься</span></div>
+<div class="word"><b>Tema on</b><span>Он / она есть</span></div>
+<div class="word"><b>Meie oleme</b><span>Мы есть</span></div>
+<div class="word"><b>Teie olete</b><span>Вы есть</span></div>
+<div class="word"><b>Nemad on</b><span>Они есть</span></div>
+</div>
 
-    <select id="q3">
-      <option value="">Выбери ответ</option>
-      <option value="a">Mina olen õpilane</option>
-      <option value="b">Sina oled õpilane</option>
-      <option value="c">Tema on õpilane</option>
-    </select>
+<p><b>Посмотрим, как это работает:</b></p>
+<div class="example">
+<p>Ma olen 14-aastane. — Мне 14 лет.</p>
+<p>Sa oled tore. — Ты классный.</p>
+<p>Ta on õpetaja. — Он/она учитель.</p>
+<p>Me oleme sõbrad. — Мы друзья.</p>
+</div>
 
-    <br>
-    <button onclick="checkAnswers()">Проверить ответы</button>
+<div class="tip">💡 В эстонском возрасте соответствует конструкция «olen ...-aastane». Не нужно переводить её дословно как «я являюсь летним» — это просто способ сказать, сколько тебе лет.</div>
+</section>
 
-    <div class="result" id="result"></div>
-  </div>
+<!-- УРОК 4 -->
+<section class="lesson">
+<h2>🔢 Урок 4. Numbrid — Числа</h2>
+<p>Числа понадобятся тебе каждый день: чтобы назвать возраст, цену, номер телефона или время.</p>
+
+<div class="example">
+<div class="word"><b>Üks</b><span>1 — один</span></div>
+<div class="word"><b>Kaks</b><span>2 — два</span></div>
+<div class="word"><b>Kolm</b><span>3 — три</span></div>
+<div class="word"><b>Neli</b><span>4 — четыре</span></div>
+<div class="word"><b>Viis</b><span>5 — пять</span></div>
+<div class="word"><b>Kuus</b><span>6 — шесть</span></div>
+<div class="word"><b>Seitse</b><span>7 — семь</span></div>
+<div class="word"><b>Kaheksa</b><span>8 — восемь</span></div>
+<div class="word"><b>Üheksa</b><span>9 — девять</span></div>
+<div class="word"><b>Kümme</b><span>10 — десять</span></div>
+</div>
+
+<p><b>Как сказать свой возраст?</b></p>
+<div class="example">
+<p>Ma olen 14-aastane. — Мне 14 лет.</p>
+<p>Mu vend on 10-aastane. — Моему брату 10 лет.</p>
+</div>
+
+<div class="tip">💡 Попробуй считать окружающие предметы по-эстонски. Например, kolm raamatut — три книги.</div>
+</section>
+
+<!-- ТЕСТ -->
+<section class="lesson" id="quiz">
+<h2>🎯 Большой тест A1</h2>
+<p>Проверь, насколько хорошо ты усвоила материал. Здесь 12 вопросов по четырём урокам.</p>
+<p>Выбирай ответы по очереди. После проверки каждый ответ подсветится: зелёным или красным. Ты также увидишь объяснение ошибок.</p>
+
+<div id="questions"></div>
+
+<button onclick="checkAnswers()" id="checkButton">Проверить все ответы</button>
+<button onclick="resetQuiz()" id="resetButton" style="display:none;background:#557568">Пройти ещё раз</button>
+
+<div id="result"></div>
+</section>
 
 </main>
 
 <footer>
-  🇪🇪 Eesti Keel Online · Уровень A1
+<strong>🇪🇪 Eesti Keel Online</strong>
+<p>Учимся вместе — шаг за шагом.</p>
 </footer>
 
 <script>
-function checkAnswers() {
-  const answers = [
-    document.getElementById("q1").value,
-    document.getElementById("q2").value,
-    document.getElementById("q3").value
-  ];
-
-  if (answers.includes("")) {
-    document.getElementById("result").textContent =
-      "Ответь на все вопросы!";
-    return;
-  }
-
-  const correct = ["thanks", "mina", "b"];
-  let score = 0;
-
-  answers.forEach((answer, index) => {
-    if (answer === correct[index]) score++;
-  });
-
-  document.getElementById("result").textContent =
-    "Твой результат: " + score + " из 3! " +
-    (score === 3 ? "Отлично! 🎉" : "Попробуй ещё раз!");
+const questions = [
+{
+q:"Как переводится слово Aitäh?",
+a:["Пожалуйста","Спасибо","До свидания"],
+c:1,
+e:"Aitäh означает «спасибо». Palun — «пожалуйста»."
+},
+{
+q:"Как правильно спросить «Как тебя зовут?»",
+a:["Kuidas läheb?","Mis su nimi on?","Head aega!"],
+c:1,
+e:"Mis su nimi on? — Как тебя зовут?"
+},
+{
+q:"Что означает Tere hommikust?",
+a:["Доброе утро","Добрый вечер","До встречи"],
+c:0,
+e:"Hommik tähendab «утро»."
+},
+{
+q:"Как переводится Sina?",
+a:["Я","Он","Ты"],
+c:2,
+e:"Sina — ты. Mina — я. Tema — он или она."
+},
+{
+q:"Как сказать «Мы»?",
+a:["Meie","Teie","Nemad"],
+c:0,
+e:"Meie означает «мы»."
+},
+{
+q:"Как будет «Она живёт в Эстонии»?",
+a:["Tema elab Eestis","Mina elan Eestis","Meie elame Eestis"],
+c:0,
+e:"Tema — он/она. Elab — живёт. Eestis — в Эстонии."
+},
+{
+q:"Выбери правильную форму: Mina ___ õpilane.",
+a:["oled","olen","on"],
+c:1,
+e:"С Mina используется olen: Mina olen õpilane."
+},
+{
+q:"Выбери правильную форму: Sina ___ tore.",
+a:["oleme","on","oled"],
+c:2,
+e:"С Sina используется oled."
+},
+{
+q:"Выбери правильную форму: Nemad ___ sõbrad.",
+a:["on","olen","olete"],
+c:0,
+e:"С Nemad используется on."
+},
+{
+q:"Как переводится Kaks?",
+a:["Три","Два","Четыре"],
+c:1,
+e:"Kaks — два. Kolm — три. Neli — четыре."
+},
+{
+q:"Как будет число 7?",
+a:["Kuus","Seitse","Viis"],
+c:1,
+e:"Seitse — семь."
+},
+{
+q:"Как правильно сказать «Мне 14 лет»?",
+a:["Ma olen 14-aastane","Mina on 14","Ma oled 14"],
+c:0,
+e:"С Ma используется olen. Возраст выражается словом -aastane."
 }
-</script>
+];
 
+const letters=["A","B","C"];
+let finished=false;
+
+function renderQuiz(){
+ const area=document.getElementById("questions");
+ area.innerHTML="";
+ questions.forEach((q,i)=>{
+  const div=document.createElement("div");
+  div.className="quiz-question";
+  div.id="question"+i;
+
+  let html="<p>"+(i+1)+". "+q.q+"</p>";
+  q.a.forEach((answer,j)=>{
+   html+='<label class="answer" id="answer'+i+'-'+j+'">';
+   html+='<input type="radio" name="q'+i+'" value="'+j+'"> ';
+   html+=letters[j]+". "+answer+"</label>";
+  });
+  html+='<div class="feedback" id="feedback'+i+'"></div>';
+  div.innerHTML=html;
+  area.appendChild(div);
+ });
+}
+
+function checkAnswers(){
+ if(finished)return;
+
+ let score=0;
+ let unanswered=0;
+
+ questions.forEach((q,i)=>{
+  const selected=document.querySelector('input[name="q'+i+'"]:checked');
+  if(!selected)unanswered++;
+ });
+
+ if(unanswered>0){
+  document.getElementById("result").innerHTML=
+  "⚠️ Ответь на все вопросы! Осталось: "+unanswered;
+  return;
+ }
+
+ questions.forEach((q,i)=>{
+  const selected=Number(document.querySelector('input[name="q'+i+'"]:checked').value);
+  const correct=document.getElementById("answer"+i+"-"+q.c);
+  const feedback=document.getElementById("feedback"+i);
+
+  if(selected===q.c){
+   score++;
+   correct.classList.add("correct");
+   feedback.className="feedback good";
+   feedback.textContent="✓ Правильно! "+q.e;
+  }else{
+   document.getElementById("answer"+i+"-"+selected).classList.add("wrong");
+   correct.classList.add("correct");
+   feedback.className="feedback bad";
+   feedback.textContent="✗ Не совсем! Правильный ответ: "+q.a[q.c]+". "+q.e;
+  }
+ });
+
+ finished=true;
+ document.querySelectorAll('input[type="radio"]').forEach(el=>el.disabled=true);
+ document.getElementById("checkButton").disabled=true;
+ document.getElementById("resetButton").style.display="inline-block";
+
+ const percent=Math.round(score/questions.length*100);
+ let message=score===12?"Превосходно! Ты отлично знаешь материал! 🏆":
+ score>=9?"Очень хорошо! Продолжай в том же духе! 🌟":
+ score>=6?"Неплохо! Повтори ошибки и попробуй ещё раз. 💪":
+ "Не расстраивайся! Вернись к урокам и попробуй снова. ❤️";
+
+ document.getElementById("result").innerHTML=
+ "<h3>Твой результат: "+score+" из 12 ("+percent+"%)</h3><p>"+message+"</p>";
+
+ if(score===12){
+  markCompleted();
+ }
+ document.getElementById("result").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function resetQuiz(){
+ finished=false;
+ document.getElementById("checkButton").disabled=false;
+ document.getElementById("resetButton").style.display="none";
+ document.getElementById("result").innerHTML="";
+ renderQuiz();
+}
+
+function markCompleted(){
+ const completed=localStorage.getItem("a1completed")==="yes";
+ if(!completed){
+  localStorage.setItem("a1completed","yes");
+ }
+ updateProgress();
+}
+
+function updateProgress(){
+ const completed=localStorage.getItem("a1completed")==="yes"?1:0;
+ document.getElementById("progressText").textContent=
+ "Пройдено тестов на 100%: "+completed+" из 1";
+ document.getElementById("progressFill").style.width=(completed*100)+"%";
+}
+
+renderQuiz();
+updateProgress();
+</script>
 </body>
 </html>
