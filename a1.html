@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1 — Eesti Keel Online</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6faf7;
+  color: #183c32;
+}
+
+header {
+  background: white;
+  padding: 20px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+header a {
+  color: #168064;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.hero {
+  background: #dff5e9;
+  padding: 55px 20px;
+  text-align: center;
+}
+
+.hero h1 { font-size: 42px; }
+
+.hero p {
+  color: #60776d;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 35px 20px;
+}
+
+.lesson {
+  background: white;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  box-shadow: 0 3px 15px #00000008;
+}
+
+.lesson h2 { color: #168064; }
+
+.example {
+  background: #eaf5ee;
+  padding: 13px;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+button {
+  background: #168064;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+button:hover { background: #10664f; }
+
+select {
+  padding: 11px;
+  border: 1px solid #b9d5c5;
+  border-radius: 8px;
+  font-size: 15px;
+  margin: 10px 0;
+  max-width: 100%;
+}
+
+.result {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  background: #183c32;
+  color: white;
+}
+
+@media(max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <strong>🇪🇪 Eesti Keel Online</strong>
+  <a href="index.html">← На главную</a>
+</header>
+
+<div class="hero">
+  <h1>Уровень A1 🇪🇪</h1>
+  <p>Начни изучать эстонский язык с самых основ!</p>
+</div>
+
+<main class="container">
+
+  <div class="lesson">
+    <h2>1. Tervitused — Приветствия</h2>
+    <p>Начнём с самых простых слов, которые нужны каждый день.</p>
+
+    <div class="example">
+      <p><b>Tere!</b> — Привет!</p>
+      <p><b>Tere hommikust!</b> — Доброе утро!</p>
+      <p><b>Head aega!</b> — До свидания!</p>
+      <p><b>Aitäh!</b> — Спасибо!</p>
+      <p><b>Palun!</b> — Пожалуйста!</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <h2>2. Mina olen — Я являюсь</h2>
+    <p>В эстонском языке глагол <b>olema</b> означает «быть».</p>
+
+    <div class="example">
+      <p><b>Mina olen Aisha.</b> — Я Аиша.</p>
+      <p><b>Sina oled õpilane.</b> — Ты ученик.</p>
+      <p><b>Tema on õpetaja.</b> — Он/она учитель.</p>
+    </div>
+
+    <p><b>Запомни:</b></p>
+    <ul>
+      <li>Mina olen — я</li>
+      <li>Sina oled — ты</li>
+      <li>Tema on — он/она</li>
+    </ul>
+  </div>
+
+  <div class="lesson">
+    <h2>3. Isikulised asesõnad — Личные местоимения</h2>
+
+    <div class="example">
+      <p>Mina — Я</p>
+      <p>Sina — Ты</p>
+      <p>Tema — Он / Она</p>
+      <p>Meie — Мы</p>
+      <p>Teie — Вы</p>
+      <p nem="x">Nemad — Они</p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <h2>4. Kontrolli oma teadmisi — Проверь знания</h2>
+    <p><b>Вопрос 1.</b> Как переводится слово Aitäh?</p>
+
+    <select id="q1">
+      <option value="">Выбери ответ</option>
+      <option value="hello">Привет</option>
+      <option value="thanks">Спасибо</option>
+      <option value="bye">До свидания</option>
+    </select>
+
+    <p><b>Вопрос 2.</b> Как будет «Я» на эстонском?</p>
+
+    <select id="q2">
+      <option value="">Выбери ответ</option>
+      <option value="sina">Sina</option>
+      <option value="mina">Mina</option>
+      <option value="tema">Tema</option>
+    </select>
+
+    <p><b>Вопрос 3.</b> Выбери правильный вариант: «Ты ученик».</p>
+
+    <select id="q3">
+      <option value="">Выбери ответ</option>
+      <option value="a">Mina olen õpilane</option>
+      <option value="b">Sina oled õpilane</option>
+      <option value="c">Tema on õpilane</option>
+    </select>
+
+    <br>
+    <button onclick="checkAnswers()">Проверить ответы</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+</main>
+
+<footer>
+  🇪🇪 Eesti Keel Online · Уровень A1
+</footer>
+
+<script>
+function checkAnswers() {
+  const answers = [
+    document.getElementById("q1").value,
+    document.getElementById("q2").value,
+    document.getElementById("q3").value
+  ];
+
+  if (answers.includes("")) {
+    document.getElementById("result").textContent =
+      "Ответь на все вопросы!";
+    return;
+  }
+
+  const correct = ["thanks", "mina", "b"];
+  let score = 0;
+
+  answers.forEach((answer, index) => {
+    if (answer === correct[index]) score++;
+  });
+
+  document.getElementById("result").textContent =
+    "Твой результат: " + score + " из 3! " +
+    (score === 3 ? "Отлично! 🎉" : "Попробуй ещё раз!");
+}
+</script>
+
+</body>
+</html>
