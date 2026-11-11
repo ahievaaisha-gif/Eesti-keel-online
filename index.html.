@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eesti Keel Online</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f8f6;
+      color: #183c32;
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: #168064;
+    }
+
+    nav a {
+      margin-left: 15px;
+      color: #183c32;
+      text-decoration: none;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 75px 20px;
+      background: #dff3e9;
+    }
+
+    h1 { font-size: 38px; }
+
+    .hero p {
+      font-size: 18px;
+    }
+
+    .levels {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 35px 20px;
+    }
+
+    .level {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 3px 12px #00000010;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+    }
+
+    @media(max-width: 600px) {
+      header { flex-direction: column; gap: 15px; }
+      h1 { font-size: 29px; }
+      nav a { margin: 0 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🇪🇪 Eesti Keel Online</div>
+  <nav>
+    <a href="#">Главная</a>
+    <a href="#">Уроки</a>
+    <a href="#">Словарь</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Учите эстонский вместе с нами!</h1>
+  <p>Бесплатное изучение эстонского языка от A1 до B2.</p>
+</section>
+
+<section class="levels">
+  <div class="level">
+    <h2>A1</h2>
+    <p>Начальный уровень</p>
+  </div>
+  <div class="level">
+    <h2>A2</h2>
+    <p>Базовый уровень</p>
+  </div>
+  <div class="level">
+    <h2>B1</h2>
+    <p>Средний уровень</p>
+  </div>
+  <div class="level">
+    <h2>B2</h2>
+    <p>Продвинутый уровень</p>
+  </div>
+</section>
+
+<footer>
+  🇪🇪 Eesti Keel Online · Бесплатное обучение
+</footer>
+
+</body>
+</html>
