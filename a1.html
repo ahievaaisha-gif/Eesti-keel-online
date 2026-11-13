@@ -1,24 +1,21 @@
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="et">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A1 Academy | Eesti Keel Online</title>
+<title>Eesti Keel Online — A1</title>
 
 <style>
 :root {
-  --green: #183d30;
-  --green2: #285642;
-  --green3: #397456;
-  --mint: #e5eee7;
-  --cream: #f7f6ef;
-  --white: #ffffff;
+  --green: #173f32;
+  --green2: #245743;
+  --light: #f5f5ed;
+  --cream: #fffef8;
   --gold: #c5a66a;
-  --text: #26372f;
-  --muted: #7c8980;
-  --red: #c94b4b;
-  --shadow: 0 12px 35px rgba(24,61,48,.08);
+  --text: #26372e;
+  --muted: #78847b;
+  --border: #e6e9df;
 }
 
 * {
@@ -32,8 +29,8 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--cream);
+  font-family: Arial, sans-serif;
+  background: var(--light);
   color: var(--text);
 }
 
@@ -41,56 +38,55 @@ body {
 
 .topbar {
   height: 76px;
-  background: rgba(255,255,255,.94);
-  border-bottom: 1px solid #e9ece6;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 28px;
-  gap: 18px;
+  gap: 20px;
+  padding: 0 35px;
   position: sticky;
   top: 0;
-  z-index: 20;
-  backdrop-filter: blur(12px);
+  z-index: 15;
 }
 
 .avatar-button {
-  width: 43px;
-  height: 43px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  border: none;
+  border: 2px solid var(--gold);
   background: var(--green);
   color: white;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: .2s;
 }
 
 .avatar-button:hover {
-  background: var(--green2);
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .brand {
-  font-weight: 750;
+  font-size: 19px;
+  font-weight: bold;
   color: var(--green);
-  font-size: 18px;
-  letter-spacing: -.4px;
 }
 
-.brand span {
-  color: var(--gold);
-}
-
-.top-right {
+.breadcrumb {
   margin-left: auto;
-  background: var(--mint);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.level {
+  background: #e8eee5;
   color: var(--green);
-  padding: 9px 17px;
-  border-radius: 30px;
+  padding: 9px 16px;
+  border-radius: 20px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: bold;
 }
 
 /* SIDEBAR */
@@ -99,11 +95,11 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
   width: 285px;
+  height: 100vh;
   background: var(--green);
   color: white;
-  z-index: 40;
+  z-index: 30;
   padding: 30px 22px;
   transform: translateX(-100%);
   transition: transform .3s ease;
@@ -114,46 +110,54 @@ body {
   transform: translateX(0);
 }
 
-.sidebar-logo {
+.sidebar-title {
   font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 38px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
-.sidebar-logo span {
-  color: var(--gold);
+.sidebar-subtitle {
+  color: #c6d5c8;
+  font-size: 13px;
+  margin-bottom: 35px;
 }
 
 .menu-label {
-  color: #a9c0b0;
+  color: #a8c0ad;
+  font-size: 11px;
   text-transform: uppercase;
-  font-size: 10px;
   letter-spacing: 1.5px;
   margin: 25px 0 12px;
 }
 
 .sidebar a {
   display: block;
-  color: #e5eee7;
+  color: #edf4ec;
   text-decoration: none;
-  padding: 13px 15px;
-  border-radius: 10px;
+  padding: 13px 14px;
+  border-radius: 9px;
   margin-bottom: 5px;
   font-size: 14px;
   transition: .2s;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
-  background: rgba(255,255,255,.13);
+.sidebar a:hover {
+  background: #2b5b43;
   color: white;
+}
+
+.sidebar .close-hint {
+  margin-top: 35px;
+  color: #a8c0ad;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.35);
-  z-index: 30;
+  background: rgba(12, 27, 20, .45);
+  z-index: 20;
   opacity: 0;
   visibility: hidden;
   transition: .3s;
@@ -167,143 +171,90 @@ body {
 /* MAIN */
 
 .main {
-  max-width: 1160px;
+  width: 100%;
+  max-width: 1150px;
   margin: auto;
-  padding: 38px 30px 80px;
+  padding: 45px 35px 80px;
 }
 
-.breadcrumb {
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 25px;
-}
-
-.breadcrumb span {
-  color: var(--green);
-  font-weight: 650;
-}
-
-/* HERO */
-
-.hero {
-  background: linear-gradient(125deg, #183d30, #32634a);
-  border-radius: 25px;
-  padding: 48px;
+.welcome {
+  background: var(--green);
   color: white;
+  border-radius: 20px;
+  padding: 48px;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow);
 }
 
-.hero::after {
-  content: "A1";
+.welcome::after {
+  content: "Õ";
   position: absolute;
-  right: 35px;
-  bottom: -45px;
-  font-size: 190px;
-  font-weight: 900;
+  right: 45px;
+  top: -35px;
+  font-size: 230px;
   color: rgba(255,255,255,.055);
+  font-weight: bold;
 }
 
 .eyebrow {
-  color: #d6c18f;
+  color: #d5bd8a;
   text-transform: uppercase;
   letter-spacing: 2px;
-  font-size: 11px;
-  font-weight: 750;
+  font-size: 12px;
   margin-bottom: 17px;
 }
 
-.hero h1 {
+.welcome h1 {
   font-family: Georgia, serif;
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 500;
+  font-size: 42px;
+  font-weight: normal;
+  margin-bottom: 16px;
   max-width: 650px;
-  line-height: 1.15;
-  margin-bottom: 17px;
 }
 
-.hero p {
-  color: #d9e7dc;
+.welcome p {
+  color: #d6e3d8;
   line-height: 1.7;
-  max-width: 570px;
+  max-width: 600px;
   font-size: 15px;
 }
 
-.hero-bottom {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
-
-.hero-button {
-  background: #d6bd83;
-  color: #183d30;
-  padding: 13px 22px;
-  border-radius: 9px;
+.welcome-button {
+  display: inline-block;
+  margin-top: 27px;
+  background: var(--gold);
+  color: #172d22;
   text-decoration: none;
-  font-weight: 750;
-  font-size: 13px;
-}
-
-.hero-note {
-  color: #d9e7dc;
-  font-size: 12px;
-}
-
-/* SECTION */
-
-.section {
-  margin-top: 55px;
-}
-
-.section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  margin-bottom: 22px;
-  gap: 15px;
-}
-
-.section-heading h2 {
-  font-family: Georgia, serif;
-  font-size: 29px;
-  font-weight: 500;
-  color: var(--green);
-}
-
-.section-heading p {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 7px;
+  padding: 13px 22px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 /* PROGRESS */
 
 .progress-card {
-  background: white;
-  border-radius: 17px;
-  padding: 23px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 25px;
   margin-top: 25px;
-  box-shadow: var(--shadow);
 }
 
 .progress-top {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  margin-bottom: 13px;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .progress-top strong {
   color: var(--green);
 }
 
-.progress-bar {
-  height: 8px;
-  background: #e9eee9;
+.progress-track {
+  height: 9px;
+  background: #e8ece5;
   border-radius: 20px;
   overflow: hidden;
 }
@@ -313,241 +264,256 @@ body {
   height: 100%;
   background: var(--green2);
   border-radius: 20px;
-  transition: .4s;
+}
+
+/* SECTIONS */
+
+.section {
+  margin-top: 48px;
+  scroll-margin-top: 100px;
+}
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.section-heading small {
+  color: var(--gold);
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.section-heading h2 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  color: var(--green);
+  font-weight: normal;
+  margin-top: 8px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  margin-top: 9px;
+  line-height: 1.6;
+  font-size: 14px;
 }
 
 /* MODULES */
 
 .modules {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 17px;
 }
 
 .module {
-  background: white;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 24px;
-  border-radius: 17px;
-  box-shadow: var(--shadow);
-  border: 1px solid #edf0eb;
+  text-decoration: none;
+  color: var(--text);
   transition: .2s;
 }
 
 .module:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  border-color: var(--gold);
 }
 
-.module-icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  background: var(--mint);
-  font-size: 21px;
-  margin-bottom: 20px;
+.module-number {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 .module h3 {
   color: var(--green);
-  font-size: 17px;
-  margin-bottom: 9px;
+  font-size: 18px;
+  margin: 12px 0 9px;
 }
 
 .module p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
-  min-height: 42px;
 }
 
-.module a {
+.module-link {
   display: inline-block;
-  margin-top: 18px;
+  margin-top: 17px;
   color: var(--green2);
-  text-decoration: none;
   font-size: 13px;
-  font-weight: 750;
+  font-weight: bold;
 }
 
-/* LESSON */
+/* LESSON PANELS */
 
-.lesson {
-  background: white;
-  border-radius: 18px;
+.panel {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 15px;
   padding: 28px;
-  box-shadow: var(--shadow);
-  margin-top: 20px;
+  margin-top: 17px;
+  scroll-margin-top: 100px;
 }
 
-.lesson h3 {
+.panel h3 {
   color: var(--green);
-  font-family: Georgia, serif;
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+
+.panel p {
+  line-height: 1.7;
+  font-size: 14px;
+  color: #536158;
   margin-bottom: 12px;
 }
 
-.lesson p {
-  color: #5e6d63;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
 .example {
-  background: #f0f5f0;
-  border-left: 3px solid var(--green2);
-  padding: 15px 18px;
-  border-radius: 8px;
-  margin-top: 18px;
+  background: #eef2e9;
+  border-left: 3px solid var(--gold);
+  padding: 16px 18px;
+  border-radius: 5px;
+  margin: 17px 0;
+  line-height: 1.8;
   font-size: 14px;
-  line-height: 1.9;
 }
 
 .example strong {
   color: var(--green);
 }
 
-.lesson-tag {
-  display: inline-block;
-  background: var(--mint);
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.word {
+  background: #f1f3eb;
+  padding: 13px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.word strong {
   color: var(--green);
-  font-size: 11px;
-  font-weight: 750;
-  padding: 7px 11px;
-  border-radius: 30px;
-  margin-bottom: 15px;
 }
 
 /* QUIZ */
 
 .quiz {
-  background: white;
-  border-radius: 18px;
-  padding: 28px;
-  box-shadow: var(--shadow);
-  margin-top: 20px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 27px;
 }
 
-.quiz-question {
-  font-size: 17px;
-  font-weight: 700;
+.question {
+  margin-bottom: 24px;
+}
+
+.question p {
+  font-weight: bold;
+  margin-bottom: 12px;
   color: var(--green);
-  margin: 20px 0 15px;
 }
 
 .answer {
   display: block;
   width: 100%;
   text-align: left;
-  border: 1px solid #e2e9e2;
+  padding: 13px 15px;
+  margin: 7px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   background: white;
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin: 9px 0;
+  cursor: pointer;
   font-size: 14px;
   color: var(--text);
-  cursor: pointer;
-  transition: .2s;
 }
 
 .answer:hover {
-  border-color: var(--green2);
-  background: #f5f8f4;
+  border-color: var(--gold);
 }
 
 .answer.correct {
-  border-color: #39966a;
-  background: #e5f5eb;
-  color: #21613e;
+  background: #e1f2e4;
+  border-color: #4d9960;
+  color: #245b34;
 }
 
 .answer.wrong {
-  border-color: var(--red);
-  background: #fff0f0;
-  color: #a83232;
-}
-
-.feedback {
-  margin-top: 12px;
-  font-size: 13px;
-  font-weight: 650;
-  min-height: 20px;
+  background: #fbe7e5;
+  border-color: #d56a61;
+  color: #a23d36;
 }
 
 .quiz-result {
+  margin-top: 15px;
+  font-weight: bold;
   color: var(--green);
-  font-weight: 750;
-  margin-top: 15px;
 }
 
-.next-button {
-  border: none;
-  background: var(--green);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-weight: 700;
-  margin-top: 15px;
-}
-
-.next-button:hover {
-  background: var(--green2);
-}
-
-/* FOOTER */
-
-footer {
-  text-align: center;
-  padding: 30px 15px;
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  padding-top: 25px;
   color: var(--muted);
   font-size: 12px;
-  border-top: 1px solid #e9ece6;
-  margin-top: 60px;
+  text-align: center;
 }
 
-/* RESPONSIVE */
+/* MOBILE */
 
-@media (max-width: 800px) {
-  .modules {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 650px) {
+  .topbar {
+    padding: 0 16px;
+    height: 68px;
+    gap: 12px;
   }
 
-  .hero {
-    padding: 32px 25px;
+  .brand {
+    font-size: 16px;
+  }
+
+  .breadcrumb {
+    display: none;
   }
 
   .main {
-    padding: 28px 18px 60px;
+    padding: 25px 17px 60px;
   }
-}
 
-@media (max-width: 520px) {
+  .welcome {
+    padding: 30px 24px;
+  }
+
+  .welcome h1 {
+    font-size: 31px;
+  }
+
+  .welcome::after {
+    right: 5px;
+    font-size: 150px;
+  }
+
   .modules {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
-    padding: 0 16px;
-  }
-
-  .hero h1 {
-    font-size: 34px;
-  }
-
-  .hero::after {
-    font-size: 130px;
-    right: 10px;
+  .word-list {
+    grid-template-columns: 1fr;
   }
 
   .section-heading h2 {
     font-size: 25px;
-  }
-
-  .lesson,
-  .quiz {
-    padding: 21px;
   }
 }
 </style>
@@ -555,232 +521,308 @@ footer {
 
 <body>
 
-<header class="topbar">
-  <button class="avatar-button" id="menuToggle" aria-label="Открыть меню" aria-expanded="false">
-    ☰
-  </button>
-
-  <div class="brand">Eesti Keel <span>Online</span></div>
-
-  <div class="top-right">Уровень A1</div>
-</header>
-
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">Eesti Keel <span>Online</span></div>
+  <div class="sidebar-title">Eesti Keel Online</div>
+  <div class="sidebar-subtitle">Sinu tee eesti keele juurde</div>
 
-  <div class="menu-label">Навигация</div>
-  <a href="#home" class="active">Главная</a>
-  <a href="#modules">Модули</a>
-  <a href="#grammar">Грамматика</a>
-  <a href="#vocabulary">Словарь</a>
-  <a href="#practice">Практика</a>
-  <a href="#quiz">Мини-тест</a>
+  <div class="menu-label">Peamenüü</div>
+  <a href="#home">⌂ Главная</a>
+  <a href="#modules">▦ Все уроки</a>
+  <a href="#grammar">✎ Грамматика</a>
+  <a href="#vocabulary">▤ Словарь</a>
+  <a href="#practice">✓ Практика</a>
+  <a href="#quiz">★ Мини-тест</a>
 
   <div class="menu-label">Уровни обучения</div>
-  <a href="a1.html">A1 — Начальный</a>
+  <a href="#modules">A1 — Начальный</a>
   <a href="a2.html">A2 — Элементарный</a>
   <a href="b1.html">B1 — Средний</a>
   <a href="b2.html">B2 — Выше среднего</a>
+
+  <div class="close-hint">
+    Нажми на затемнённую область, чтобы закрыть меню.
+  </div>
 </aside>
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
 
-<main class="main" id="home">
+<!-- TOPBAR -->
+<header class="topbar">
+  <button
+    class="avatar-button"
+    id="menuToggle"
+    aria-label="Открыть меню"
+    aria-expanded="false"
+  >♙</button>
 
-  <div class="breadcrumb">
-    Главная / Уровни / <span>A1</span>
+  <div class="brand">Eesti Keel Online</div>
+
+  <div class="breadcrumb">Õppematerjalid / A1</div>
+  <div class="level">A1 · Beginner</div>
+</header>
+
+<main class="main">
+
+  <!-- HOME -->
+  <section class="welcome" id="home">
+    <div class="eyebrow">TERE TULEMAST!</div>
+    <h1>Начни изучать эстонский язык</h1>
+    <p>
+      Добро пожаловать на A1 — твой первый шаг к эстонскому языку.
+      Здесь ты найдёшь простые объяснения, полезные слова и задания,
+      которые помогут тебе учиться постепенно.
+    </p>
+    <a href="#modules" class="welcome-button">Начать обучение →</a>
+  </section>
+
+  <!-- PROGRESS -->
+  <div class="progress-card">
+    <div class="progress-top">
+      <strong>Твой прогресс</strong>
+      <span>0% завершено</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
   </div>
 
-  <section class="hero">
-    <div class="eyebrow">Eesti keel · A1 tase</div>
-
-    <h1>Начни говорить по-эстонски уверенно.</h1>
-
-    <p>
-      Изучай эстонский язык постепенно: понятные объяснения,
-      полезные примеры и небольшие задания после каждой темы.
-      Всё необходимое для начального уровня A1 — в одном месте.
-    </p>
-
-    <div class="hero-bottom">
-      <a href="#modules" class="hero-button">Начать обучение →</a>
-      <span class="hero-note">Для начинающих · A1</span>
-    </div>
-  </section>
-
-  <section class="progress-card">
-    <div class="progress-top">
-      <span>Твой прогресс</span>
-      <strong id="progressText">0% завершено</strong>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-  </section>
-
+  <!-- MODULES -->
   <section class="section" id="modules">
     <div class="section-heading">
-      <div>
-        <h2>Учебные модули</h2>
-        <p>Основные разделы для изучения языка.</p>
-      </div>
+      <small>ÕPPIMINE</small>
+      <h2>Учебные модули</h2>
+      <p>Выбери тему и начни изучать её в своём темпе.</p>
     </div>
 
     <div class="modules">
-      <article class="module">
-        <div class="module-icon">📖</div>
+      <a class="module" href="#grammar">
+        <div class="module-number">MODULE 01</div>
         <h3>Грамматика</h3>
-        <p>Изучай правила и учись правильно строить предложения.</p>
-        <a href="#grammar">Перейти к уроку →</a>
-      </article>
+        <p>Основные правила эстонского языка с понятными примерами.</p>
+        <span class="module-link">Перейти к уроку →</span>
+      </a>
 
-      <article class="module">
-        <div class="module-icon">🗣️</div>
+      <a class="module" href="#vocabulary">
+        <div class="module-number">MODULE 02</div>
         <h3>Словарный запас</h3>
-        <p>Запоминай полезные эстонские слова и выражения.</p>
-        <a href="#vocabulary">Изучать слова →</a>
-      </article>
+        <p>Самые важные слова и выражения на каждый день.</p>
+        <span class="module-link">Перейти к словам →</span>
+      </a>
 
-      <article class="module">
-        <div class="module-icon">✍️</div>
+      <a class="module" href="#practice">
+        <div class="module-number">MODULE 03</div>
         <h3>Практика</h3>
-        <p>Закрепляй знания с помощью небольших упражнений.</p>
-        <a href="#practice">Начать практику →</a>
-      </article>
+        <p>Закрепляй знания с помощью небольших заданий.</p>
+        <span class="module-link">Начать практику →</span>
+      </a>
+
+      <a class="module" href="#quiz">
+        <div class="module-number">MODULE 04</div>
+        <h3>Проверка знаний</h3>
+        <p>Проверь, насколько хорошо ты понял изученные темы.</p>
+        <span class="module-link">Пройти тест →</span>
+      </a>
     </div>
   </section>
 
+  <!-- GRAMMAR -->
   <section class="section" id="grammar">
     <div class="section-heading">
-      <div>
-        <h2>Грамматика A1</h2>
-        <p>Первый урок — знакомство с эстонскими предложениями.</p>
+      <small>GRAMMATIKA</small>
+      <h2>Основы грамматики</h2>
+      <p>Начнём с самых важных конструкций, которые нужны каждому новичку.</p>
+    </div>
+
+    <div class="panel">
+      <h3>1. Личные местоимения</h3>
+      <p>
+        Личные местоимения помогают понять, кто выполняет действие.
+        В эстонском языке они выглядят так:
+      </p>
+
+      <div class="word-list">
+        <div class="word"><strong>Mina</strong> — я</div>
+        <div class="word"><strong>Sina</strong> — ты</div>
+        <div class="word"><strong>Tema</strong> — он / она</div>
+        <div class="word"><strong>Meie</strong> — мы</div>
+        <div class="word"><strong>Teie</strong> — вы</div>
+        <div class="word"><strong>Nemad</strong> — они</div>
+      </div>
+
+      <div class="example">
+        <strong>Примеры:</strong><br>
+        Mina olen õpilane. — Я ученик.<br>
+        Sina oled õpilane. — Ты ученик.<br>
+        Tema on õpetaja. — Он / она учитель.
       </div>
     </div>
 
-    <article class="lesson">
-      <span class="lesson-tag">Урок 01 · Основы</span>
-
-      <h3>Личные местоимения</h3>
-
+    <div class="panel">
+      <h3>2. Глагол olema — быть</h3>
       <p>
-        Личные местоимения используются вместо имён людей
-        или названий предметов. В эстонском языке они помогают
-        понять, кто выполняет действие.
+        Глагол <strong>olema</strong> означает «быть».
+        Он часто используется, когда мы рассказываем о себе,
+        своей профессии или состоянии.
+      </p>
+
+      <div class="word-list">
+        <div class="word"><strong>Ma olen</strong> — я есть</div>
+        <div class="word"><strong>Sa oled</strong> — ты есть</div>
+        <div class="word"><strong>Ta on</strong> — он / она есть</div>
+        <div class="word"><strong>Me oleme</strong> — мы есть</div>
+        <div class="word"><strong>Te olete</strong> — вы есть</div>
+        <div class="word"><strong>Nad on</strong> — они есть</div>
+      </div>
+
+      <div class="example">
+        <strong>Запомни:</strong><br>
+        Ma olen õpilane. — Я ученик.<br>
+        Me oleme sõbrad. — Мы друзья.<br>
+        Nad on kodus. — Они дома.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>3. Простое предложение</h3>
+      <p>
+        В обычном эстонском предложении чаще всего сначала стоит
+        подлежащее, затем глагол, а потом остальная информация.
       </p>
 
       <div class="example">
-        <strong>Mina</strong> — я<br>
-        <strong>Sina</strong> — ты<br>
-        <strong>Tema</strong> — он / она<br>
-        <strong>Meie</strong> — мы<br>
-        <strong>Teie</strong> — вы<br>
-        <strong>Nemad</strong> — они
+        <strong>Формула:</strong><br>
+        Кто? + Что делает? + Дополнительная информация<br><br>
+        Ma õpin eesti keelt. — Я изучаю эстонский язык.<br>
+        Ta elab Eestis. — Он / она живёт в Эстонии.
       </div>
-
-      <h3 style="margin-top:25px;">Глагол olema — быть</h3>
-
-      <p>
-        Глагол olema — один из самых важных глаголов
-        эстонского языка. Он используется, когда мы говорим,
-        кто мы, где находимся или что чем-то является.
-      </p>
-
-      <div class="example">
-        <strong>Mina olen õpilane.</strong> — Я ученик.<br>
-        <strong>Sina oled sõber.</strong> — Ты друг.<br>
-        <strong>Tema on õpetaja.</strong> — Он / она учитель.<br>
-        <strong>Meie oleme kodus.</strong> — Мы дома.
-      </div>
-    </article>
+    </div>
   </section>
 
+  <!-- VOCABULARY -->
   <section class="section" id="vocabulary">
     <div class="section-heading">
-      <div>
-        <h2>Полезные слова</h2>
-        <p>Базовые слова, которые пригодятся каждый день.</p>
+      <small>SÕNAVARA</small>
+      <h2>Полезные слова</h2>
+      <p>Начни с выражений, которые можно использовать каждый день.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Приветствия и знакомства</h3>
+
+      <div class="word-list">
+        <div class="word"><strong>Tere</strong> — привет</div>
+        <div class="word"><strong>Head aega</strong> — до свидания</div>
+        <div class="word"><strong>Aitäh</strong> — спасибо</div>
+        <div class="word"><strong>Palun</strong> — пожалуйста</div>
+        <div class="word"><strong>Jah</strong> — да</div>
+        <div class="word"><strong>Ei</strong> — нет</div>
+        <div class="word"><strong>Vabandust</strong> — извините</div>
+        <div class="word"><strong>Mis nimi sul on?</strong> — как тебя зовут?</div>
       </div>
     </div>
 
-    <article class="lesson">
-      <span class="lesson-tag">Словарь · A1</span>
+    <div class="panel">
+      <h3>О себе</h3>
 
-      <div class="example">
-        <strong>Tere</strong> — Привет<br>
-        <strong>Aitäh</strong> — Спасибо<br>
-        <strong>Palun</strong> — Пожалуйста<br>
-        <strong>Jah</strong> — Да<br>
-        <strong>Ei</strong> — Нет<br>
-        <strong>Kool</strong> — Школа<br>
-        <strong>Kodu</strong> — Дом<br>
-        <strong>Sõber</strong> — Друг<br>
-        <strong>Raamat</strong> — Книга<br>
-        <strong>Vesi</strong> — Вода
+      <div class="word-list">
+        <div class="word"><strong>Nimi</strong> — имя</div>
+        <div class="word"><strong>Vanus</strong> — возраст</div>
+        <div class="word"><strong>Kool</strong> — школа</div>
+        <div class="word"><strong>Sõber</strong> — друг</div>
+        <div class="word"><strong>Perekond</strong> — семья</div>
+        <div class="word"><strong>Kodu</strong> — дом</div>
       </div>
-    </article>
+    </div>
   </section>
 
+  <!-- PRACTICE -->
   <section class="section" id="practice">
     <div class="section-heading">
-      <div>
-        <h2>Практика</h2>
-        <p>Попробуй составить простое предложение.</p>
-      </div>
+      <small>HARJUTAMINE</small>
+      <h2>Небольшая практика</h2>
+      <p>Попробуй составить несколько простых предложений.</p>
     </div>
 
-    <article class="lesson">
-      <span class="lesson-tag">Задание · A1</span>
-      <h3>Переведи предложение</h3>
-      <p>Как по-эстонски сказать «Я ученик»?</p>
+    <div class="panel">
+      <h3>Переведи на эстонский</h3>
 
-      <div class="example">
-        Подсказка: Mina + olen + õpilane.
-      </div>
-    </article>
+      <p>1. Меня зовут Анна.</p>
+      <div class="example">Minu nimi on Anna.</div>
+
+      <p>2. Я живу в Эстонии.</p>
+      <div class="example">Ma elan Eestis.</div>
+
+      <p>3. Я изучаю эстонский язык.</p>
+      <div class="example">Ma õpin eesti keelt.</div>
+    </div>
   </section>
 
+  <!-- QUIZ -->
   <section class="section" id="quiz">
     <div class="section-heading">
-      <div>
-        <h2>Проверь свои знания</h2>
-        <p>Ответь на вопросы и закрепи материал урока.</p>
-      </div>
+      <small>MINI TEST</small>
+      <h2>Проверь свои знания</h2>
+      <p>Выбери правильный ответ. После выбора ты сразу увидишь результат.</p>
     </div>
 
-    <article class="quiz">
-      <span class="lesson-tag">Мини-тест · 5 вопросов</span>
+    <div class="quiz">
 
-      <div class="progress-top">
-        <span id="questionNumber">Вопрос 1 из 5</span>
-        <strong id="scoreText">Счёт: 0</strong>
+      <div class="question">
+        <p>1. Как переводится слово «Tere»?</p>
+        <button class="answer" data-correct="true">Привет</button>
+        <button class="answer" data-correct="false">Спасибо</button>
+        <button class="answer" data-correct="false">До свидания</button>
       </div>
 
-      <div class="quiz-question" id="question">
-        Как переводится слово Mina?
+      <div class="question">
+        <p>2. Как будет «я» на эстонском?</p>
+        <button class="answer" data-correct="false">Sina</button>
+        <button class="answer" data-correct="true">Mina</button>
+        <button class="answer" data-correct="false">Tema</button>
       </div>
 
-      <div id="answers"></div>
+      <div class="question">
+        <p>3. Что означает «Aitäh»?</p>
+        <button class="answer" data-correct="false">Пожалуйста</button>
+        <button class="answer" data-correct="false">Привет</button>
+        <button class="answer" data-correct="true">Спасибо</button>
+      </div>
 
-      <div class="feedback" id="feedback"></div>
+      <div class="question">
+        <p>4. Как правильно сказать «Я ученик»?</p>
+        <button class="answer" data-correct="true">Ma olen õpilane</button>
+        <button class="answer" data-correct="false">Ma on õpilane</button>
+        <button class="answer" data-correct="false">Mina oled õpilane</button>
+      </div>
 
-      <button class="next-button" id="nextButton" style="display:none;">
-        Следующий вопрос →
-      </button>
+      <div class="question">
+        <p>5. Как переводится «Eesti»?</p>
+        <button class="answer" data-correct="false">Финляндия</button>
+        <button class="answer" data-correct="true">Эстония</button>
+        <button class="answer" data-correct="false">Латвия</button>
+      </div>
 
-      <div class="quiz-result" id="quizResult"></div>
-    </article>
+      <div class="quiz-result" id="quizResult">
+        Ответь на вопросы, чтобы увидеть результат.
+      </div>
+
+      <button
+        class="welcome-button"
+        id="resetQuiz"
+        style="border:0;cursor:pointer"
+      >Пройти заново</button>
+
+    </div>
   </section>
+
+  <footer class="footer">
+    Eesti Keel Online · Õpi eesti keelt samm-sammult
+  </footer>
 
 </main>
 
-<footer>
-  Eesti Keel Online · Учись в своём темпе.
-</footer>
-
 <script>
-/* MENU */
-
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("drawerOverlay");
@@ -807,148 +849,89 @@ menuToggle.addEventListener("click", () => {
 
 overlay.addEventListener("click", closeMenu);
 
-document.querySelectorAll(".sidebar a").forEach(link => {
+sidebar.querySelectorAll("a").forEach(link => {
   link.addEventListener("click", closeMenu);
 });
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeMenu();
+  if (event.key === "Escape") {
+    closeMenu();
+  }
 });
 
 /* QUIZ */
 
-const questions = [
-  {
-    question: "Как переводится слово Mina?",
-    answers: ["Ты", "Я", "Он", "Мы"],
-    correct: 1,
-    explanation: "Mina означает «я»."
-  },
-  {
-    question: "Как переводится слово Aitäh?",
-    answers: ["Привет", "Пожалуйста", "Спасибо", "Пока"],
-    correct: 2,
-    explanation: "Aitäh означает «спасибо»."
-  },
-  {
-    question: "Выбери правильный вариант: Mina ... õpilane.",
-    answers: ["oled", "olen", "on", "oleme"],
-    correct: 1,
-    explanation: "С местоимением Mina используется olen."
-  },
-  {
-    question: "Как переводится слово Kool?",
-    answers: ["Дом", "Книга", "Друг", "Школа"],
-    correct: 3,
-    explanation: "Kool означает «школа»."
-  },
-  {
-    question: "Как переводится слово Meie?",
-    answers: ["Мы", "Вы", "Они", "Я"],
-    correct: 0,
-    explanation: "Meie означает «мы»."
-  }
-];
+const questions = document.querySelectorAll(".question");
+const result = document.getElementById("quizResult");
+const resetButton = document.getElementById("resetQuiz");
 
-let currentQuestion = 0;
-let score = 0;
-let answered = false;
+function updateResult() {
+  let correct = 0;
+  let answered = 0;
 
-const questionElement = document.getElementById("question");
-const answersElement = document.getElementById("answers");
-const feedbackElement = document.getElementById("feedback");
-const nextButton = document.getElementById("nextButton");
-const questionNumber = document.getElementById("questionNumber");
-const scoreText = document.getElementById("scoreText");
-const quizResult = document.getElementById("quizResult");
+  questions.forEach(question => {
+    const selected = question.querySelector(".answer.selected");
 
-function showQuestion() {
-  answered = false;
-
-  const item = questions[currentQuestion];
-
-  questionElement.textContent = item.question;
-  questionNumber.textContent =
-    `Вопрос ${currentQuestion + 1} из ${questions.length}`;
-
-  scoreText.textContent = `Счёт: ${score}`;
-  feedbackElement.textContent = "";
-  answersElement.innerHTML = "";
-  nextButton.style.display = "none";
-  quizResult.textContent = "";
-
-  item.answers.forEach((answer, index) => {
-    const button = document.createElement("button");
-    button.className = "answer";
-    button.textContent = answer;
-
-    button.addEventListener("click", () => checkAnswer(index, button));
-
-    answersElement.appendChild(button);
+    if (selected) {
+      answered++;
+      if (selected.dataset.correct === "true") {
+        correct++;
+      }
+    }
   });
+
+  if (answered === questions.length) {
+    result.textContent =
+      "Твой результат: " + correct + " из " + questions.length + "!";
+  } else {
+    result.textContent =
+      "Отвечено: " + answered + " из " + questions.length;
+  }
 }
 
-function checkAnswer(index, selectedButton) {
-  if (answered) return;
-
-  answered = true;
-
-  const item = questions[currentQuestion];
-  const buttons = answersElement.querySelectorAll(".answer");
-
-  if (index === item.correct) {
-    score++;
-    selectedButton.classList.add("correct");
-    feedbackElement.style.color = "#27804f";
-    feedbackElement.textContent = "Правильно! " + item.explanation;
-  } else {
-    selectedButton.classList.add("wrong");
-    buttons[item.correct].classList.add("correct");
-    feedbackElement.style.color = "#c94b4b";
-    feedbackElement.textContent = "Не совсем. " + item.explanation;
-  }
+questions.forEach(question => {
+  const buttons = question.querySelectorAll(".answer");
 
   buttons.forEach(button => {
-    button.disabled = true;
+    button.addEventListener("click", () => {
+      if (question.dataset.answered === "true") return;
+
+      question.dataset.answered = "true";
+      button.classList.add("selected");
+
+      if (button.dataset.correct === "true") {
+        button.classList.add("correct");
+      } else {
+        button.classList.add("wrong");
+
+        const correctButton = question.querySelector(
+          '.answer[data-correct="true"]'
+        );
+
+        correctButton.classList.add("correct");
+      }
+
+      buttons.forEach(item => {
+        item.disabled = true;
+      });
+
+      updateResult();
+    });
   });
-
-  scoreText.textContent = `Счёт: ${score}`;
-  nextButton.style.display = "inline-block";
-
-  if (currentQuestion === questions.length - 1) {
-    nextButton.textContent = "Посмотреть результат";
-  }
-}
-
-nextButton.addEventListener("click", () => {
-  if (currentQuestion < questions.length - 1) {
-    currentQuestion++;
-    showQuestion();
-  } else {
-    showResult();
-  }
 });
 
-function showResult() {
-  questionElement.textContent = "Тест завершён!";
-  answersElement.innerHTML = "";
-  feedbackElement.textContent = "";
-  nextButton.style.display = "none";
+resetButton.addEventListener("click", () => {
+  questions.forEach(question => {
+    delete question.dataset.answered;
 
-  quizResult.textContent =
-    `Ты ответил правильно на ${score} из ${questions.length} вопросов!`;
+    question.querySelectorAll(".answer").forEach(button => {
+      button.disabled = false;
+      button.classList.remove("selected", "correct", "wrong");
+    });
+  });
 
-  questionNumber.textContent = "Результат";
-  scoreText.textContent = `Счёт: ${score}`;
-
-  const percentage = Math.round(score / questions.length * 100);
-
-  document.getElementById("progressFill").style.width = percentage + "%";
-  document.getElementById("progressText").textContent =
-    percentage + "% завершено";
-}
-
-showQuestion();
+  result.textContent = "Ответь на вопросы, чтобы увидеть результат.";
+});
 </script>
 
 </body>
