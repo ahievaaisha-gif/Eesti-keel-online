@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>B1 Academy | Eesti Keel Online</title>
+<style>
+:root {
+  --green:#173f32;
+  --green2:#245743;
+  --green3:#326d51;
+  --light:#f5f5ed;
+  --cream:#fffef8;
+  --gold:#c5a66a;
+  --text:#26372e;
+  --muted:#78847b;
+  --border:#e6e9df;
+  --red:#c64d4d;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+button { font:inherit; cursor:pointer; }
+
+.topbar {
+  height:76px;
+  background:var(--cream);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 5%;
+  gap:18px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.profile-button {
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:#f2eee1;
+  color:var(--green);
+  font-size:22px;
+}
+
+.brand {
+  font-size:19px;
+  font-weight:800;
+  color:var(--green);
+  letter-spacing:-.5px;
+}
+
+.brand span { color:var(--gold); }
+
+.top-right {
+  margin-left:auto;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.overlay {
+  position:fixed;
+  inset:0;
+  background:#10271e80;
+  z-index:29;
+  display:none;
+}
+
+.overlay.show { display:block; }
+
+.sidebar {
+  position:fixed;
+  z-index:30;
+  left:0;
+  top:0;
+  bottom:0;
+  width:290px;
+  background:var(--cream);
+  padding:28px 22px;
+  transform:translateX(-105%);
+  transition:.3s;
+  overflow-y:auto;
+  box-shadow:10px 0 35px #00000012;
+}
+
+.sidebar.open { transform:translateX(0); }
+
+.sidebar-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.sidebar-title {
+  color:var(--green);
+  font-weight:800;
+  font-size:19px;
+}
+
+.close-menu {
+  border:0;
+  background:transparent;
+  font-size:25px;
+  color:var(--muted);
+}
+
+.nav-label {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  margin:25px 10px 10px;
+  text-transform:uppercase;
+}
+
+.nav-link {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:13px 14px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  text-align:left;
+  color:var(--text);
+  font-size:14px;
+  margin:4px 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:700;
+}
+
+.nav-icon { width:22px; font-size:17px; }
+
+.level-link {
+  display:flex;
+  justify-content:space-between;
+  padding:12px 14px;
+  color:var(--muted);
+  font-size:14px;
+  text-decoration:none;
+  border-radius:10px;
+}
+
+.level-link.current {
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:800;
+}
+
+.level-link:hover { background:#f0f1e9; }
+
+main {
+  max-width:1160px;
+  margin:auto;
+  padding:36px 28px 80px;
+}
+
+.page { display:none; }
+.page.active { display:block; }
+
+.breadcrumb {
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.hero {
+  background:var(--green);
+  color:white;
+  padding:43px;
+  border-radius:22px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:25px;
+}
+
+.hero:after {
+  content:"Õ";
+  position:absolute;
+  right:55px;
+  top:-65px;
+  font-size:260px;
+  font-weight:900;
+  color:#ffffff0c;
+}
+
+.hero small {
+  color:#d5c18e;
+  letter-spacing:2px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.hero h1 {
+  font-size:36px;
+  margin:13px 0;
+  position:relative;
+  z-index:1;
+}
+
+.hero p {
+  color:#d6e0d8;
+  max-width:590px;
+  line-height:1.7;
+  font-size:15px;
+  position:relative;
+  z-index:1;
+}
+
+.hero-tag {
+  display:inline-block;
+  margin-top:12px;
+  background:#ffffff18;
+  border:1px solid #ffffff30;
+  padding:8px 13px;
+  border-radius:30px;
+  font-size:12px;
+}
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:15px;
+  margin:35px 0 17px;
+}
+
+.section-heading h2 {
+  margin:0;
+  color:var(--green);
+  font-size:23px;
+}
+
+.section-heading p {
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.progress-card {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+  margin-bottom:25px;
+}
+
+.progress-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:13px;
+  gap:12px;
+}
+
+.progress-top strong { color:var(--green); }
+
+.progress-track {
+  height:9px;
+  background:#e9ece4;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-fill {
+  height:100%;
+  width:0%;
+  background:var(--green3);
+  border-radius:20px;
+  transition:.4s;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:25px;
+}
+.stats-extra{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 25px}
+
+.stat {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:19px;
+}
+
+.stat-number {
+  font-size:25px;
+  color:var(--green);
+  font-weight:800;
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.card {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:23px;
+  transition:.2s;
+}
+
+.card:hover {
+  transform:translateY(-3px);
+  border-color:#c9d5c8;
+}
+
+.card-icon {
+  width:44px;
+  height:44px;
+  border-radius:13px;
+  background:#eaf0e9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  margin-bottom:16px;
+}
+
+.card h3 {
+  color:var(--green);
+  margin:0 0 9px;
+  font-size:17px;
+}
+
+.card p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin:0 0 17px;
+}
+
+.primary-btn,
+.secondary-btn {
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.primary-btn {
+  background:var(--green);
+  color:white;
+}
+
+.primary-btn:hover { background:var(--green2); }
+
+.secondary-btn {
+  background:#eaf0e9;
+  color:var(--green);
+}
+
+.full-btn { width:100%; }
+
+.lesson-list {
+  display:grid;
+  gap:13px;
+}
+
+.lesson {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:19px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.lesson-number {
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:800;
+  flex-shrink:0;
+}
+
+.lesson-info { flex:1; }
+
+.lesson-info h3 {
+  margin:0 0 5px;
+  font-size:15px;
+  color:var(--green);
+}
+
+.lesson-info p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.lesson-status {
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.lesson.opened { border-color:#b8cdb9; }
+
+.lesson-content {
+  display:none;
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:25px;
+  margin-top:15px;
+  line-height:1.8;
+}
+
+.lesson-content.show { display:block; }
+
+.lesson-content h3 { color:var(--green); }
+
+.example {
+  background:#eef2e9;
+  padding:13px 16px;
+  border-radius:10px;
+  margin:10px 0;
+}
+
+.example strong { color:var(--green); }
+
+.word-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.word {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:15px;
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.word strong { color:var(--green); }
+.word span { color:var(--muted); font-size:13px; }
+
+.category-tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.tab-btn {
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:9px 15px;
+  background:var(--cream);
+  color:var(--text);
+  font-size:12px;
+}
+
+.tab-btn.active {
+  background:var(--green);
+  color:white;
+  border-color:var(--green);
+}
+
+.question-box {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:25px;
+  margin-top:15px;
+}
+
+.question-box h3 {
+  color:var(--green);
+  margin-top:0;
+}
+
+.answer-option {
+  display:block;
+  width:100%;
+  text-align:left;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:white;
+  padding:14px;
+  margin:9px 0;
+  color:var(--text);
+  transition:.15s;
+}
+
+.answer-option:hover { border-color:var(--green3); }
+
+.answer-option.correct {
+  border:2px solid #398454;
+  background:#eaf5ed;
+}
+
+.answer-option.wrong {
+  border:2px solid var(--red);
+  background:#fff0ef;
+}
+
+.feedback {
+  min-height:24px;
+  margin:12px 0;
+  font-size:13px;
+  font-weight:700;
+}
+
+.test-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.test-pill {
+  background:#eaf0e9;
+  color:var(--green);
+  padding:7px 11px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.test-dots {
+  display:flex;
+  gap:6px;
+  margin:15px 0;
+}
+
+.test-dot {
+  height:6px;
+  flex:1;
+  border-radius:10px;
+  background:#e4e8df;
+}
+
+.test-dot.done { background:var(--green3); }
+
+.result {
+  text-align:center;
+  padding:25px 10px;
+}
+
+.result h2 { color:var(--green); }
+
+.result-score {
+  font-size:45px;
+  color:var(--green);
+  font-weight:900;
+  margin:15px 0;
+}
+
+.locked {
+  opacity:.55;
+  background:#f1f1eb;
+}
+
+.notice {
+  background:#f2eee1;
+  border:1px solid #e7ddc4;
+  border-radius:12px;
+  padding:15px;
+  color:#665535;
+  font-size:13px;
+  line-height:1.6;
+  margin:18px 0;
+}
+
+@media(max-width:700px) {
+  main { padding:25px 16px 60px; }
+  .topbar { padding:0 17px; }
+  .top-right { display:none; }
+  .hero { padding:28px 23px; }
+  .hero h1 { font-size:28px; }
+  .hero:after { right:0; font-size:180px; }
+  .grid,.word-grid { grid-template-columns:1fr; }
+  .stats { gap:8px; }
+  .stat { padding:13px; }
+  .stat-number { font-size:21px; }
+  .lesson { align-items:flex-start; }
+  .lesson-status { display:none; }
+}
+
+
+/* Навигация и прогресс разделов */
+.back-home {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  color:var(--green);
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  margin:0 0 18px;
+}
+.back-home:hover { background:#eaf0e9; }
+.section-progress {
+  background:var(--cream);
+  border:1px solid var(--border);
+  padding:17px 20px;
+  border-radius:14px;
+  margin:0 0 22px;
+}
+.section-progress-top {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:13px;
+  margin-bottom:10px;
+}
+.section-progress-top strong { color:var(--green); }
+.section-progress-top span { color:var(--muted); }
+.word-learned { border-color:#b8cdb9; background:#f3f7ef; }
+@media(max-width:700px) {
+  .section-progress { padding:14px; }
+  .back-home { margin-bottom:14px; }
+}
+
+
+/* Последовательное обучение: переходы, словарный квиз и практика по темам */
+.lesson-actions,.word-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.practice-topic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.practice-topic-card{background:var(--cream);border:1px solid var(--border);border-radius:15px;padding:19px}
+.practice-topic-card h3{color:var(--green);font-size:15px;margin:0 0 7px}
+.practice-topic-card p{color:var(--muted);font-size:12px;margin:0 0 14px}
+.vocab-quiz{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px;margin-top:22px}
+.vocab-quiz h3{color:var(--green);margin-top:0}
+.vocab-quiz-result{text-align:center;padding:18px}
+.word-category-actions{margin:18px 0 24px;}
+.word-category-actions .primary-btn{width:100%;min-height:48px;}
+.practice-topic-card.is-complete{border-color:#b8cdb9;background:#f3f7ef;}
+.practice-complete-label{display:inline-flex;align-items:center;gap:6px;color:#285642;font-size:12px;font-weight:800;margin-bottom:10px;}
+.practice-topic-card .primary-btn:disabled{opacity:.7;cursor:default;}
+.vocab-confirm-backdrop{position:fixed;inset:0;background:rgba(12,25,19,.62);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;}
+.vocab-confirm{width:min(100%,420px);background:var(--cream);border:1px solid var(--border);border-radius:20px;padding:25px;box-shadow:0 18px 60px rgba(0,0,0,.25);text-align:center;}
+.vocab-confirm-mark{width:48px;height:48px;border-radius:50%;margin:0 auto 14px;background:#f5ead0;color:#8a6727;display:grid;place-items:center;font-size:24px;font-weight:800;}
+.vocab-confirm h3{color:var(--green);margin:0 0 9px;font-size:20px;}
+.vocab-confirm p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 20px;}
+.vocab-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.vocab-confirm-actions button{min-height:45px;}
+@media(max-width:700px){.practice-topic-list{grid-template-columns:1fr}.lesson-actions>*{flex:1}.vocab-confirm{padding:22px 18px}.vocab-confirm-actions{grid-template-columns:1fr;}}
+
+
+</style>
+<style>
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.resource-card{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px}.resource-card h3{color:var(--green);margin:8px 0}.resource-card p{color:var(--muted);font-size:14px;line-height:1.6}.resource-card .primary-btn{margin-top:12px}.reading-text,.writing-task,.opinion-card{background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:24px;margin:16px 0;line-height:1.8}.reading-text h3,.writing-task h3,.opinion-card h3{color:var(--green)}.reading-question{padding:14px 0;border-top:1px solid var(--border)}.reading-question button{display:block;width:100%;text-align:left;margin:7px 0}.writing-answer{width:100%;min-height:160px;border:1px solid var(--border);border-radius:12px;padding:14px;font:inherit;background:#fffefb;resize:vertical}.small-note{font-size:12px;color:var(--muted)}.grammar-tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#eaf0e9;color:var(--green);font-size:11px;font-weight:700;margin:3px}.lesson-content h3{margin-top:24px}.lesson-content ul{line-height:1.8}.lesson-content .warning{background:#fff7e7;border-left:4px solid var(--gold);padding:13px 16px;border-radius:8px;margin:14px 0}.lesson-content .table-wrap{overflow-x:auto}.lesson-content table{border-collapse:collapse;width:100%;margin:14px 0;background:#fffefb}.lesson-content th,.lesson-content td{border:1px solid var(--border);padding:10px;text-align:left}.lesson-content th{background:#edf2eb;color:var(--green)}.section-intro{max-width:760px;color:var(--muted);line-height:1.7}.resource-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.resource-tabs button{border:1px solid var(--border);background:var(--cream);padding:9px 13px;border-radius:20px;color:var(--text)}.resource-tabs button.active{background:var(--green);color:white}.result-box{padding:15px;background:#edf2eb;border-radius:12px;margin-top:12px;line-height:1.6}
+@media(max-width:700px){.home-grid{grid-template-columns:1fr}.reading-text,.writing-task,.opinion-card{padding:17px}}
+</style></head><body>
+<header class="topbar"><button class="profile-button" onclick="toggleMenu()" aria-label="Открыть меню">♙</button><div class="brand">EESTI KEEL <span>ONLINE</span></div><div class="top-right">Õpi eesti keelt lihtsalt ja targalt</div></header>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<aside class="sidebar" id="sidebar"><div class="sidebar-head"><div class="sidebar-title">Eesti Keel Online</div><button class="close-menu" onclick="toggleMenu()">×</button></div>
+<div class="nav-label">Обучение</div>
+<button class="nav-link active" data-page="home" onclick="showPage('home')"><span class="nav-icon">⌂</span> Главная</button>
+<button class="nav-link" data-page="topics" onclick="showPage('topics')"><span class="nav-icon">📚</span> Темы и грамматика</button>
+<button class="nav-link" data-page="vocabulary" onclick="showPage('vocabulary')"><span class="nav-icon">📖</span> Словарный запас</button>
+<button class="nav-link" data-page="practice" onclick="showPage('practice')"><span class="nav-icon">✍️</span> Практика</button>
+<button class="nav-link" data-page="reading" onclick="showPage('reading')"><span class="nav-icon">📘</span> Чтение</button>
+<button class="nav-link" data-page="writing" onclick="showPage('writing')"><span class="nav-icon">📝</span> Письмо</button>
+<button class="nav-link" data-page="opinion" onclick="showPage('opinion')"><span class="nav-icon">💬</span> Выражение мнения</button>
+<button class="nav-link" data-page="tests" onclick="showPage('tests')"><span class="nav-icon">✓</span> Тесты</button>
+<div class="nav-label">Личный кабинет</div><button class="nav-link" data-page="progress" onclick="showPage('progress')"><span class="nav-icon">◷</span> Мой прогресс</button>
+<div class="nav-label">Уровни обучения</div><a class="level-link" href="a1.html">A1 — Начальный</a><a class="level-link" href="a2.html">A2 — Элементарный</a><a class="level-link current" href="b1.html">B1 — Средний <span>●</span></a><a class="level-link" href="b2.html">B2 — Выше среднего</a></aside>
+<main>
+<section class="page active" id="page-home"><div class="breadcrumb">Главная / Уровни / B1</div><div class="hero"><small>ESTONIAN LANGUAGE COURSE</small><h1>Уверенно используй эстонский 🇪🇪</h1><p>Добро пожаловать на B1 — самостоятельный средний уровень. Учись объяснять своё мнение, понимать более сложные тексты, рассказывать о событиях, грамотно использовать падежи и строить связную речь.</p><div class="hero-tag">B1 · Intermediate · Полноценный курс</div></div>
+<div class="progress-card"><div class="progress-top"><strong>Твой прогресс B1</strong><span id="homePercent">0%</span></div><div class="progress-track"><div class="progress-fill" id="homeProgress"></div></div><p style="color:var(--muted);font-size:12px;margin:12px 0 0">Проходи уроки, учи слова, читай тексты и выполняй письменные задания. Гостевой прогресс хранится до закрытия вкладки.</p></div>
+<div class="stats"><div class="stat"><div class="stat-number" id="statLessons">0</div><div class="stat-label">Уроков пройдено</div></div><div class="stat"><div class="stat-number" id="statTests">0/10</div><div class="stat-label">Тестов пройдено</div></div><div class="stat"><div class="stat-number" id="statWords">0</div><div class="stat-label">Слов изучено</div></div></div>
+<div class="section-heading"><div><h2>Учебные разделы</h2><p>Выбирай направление и двигайся постепенно</p></div></div>
+<div class="home-grid">
+<div class="resource-card"><div class="card-icon">📚</div><h3>Темы и грамматика</h3><p>Тематические уроки, все 14 падежей, времена, инфинитивы, наклонения и структура предложений.</p><button class="primary-btn" onclick="showPage('topics')">Открыть уроки →</button></div>
+<div class="resource-card"><div class="card-icon">📖</div><h3>Словарный запас</h3><p>Большие тематические подборки слов, устойчивые выражения и полезные сочетания.</p><button class="primary-btn" onclick="showPage('vocabulary')">Изучать слова →</button></div>
+<div class="resource-card"><div class="card-icon">✍️</div><h3>Практика</h3><p>Грамматика в контексте, исправление ошибок, перевод и самостоятельное построение предложений.</p><button class="primary-btn" onclick="showPage('practice')">Начать практику →</button></div>
+<div class="resource-card"><div class="card-icon">📘</div><h3>Lugemine — Чтение</h3><p>Тексты уровня B1, вопросы на понимание, поиск главной мысли и деталей.</p><button class="primary-btn" onclick="showPage('reading')">Перейти к чтению →</button></div>
+<div class="resource-card"><div class="card-icon">📝</div><h3>Kirjutamine — Письмо</h3><p>Сообщения, письма, рассказы и аргументированные тексты с планом и критериями.</p><button class="primary-btn" onclick="showPage('writing')">Учиться писать →</button></div>
+<div class="resource-card"><div class="card-icon">💬</div><h3>Выражение мнения</h3><p>Учись аргументировать, соглашаться, возражать и приводить примеры.</p><button class="primary-btn" onclick="showPage('opinion')">Тренировать речь →</button></div>
+<div class="resource-card"><div class="card-icon">🏆</div><h3>Тесты B1</h3><p>Тематические проверки и итоговые тесты для закрепления материала.</p><button class="primary-btn" onclick="showPage('tests')">К тестам →</button></div>
+</div></section>
+<section class="page" id="page-topics"><div class="breadcrumb">B1 / Темы и грамматика</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Темы и грамматика</h2><p>Отдельные уроки с объяснениями, примерами и заданиями</p></div></div><p class="section-intro">Изучай уроки по порядку. Сначала разбираем правило, затем смотрим на примеры и применяем его в практике. Раздел падежей построен от отдельных форм к сравнению и использованию в тексте.</p><div class="lesson-list" id="lessonList"></div><div class="lesson-content" id="lessonContent"></div></section>
+<section class="page" id="page-vocabulary"><div class="breadcrumb">B1 / Словарный запас</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Словарный запас</h2><p>Слова и выражения, которые нужны для общения на уровне B1</p></div></div><div class="category-tabs" id="wordTabs"></div><div class="section-progress" id="wordCategoryProgress"></div><div class="word-grid" id="wordGrid"></div><div id="wordCategoryActions" class="word-actions word-category-actions"></div><div id="vocabularyQuizArea"></div></section>
+<section class="page" id="page-practice"><div class="breadcrumb">B1 / Практика</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Практика</h2><p>Разные типы заданий — от распознавания правила до самостоятельного применения</p></div></div><div id="practiceTopicList" class="practice-topic-list"></div><div id="practiceExercise" class="question-box" style="display:none"><button class="back-home" onclick="renderPracticeTopics()">← К темам практики</button><div class="test-pill" id="practiceTopicLabel">Практика по теме</div><h3 id="practiceQuestion" style="margin-top:20px"></h3><div id="practiceOptions"></div><div class="feedback" id="practiceFeedback"></div><button class="secondary-btn" onclick="nextPractice()">Следующий вопрос →</button></div></section>
+<section class="page" id="page-reading"><div class="breadcrumb">B1 / Lugemine</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Lugemine — Чтение</h2><p>Читай тексты на эстонском и проверяй понимание</p></div></div><p class="section-intro">Не пытайся переводить каждое слово. Сначала пойми общую мысль, затем найди конкретные факты и обрати внимание на выражения.</p><div id="readingList"></div><div id="readingArea"></div></section>
+<section class="page" id="page-writing"><div class="breadcrumb">B1 / Kirjutamine</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Kirjutamine — Письмо</h2><p>Учись создавать связные тексты на эстонском языке</p></div></div><p class="section-intro">У каждого задания есть цель, адресат, план и критерии самопроверки. Напиши свой вариант и сравни его с примером. Пример — ориентир, а не единственный правильный ответ.</p><div id="writingList"></div><div id="writingArea"></div></section>
+<section class="page" id="page-opinion"><div class="breadcrumb">B1 / Arvamuse avaldamine</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Выражение мнения</h2><p>Аргументы, причины, примеры и уважительное несогласие</p></div></div><div id="opinionList"></div></section>
+<section class="page" id="page-tests"><div class="breadcrumb">B1 / Проверка знаний</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Тестирование B1</h2><p>Проверяй знания после изучения соответствующих тем</p></div></div><div class="notice">Для перехода к следующему тесту нужно набрать минимум 80%. Если результат ниже, тест можно повторить.</div><div id="testList"></div><div id="testArea"></div></section>
+<section class="page" id="page-progress"><div class="breadcrumb">B1 / Мой прогресс</div><button class="back-home" onclick="showPage('home')">← Назад к началу B1</button><div class="section-heading"><div><h2>Мой прогресс</h2><p>Результаты твоего обучения</p></div></div><div class="progress-card"><div class="progress-top"><strong>Общий прогресс</strong><span id="progressPercent">0%</span></div><div class="progress-track"><div class="progress-fill" id="progressBar"></div></div></div><div class="stats"><div class="stat"><div class="stat-number" id="progressLessons">0</div><div class="stat-label">Уроков завершено</div></div><div class="stat"><div class="stat-number" id="progressTests">0/10</div><div class="stat-label">Тестов завершено</div></div><div class="stat"><div class="stat-number" id="progressWords">0</div><div class="stat-label">Слов изучено</div></div></div><div class="stats-extra"><div class="stat"><div class="stat-number" id="progressReading">0/6</div><div class="stat-label">Текстов прочитано</div></div><div class="stat"><div class="stat-number" id="progressWriting">0/6</div><div class="stat-label">Письменных заданий</div></div></div><div class="section-heading"><div><h2>Результаты тестов</h2><p>Твои лучшие результаты</p></div></div><div class="lesson-list" id="progressTestList"></div><div class="notice">Гостевой прогресс хранится до закрытия вкладки. Для постоянного аккаунта понадобится отдельная система регистрации и базы данных.</div><button class="secondary-btn" onclick="resetProgress()">Сбросить весь прогресс</button></section>
+</main>
+
+<div class="vocab-confirm-overlay" id="b1VocabConfirm" style="display:none;position:fixed;inset:0;background:#10271e99;z-index:60;align-items:center;justify-content:center;padding:20px"><div role="dialog" aria-modal="true" aria-labelledby="b1VocabTitle" style="background:var(--cream);max-width:430px;width:100%;padding:26px;border-radius:20px;box-shadow:0 20px 60px #0003"><div style="font-size:28px;margin-bottom:10px">📚</div><h3 id="b1VocabTitle" style="color:var(--green);margin:0 0 10px">Ты уверена?</h3><p id="b1VocabMessage" style="color:var(--muted);line-height:1.6"></p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button class="secondary-btn" onclick="closeVocabConfirm()">Продолжить учить</button><button class="primary-btn" onclick="closeVocabConfirm();startVocabQuiz()">Всё равно пройти</button></div></div></div>
+<script>
+const STORAGE_KEY = "eestiB1Progress";
+const defaultProgress = () => ({completedLessons:[],learnedWords:[],completedPractice:[],completedPracticeTopics:[],completedTests:[],bestScores:{},unlockedTest:1,completedReading:[],completedWriting:[]});
+function loadProgress(){try{return {...defaultProgress(),...(JSON.parse(sessionStorage.getItem(STORAGE_KEY))||{})}}catch{return defaultProgress()}}
+let progress=loadProgress();
+function saveProgress(){sessionStorage.setItem(STORAGE_KEY,JSON.stringify(progress));updateProgress()}
+function toggleMenu(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));let el=document.getElementById('page-'+name);if(!el)return;el.classList.add('active');document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.page===name));document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});if(name==='reading')renderReadingList();if(name==='writing')renderWritingList();if(name==='opinion')renderOpinion();if(name==='tests')renderTestList();if(name==='progress')renderProgressTests()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')}});
+
+const lessons = [
+{title:'Человек, характер и отношения',description:'Описываем личность, эмоции, качества и отношения между людьми.',content:`<h3>Описываем характер</h3><p>Для описания человека используй не только прилагательные, но и конструкции, которые объясняют поведение.</p><div class="example"><b>Ta on usaldusväärne ja peab alati oma lubadustest kinni.</b> — Он/она надёжный человек и всегда держит обещания.</div><div class="example"><b>Ta kipub otsuseid liiga kiiresti tegema.</b> — Он/она склонен(на) принимать решения слишком быстро.</div><h3>Полезные конструкции</h3><div class="example">Minu meelest… — По-моему… · Ta saab teistega hästi läbi. — Он/она хорошо ладит с другими.</div><div class="example">Meil on palju ühist. — У нас много общего. · Me ei saa alati üksteisest aru. — Мы не всегда понимаем друг друга.</div><h3>Как сделать описание точнее</h3><p>Добавляй причину или пример: <b>Ta on kannatlik, sest kuulab teisi rahulikult.</b> — Он/она терпелив(а), потому что спокойно выслушивает других.</p>`},
+{title:'Образование и обучение',description:'Рассказываем об учебном опыте, целях и способах обучения.',content:`<h3>Говорим об обучении</h3><div class="example"><b>Olen sellel erialal õppinud juba kaks aastat.</b> — Я учусь по этой специальности уже два года.</div><div class="example"><b>Mul on plaan järgmisel aastal edasi õppida.</b> — Я планирую продолжить обучение в следующем году.</div><h3>Полезная лексика</h3><p>õppeaine — учебный предмет; õppekava — учебная программа; teadmised — знания; oskus — навык; eesmärk — цель; eksamit sooritama — сдавать экзамен.</p><h3>Объясняем причину</h3><div class="example"><b>Valisin selle kursuse, kuna tahan oma keeleoskust parandada.</b> — Я выбрал(а) этот курс, поскольку хочу улучшить знание языка.</div>`},
+{title:'Работа и профессиональная жизнь',description:'Профессии, обязанности, опыт, поиск работы и собеседование.',content:`<h3>Опыт и обязанности</h3><div class="example"><b>Minu peamised tööülesanded on klientidega suhtlemine ja dokumentide koostamine.</b> — Мои основные обязанности — общение с клиентами и составление документов.</div><div class="example"><b>Mul on varasem töökogemus teenindusvaldkonnas.</b> — У меня есть предыдущий опыт работы в сфере обслуживания.</div><h3>На собеседовании</h3><p>töökuulutus — объявление о работе; kandideerima — подавать заявку; töövestlus — собеседование; palgatingimused — условия оплаты; osalise tööajaga — на неполный рабочий день.</p><div class="example"><b>Millised on selle ametikoha peamised nõuded?</b> — Каковы основные требования к этой должности?</div>`},
+{title:'Здоровье и образ жизни',description:'Объясняем самочувствие, привычки и рекомендации.',content:`<h3>Говорим о самочувствии</h3><div class="example"><b>Viimasel ajal olen tavalisest kiiremini väsinud.</b> — В последнее время я устаю быстрее обычного.</div><div class="example"><b>Arst soovitas mul rohkem puhata.</b> — Врач посоветовал мне больше отдыхать.</div><h3>Советы и рекомендации</h3><div class="example">Soovitan sul regulaarselt liikuda. — Советую тебе регулярно двигаться.</div><div class="example">Tuleks piisavalt magada. — Следовало бы достаточно спать.</div><p>Обрати внимание: <b>soovitama + kellel/mida teha</b> и безличные конструкции с <b>tuleks</b> помогают давать советы.</p>`},
+{title:'Общество и повседневные проблемы',description:'Обсуждаем общественные услуги, правила и жизненные ситуации.',content:`<h3>Описываем проблему</h3><div class="example"><b>Ühistransport hilines, mistõttu jäin kohtumisele hiljaks.</b> — Общественный транспорт опоздал, поэтому я опоздал(а) на встречу.</div><div class="example"><b>Soovin esitada kaebuse, sest teenus ei vastanud ootustele.</b> — Я хочу подать жалобу, потому что услуга не оправдала ожиданий.</div><h3>Выражения</h3><p>avalik teenus — общественная услуга; taotlus — заявление; kaebus — жалоба; eeskiri — правило; kohustus — обязанность; õigus — право.</p>`},
+{title:'Путешествия и транспорт',description:'Рассказываем о поездках, впечатлениях и непредвиденных ситуациях.',content:`<h3>Планируем поездку</h3><div class="example"><b>Enne reisi tasub kontrollida, kas majutus on kinnitatud.</b> — Перед поездкой стоит проверить, подтверждено ли жильё.</div><div class="example"><b>Meie lend tühistati halva ilma tõttu.</b> — Наш рейс отменили из-за плохой погоды.</div><h3>Сложные ситуации</h3><p>ümberistumine — пересадка; hilinemine — задержка; tühistamine — отмена; tagasimakse — возврат денег; pagas — багаж; sihtkoht — пункт назначения.</p>`},
+{title:'Природа и окружающая среда',description:'Обсуждаем экологические проблемы и возможные решения.',content:`<h3>Экологические темы</h3><div class="example"><b>Plastiku kasutamist tuleks vähendada, et loodust paremini kaitsta.</b> — Использование пластика следовало бы сократить, чтобы лучше защищать природу.</div><div class="example"><b>Taastuvenergia aitab vähendada sõltuvust fossiilkütustest.</b> — Возобновляемая энергия помогает уменьшить зависимость от ископаемого топлива.</div><h3>Полезные слова</h3><p>keskkonnakaitse — охрана окружающей среды; jäätmed — отходы; taaskasutus — повторное использование; kliimamuutus — изменение климата; taastuvenergia — возобновляемая энергия.</p>`},
+{title:'Культура, медиа и информация',description:'Обсуждаем фильмы, книги, новости и достоверность информации.',content:`<h3>Оцениваем материалы</h3><div class="example"><b>Artikkel käsitleb noorte mõju ühiskonnale.</b> — Статья рассматривает влияние молодёжи на общество.</div><div class="example"><b>Enne jagamist kontrollin, kas allikas on usaldusväärne.</b> — Перед публикацией я проверяю, надёжен ли источник.</div><p>käsitlema — рассматривать тему; allikas — источник; usaldusväärne — надёжный; arvustus — рецензия; vaatenurk — точка зрения.</p>`},
+{title:'Технологии и цифровая жизнь',description:'Говорим о технологиях, преимуществах, рисках и цифровых навыках.',content:`<h3>Преимущества и недостатки</h3><div class="example"><b>Tehnoloogia muudab suhtlemise kiiremaks, kuid võib vähendada silmast silma kohtumisi.</b> — Технологии ускоряют общение, но могут уменьшить количество личных встреч.</div><p>andmekaitse — защита данных; privaatsus — конфиденциальность; kasutajakonto — учётная запись; tarkvarauuendus — обновление программного обеспечения; võrguturvalisus — безопасность сети.</p>`},
+{title:'Деньги, покупки и потребление',description:'Сравниваем предложения, обсуждаем расходы и финансовые решения.',content:`<h3>Покупки и расходы</h3><div class="example"><b>Enne ostu sooritamist võrdlesin mitme poe hindu.</b> — Перед покупкой я сравнил(а) цены нескольких магазинов.</div><div class="example"><b>Toote hind sisaldab käibemaksu.</b> — Цена товара включает НДС.</div><p>eelarve — бюджет; väljaminek — расход; sissetulek — доход; järelmaks — рассрочка; soodustus — скидка; tarbija — потребитель.</p>`},
+{title:'Общение и решение конфликтов',description:'Вежливо объясняем проблему, договариваемся и ищем компромисс.',content:`<h3>Вежливое несогласие</h3><div class="example"><b>Ma saan sinu seisukohast aru, kuid näen seda veidi teisiti.</b> — Я понимаю твою точку зрения, но вижу это немного иначе.</div><div class="example"><b>Kas leiaksime mõlemale sobiva lahenduse?</b> — Можем ли мы найти решение, подходящее обоим?</div><p>seisukoht — позиция; kompromiss — компромисс; arusaamatus — недоразумение; lahendus — решение; kokku leppima — договариваться.</p>`},
+{title:'События, опыт и воспоминания',description:'Строим последовательный рассказ о прошлом и личном опыте.',content:`<h3>Связный рассказ</h3><div class="example"><b>Alguses tundus olukord keeruline, kuid hiljem sain aru, mida teha.</b> — Сначала ситуация казалась сложной, но позже я понял(а), что делать.</div><div class="example"><b>See kogemus õpetas mulle kannatlikkust.</b> — Этот опыт научил меня терпению.</div><p>kogemus — опыт; mälestus — воспоминание; sündmus — событие; tagajärg — последствие; õppetund — урок, вывод из опыта.</p>`},
+{title:'Эстония и эстонская культура',description:'Говорим о традициях, регионах, культурной жизни и обществе Эстонии.',content:`<h3>Культурная жизнь</h3><div class="example"><b>Eestis on oluline roll nii laulupeol kui ka kohalikel rahvatraditsioonidel.</b> — В Эстонии важную роль играют и праздник песни, и местные народные традиции.</div><p>pärand — наследие; rahvatraditsioon — народная традиция; piirkond — регион; kodukoht — родное место; kultuurisündmus — культурное событие.</p>`},
+{title:'Сложные предложения и связующие слова',description:'Соединяем идеи, выражаем причину, уступку, условие и результат.',content:`<h3>Причина и результат</h3><div class="example"><b>Kuna buss ei tulnud õigel ajal, pidin takso võtma.</b> — Поскольку автобус не пришёл вовремя, мне пришлось взять такси.</div><div class="example"><b>Olin väsinud, seetõttu läksin varem magama.</b> — Я устал(а), поэтому лёг/легла спать раньше.</div><h3>Уступка и условие</h3><div class="example"><b>Kuigi ilm oli halb, läksime siiski jalutama.</b> — Хотя погода была плохой, мы всё же пошли гулять.</div><div class="example"><b>Kui mul oleks rohkem aega, õpiksin iga päev.</b> — Если бы у меня было больше времени, я бы учился/училась каждый день.</div><p>Связки: kuna, sest, seetõttu, sellepärast, kuigi, ehkki, juhul kui, tingimusel et.</p>`},
+{title:'Порядок слов и структура предложения',description:'Осваиваем порядок слов, инверсию и выделение новой информации.',content:`<h3>Базовый порядок слов</h3><p>В нейтральном эстонском предложении часто используется порядок подлежащее + сказуемое + остальные члены, но порядок меняется в зависимости от темы и фокуса.</p><div class="example"><b>Õpilased arutasid eile uut projekti.</b> — Ученики вчера обсуждали новый проект.</div><div class="example"><b>Eile arutasid õpilased uut projekti.</b> — Вчера ученики обсуждали новый проект.</div><h3>В придаточном предложении</h3><div class="example"><b>Ma tean, et ta tuleb homme.</b> — Я знаю, что он/она придёт завтра.</div><div class="example"><b>Kui mul on aega, lähen raamatukokku.</b> — Если у меня будет время, я пойду в библиотеку.</div><div class="warning">Не переноси русский порядок слов механически. В эстонском важно учитывать тип предложения и коммуникативный акцент.</div>`},
+{title:'MA-infinitiiv и его формы',description:'Подробно изучаем -ma, -mas, -mast, -mata и -maks.',content:`<h3>Что такое MA-infinitiiv?</h3><p>Это форма глагола на <b>-ma</b>, которая используется после ряда глаголов движения, начала, прекращения и в некоторых устойчивых конструкциях.</p><div class="example"><b>Ma lähen õppima.</b> — Я иду учиться.</div><h3>Основные формы MA-инфинитива</h3><div class="table-wrap"><table><tr><th>Форма</th><th>Пример</th><th>Значение</th></tr><tr><td>-ma</td><td>õppima</td><td>идти/начинать учиться</td></tr><tr><td>-mas</td><td>õppimas</td><td>быть занятым действием</td></tr><tr><td>-mast</td><td>õppimast</td><td>прекращать/возвращаться от действия</td></tr><tr><td>-mata</td><td>õppimata</td><td>не сделав, без выполнения</td></tr><tr><td>-maks</td><td>õppimaks</td><td>для того чтобы учиться; более книжная форма</td></tr></table></div><div class="example"><b>Ta tuli mind aitama.</b> — Он/она пришёл(ла) помочь мне.</div><div class="example"><b>Ta on praegu ujumas.</b> — Он/она сейчас плавает (находится плавать).</div><div class="example"><b>Ära lahku küsimata.</b> — Не уходи, не спросив.</div><div class="warning">Не каждый глагол свободно сочетается со всеми формами. Выбор зависит от управляющего глагола и значения конструкции.</div>`},
+{title:'DA-infinitiiv и выбор инфинитива',description:'Когда использовать -da/-ta/-a и чем эта форма отличается от MA-инфинитива.',content:`<h3>DA-infinitiiv</h3><p>DA-инфинитив — словарная инфинитивная форма, часто используется после глаголов желания, умения, необходимости и в роли дополнения.</p><div class="example"><b>Ma tahan õppida.</b> — Я хочу учиться.</div><div class="example"><b>Ta oskab hästi ujuda.</b> — Он/она хорошо умеет плавать.</div><h3>Сравни</h3><div class="example"><b>Ma lähen ujuma.</b> — Я иду плавать (направление/цель).</div><div class="example"><b>Ma tahan ujuda.</b> — Я хочу плавать (желание).</div><p>Форма DA-инфинитива бывает на -da, -ta или -a: kirjutada, õppida, süüa. Её нельзя выбирать только по русскому переводу — нужно учитывать конструкцию.</p>`},
+{title:'-mine: отглагольные существительные',description:'Образуем существительные от глаголов и используем их в предложениях.',content:`<h3>Что такое -mine?</h3><p>С помощью окончания <b>-mine</b> от глагола образуется существительное, обозначающее действие или процесс.</p><div class="example">õppima → õppimine — учиться → обучение</div><div class="example">lugema → lugemine — читать → чтение</div><div class="example">otsustama → otsustamine — решать → принятие решения</div><h3>Использование в предложении</h3><div class="example"><b>Eesti keele õppimine nõuab järjepidevust.</b> — Изучение эстонского требует последовательности.</div><div class="example"><b>Raamatute lugemine arendab sõnavara.</b> — Чтение книг развивает словарный запас.</div><p>Формы на -mine склоняются как существительные: õppimine, õppimise, õppimist.</p>`},
+{title:'Глагольное управление — rektsioon',description:'Учимся запоминать, какой падеж требует конкретный глагол.',content:`<h3>Что такое rektsioon?</h3><p>Некоторые глаголы требуют после себя определённый падеж. Его нельзя всегда предсказать по русскому переводу.</p><div class="example"><b>Ma ootan bussi.</b> — Я жду автобус. (osastav)</div><div class="example"><b>Ma usun sind.</b> — Я верю тебе. (osastav)</div><div class="example"><b>Ma mõtlen sellele probleemile.</b> — Я думаю об этой проблеме. (alaleütlev)</div><div class="example"><b>Ma loobusin sellest plaanist.</b> — Я отказался/отказалась от этого плана. (seestütlev)</div><h3>Как учить управление</h3><p>Запоминай глагол вместе с вопросом и примером: <b>huvituma millest?</b> — интересоваться чем-либо; <b>keskenduma millele?</b> — сосредоточиться на чём-либо.</p>`},
+{title:'Tingiv kõneviis — условное наклонение',description:'Выражаем желания, вежливые просьбы, предположения и условия.',content:`<h3>Условное наклонение</h3><p>Используется для нереальных/предполагаемых ситуаций, желаний и вежливых формулировок.</p><div class="example"><b>Ma tuleksin hea meelega.</b> — Я бы с удовольствием пришёл/пришла.</div><div class="example"><b>Kui mul oleks aega, läheksin sinuga kaasa.</b> — Если бы у меня было время, я бы пошёл/пошла с тобой.</div><div class="example"><b>Kas sa saaksid mind aidata?</b> — Не мог(ла) бы ты мне помочь?</div><p>Форма зависит от лица и глагола. В условных предложениях обращай внимание на сочетание <b>kui</b> и условной формы.</p>`},
+{title:'Повелительное и косвенное наклонения',description:'Просим, советуем, передаём чужую информацию и слухи.',content:`<h3>Käskiv kõneviis</h3><div class="example"><b>Palun ava aken!</b> — Пожалуйста, открой окно!</div><div class="example"><b>Ärge hilinege!</b> — Не опаздывайте!</div><h3>Kaudne kõneviis</h3><p>Используется, когда говорящий передаёт информацию не как собственное непосредственное утверждение, а как услышанное или сообщённое.</p><div class="example"><b>Ta olevat juba koju läinud.</b> — Говорят, он/она уже ушёл/ушла домой.</div><div class="example"><b>Ilm pidavat homme parem olema.</b> — Говорят, завтра погода должна быть лучше.</div><div class="warning">Косвенное наклонение часто встречается в новостях и пересказах. Важно отличать его от обычного прошедшего времени.</div>`},
+{title:'Umbisikuline tegumood — безличный залог',description:'Говорим о действиях без указания конкретного исполнителя.',content:`<h3>Безличная форма</h3><p>Безличный залог используется, когда исполнитель не назван или не важен. Часто переводится на русский пассивной конструкцией или предложением с «кто-то/люди».</p><div class="example"><b>Siin räägitakse eesti keelt.</b> — Здесь говорят по-эстонски.</div><div class="example"><b>Uus kool avatakse sügisel.</b> — Новую школу откроют осенью.</div><div class="example"><b>Dokument tuleb enne tähtaega esitada.</b> — Документ нужно подать до срока.</div><p>Сравни личную форму <b>Õpetaja kontrollib tööd</b> и безличную <b>Tööd kontrollitakse</b>.</p>`},
+{title:'Причастия и сложные формы',description:'Разбираем -nud, -tud, -v и -tav в контексте.',content:`<h3>Причастные формы</h3><div class="example"><b>õppinud õpilane</b> — ученик, который учился / обученный опытом</div><div class="example"><b>avatud uks</b> — открытая дверь</div><div class="example"><b>jooksev vesi</b> — текущая вода</div><div class="example"><b>lahendatav ülesanne</b> — задача, которую можно решить / решаемая задача</div><p>Формы могут выступать как определения и помогают делать речь компактнее. Значение зависит от основы глагола и контекста.</p>`},
+{title:'Степени сравнения и усиление значения',description:'Сравниваем качества, выделяем исключительность и смягчаем оценки.',content:`<h3>Сравнительная степень</h3><div class="example">kiire — быстрый → kiirem — быстрее; huvitav — интересный → huvitavam — интереснее.</div><h3>Превосходная степень</h3><div class="example"><b>See on kõige olulisem küsimus.</b> — Это самый важный вопрос.</div><p>Нерегулярные формы: hea → parem → kõige parem; halb → halvem → kõige halvem; väike → väiksem → kõige väiksem; suur → suurem → kõige suurem.</p><p>Для точности используй võrdlus: palju parem — намного лучше; veidi kallim — немного дороже; peaaegu sama suur — почти такого же размера.</p>`},
+{title:'Все 14 падежей: обзор системы',description:'Понимаем логику падежей и различаем основные группы.',content:`<h3>Зачем нужны падежи?</h3><p>Падеж показывает роль слова в предложении, направление, местоположение, принадлежность, количество и другие отношения. В эстонском языке 14 падежей.</p><div class="table-wrap"><table><tr><th>Падеж</th><th>Основной вопрос/значение</th></tr><tr><td>Nimetav</td><td>кто? что? — основная форма</td></tr><tr><td>Omastav</td><td>чей? кого? чего? — родительная форма</td></tr><tr><td>Osastav</td><td>кого? что? — частичное/неполное действие и другие функции</td></tr><tr><td>Sisseütlev</td><td>куда? внутрь</td></tr><tr><td>Seesütlev</td><td>где? внутри</td></tr><tr><td>Seestütlev</td><td>откуда? изнутри</td></tr><tr><td>Alaleütlev</td><td>куда? на/к поверхности или адресату</td></tr><tr><td>Alalütlev</td><td>где? на/у; также у кого есть</td></tr><tr><td>Alaltütlev</td><td>откуда? с/от</td></tr><tr><td>Saav</td><td>кем? чем? во что/в качестве кого</td></tr><tr><td>Rajav</td><td>до какого предела?</td></tr><tr><td>Olev</td><td>кем? в каком качестве?</td></tr><tr><td>Ilmaütlev</td><td>без чего?</td></tr><tr><td>Kaasaütlev</td><td>с кем? с чем?</td></tr></table></div><div class="warning">Вопросы помогают ориентироваться, но не заменяют понимание употребления: один падеж может выполнять несколько функций.</div>`},
+{title:'Nimetav — именительный падеж',description:'Основная словарная форма и подлежащее предложения.',content:`<h3>Функция</h3><p><b>Nimetav</b> — основная форма слова, в которой обычно приводятся существительные в словаре. Часто обозначает подлежащее и используется в названиях.</p><div class="example"><b>Õpilane loeb raamatut.</b> — Ученик читает книгу.</div><div class="example"><b>See maja on vana.</b> — Этот дом старый.</div><h3>Единственное и множественное число</h3><p>Номинатив единственного числа — словарная форма; множественное число часто имеет окончание <b>-d</b>, но образование основы нужно изучать вместе с типом слова.</p><div class="example">õpilane — õpilased; raamat — raamatud; suur maja — suured majad.</div><h3>Важно</h3><p>Не путай форму подлежащего с формой объекта: <b>Õpilane loeb raamatut</b> — слово raamatut стоит в osastav.</p>`},
+{title:'Omastav — родительный падеж',description:'Принадлежность, основы слов и образование других форм.',content:`<h3>Основные функции</h3><p><b>Omastav</b> часто выражает принадлежность и служит важной основой для образования других падежных форм.</p><div class="example"><b>See on minu venna auto.</b> — Это машина моего брата.</div><div class="example"><b>Õpilase raamat on laual.</b> — Книга ученика на столе.</div><h3>Как образуется?</h3><p>Форма зависит от типа слова и может отличаться от словарной формы. Её важно запоминать вместе с Nimetav.</p><div class="example">raamat — raamatu; inimene — inimese; õpilane — õpilase; tuba — toa.</div><h3>Использование как основы</h3><p>Многие формы образуются от omastav: raamatu + s → raamatus; raamatu + st → raamatust.</p>`},
+{title:'Osastav — частичный падеж',description:'Объект действия, количество, отрицание и незавершённость.',content:`<h3>Когда используется?</h3><p><b>Osastav</b> — один из самых важных и сложных падежей. Он часто обозначает частичный объект, неопределённое количество, объект при отрицании и некоторые глагольные дополнения.</p><div class="example"><b>Ma loen raamatut.</b> — Я читаю книгу (процесс/не весь объект).</div><div class="example"><b>Ma ostsin kolm õuna.</b> — Я купил(а) три яблока.</div><div class="example"><b>Ma ei näe bussi.</b> — Я не вижу автобус.</div><h3>Сравни</h3><div class="example">Ma loen raamatu läbi. — Я прочитаю книгу целиком.</div><div class="example">Ma loen raamatut. — Я читаю книгу.</div><div class="warning">Выбор объекта в эстонском зависит от значения, завершённости, отрицания и управления глагола. Не переводите русский винительный падеж механически.</div>`},
+{title:'Sisseütlev — внутренний направительный',description:'Показываем движение внутрь или попадание в место.',content:`<h3>Вопрос</h3><p><b>Kuhu?</b> — Куда? Внутрь, в какое-либо место.</p><div class="example"><b>Ma lähen majja.</b> — Я иду в дом.</div><div class="example"><b>Ta pani raamatu kotti.</b> — Он/она положил(а) книгу в сумку.</div><h3>Формы</h3><p>Часто встречаются окончания <b>-sse</b> и короткие формы, например majja, kooli, poodi. Короткую форму нужно учить для конкретного слова.</p><div class="example">maja → majja; tuba → tuppa; kott → kotti; kool → kooli.</div>`},
+{title:'Seesütlev — внутренний местный',description:'Обозначаем нахождение внутри места или предмета.',content:`<h3>Вопрос</h3><p><b>Kus?</b> — Где? Внутри чего-либо.</p><div class="example"><b>Lapsed mängivad hoovis.</b> — Дети играют во дворе.</div><div class="example"><b>Võtmed on kotis.</b> — Ключи в сумке.</div><p>Частое окончание — <b>-s</b>, присоединяемое к основе omastav: maja → majas; kool → koolis; kott → kotis.</p><h3>Не путай</h3><p><b>koolis</b> — в школе (где?), <b>kooli</b> — в школу (куда?).</p>`},
+{title:'Seestütlev — внутренний исходный',description:'Обозначаем движение изнутри и источник.',content:`<h3>Вопрос</h3><p><b>Kust?</b> — Откуда? Изнутри чего-либо.</p><div class="example"><b>Ma tulen poest.</b> — Я иду из магазина.</div><div class="example"><b>Ta võttis raamatu kotist.</b> — Он/она достал(а) книгу из сумки.</div><p>Частое окончание — <b>-st</b>: maja → majast; kool → koolist; kott → kotist.</p><h3>Важное различие</h3><p>Эта форма также может появляться в глагольном управлении: <b>huvituma millest?</b> — интересоваться чем?</p>`},
+{title:'Alaleütlev — внешний направительный',description:'Направление на поверхность, к человеку или адресату.',content:`<h3>Вопрос</h3><p><b>Kellele? Millele? Kuhu?</b> — Кому? Чему? Куда/на что?</p><div class="example"><b>Panin raamatu lauale.</b> — Я положил(а) книгу на стол.</div><div class="example"><b>Kirjutasin sõbrale.</b> — Я написал(а) другу.</div><div class="example"><b>Ma helistan emale.</b> — Я звоню маме.</div><p>Частое окончание — <b>-le</b>: laud → lauale; sõber → sõbrale; ema → emale.</p>`},
+{title:'Alalütlev — внешний местный',description:'Местонахождение на поверхности, у кого-либо и обладание.',content:`<h3>Вопросы</h3><p><b>Kellel? Millel? Kus?</b> — У кого? На чём? Где?</p><div class="example"><b>Raamat on laual.</b> — Книга на столе.</div><div class="example"><b>Mul on uus telefon.</b> — У меня есть новый телефон.</div><div class="example"><b>Tal on palju kogemusi.</b> — У него/неё много опыта.</div><p>Частое окончание — <b>-l</b>: laud → laual; sõber → sõbral. Конструкция <b>mul on</b> буквально строится как «у меня есть».</p>`},
+{title:'Alaltütlev — внешний исходный',description:'Движение с поверхности, от человека или источника.',content:`<h3>Вопросы</h3><p><b>Kellelt? Millelt? Kust?</b> — От кого? С чего? Откуда?</p><div class="example"><b>Võtsin raamatu laualt.</b> — Я взял(а) книгу со стола.</div><div class="example"><b>Sain sõbralt kirja.</b> — Я получил(а) письмо от друга.</div><div class="example"><b>Küsisin õpetajalt nõu.</b> — Я попросил(а) совета у учителя.</div><p>Частое окончание — <b>-lt</b>: laud → laualt; sõber → sõbralt.</p>`},
+{title:'Saav — становительный падеж',description:'Показываем, кем или чем становится предмет или человек.',content:`<h3>Вопрос</h3><p><b>Kelleks? Milleks?</b> — Кем? Чем? Во что превращается?</p><div class="example"><b>Ta õppis arstiks.</b> — Он/она выучился/выучилась на врача.</div><div class="example"><b>Vesi muutus jääks.</b> — Вода превратилась в лёд.</div><div class="example"><b>Valisin selle oma eesmärgiks.</b> — Я выбрал(а) это своей целью.</div><p>Окончание — <b>-ks</b>: arst → arstiks; õpetaja → õpetajaks; sõber → sõbraks.</p>`},
+{title:'Rajav — предельный падеж',description:'Обозначаем предел времени, пространства или количества.',content:`<h3>Вопрос</h3><p><b>Milleni? Kuhu maani?</b> — До чего? До какого предела?</p><div class="example"><b>Ootan sind kella kuueni.</b> — Я жду тебя до шести часов.</div><div class="example"><b>Jalutasime metsani.</b> — Мы гуляли до леса.</div><div class="example"><b>Loe kümneni.</b> — Считай до десяти.</div><p>Окончание — <b>-ni</b>: hommik → hommikuni; õhtu → õhtuni; mets → metsani.</p>`},
+{title:'Olev — бытийный падеж',description:'Описываем временную роль, состояние или положение в качестве кого-либо.',content:`<h3>Вопрос</h3><p><b>Kellena? Millena?</b> — Кем? В качестве кого/чего?</p><div class="example"><b>Ta töötab õpetajana.</b> — Он/она работает учителем.</div><div class="example"><b>Ma tulin külalisena.</b> — Я пришёл/пришла в качестве гостя.</div><div class="example"><b>See sobib näiteks.</b> — Это подходит в качестве примера.</div><p>Окончание — <b>-na</b>: õpetaja → õpetajana; sõber → sõbrana; külaline → külalisena.</p>`},
+{title:'Ilmaütlev — падеж отсутствия',description:'Выражаем отсутствие человека или предмета.',content:`<h3>Вопрос</h3><p><b>Milleta? Kelleta?</b> — Без чего? Без кого?</p><div class="example"><b>Ma ei saa kohvita hommikut alustada.</b> — Я не могу начать утро без кофе.</div><div class="example"><b>Ta lahkus sõbrata.</b> — Он/она ушёл/ушла без друга.</div><div class="example"><b>Olen telefonita täiesti rahulik.</b> — Без телефона я совершенно спокоен/спокойна.</div><p>Частое окончание — <b>-ta</b>: kohv → kohvita; sõber → sõbrata; raha → rahata.</p>`},
+{title:'Kaasaütlev — совместный падеж',description:'Выражаем совместность, инструмент или сопровождение.',content:`<h3>Вопрос</h3><p><b>Kellega? Millega?</b> — С кем? С чем? При помощи чего?</p><div class="example"><b>Lähen sõbraga kinno.</b> — Я иду с другом в кино.</div><div class="example"><b>Kirjutan pliiatsiga.</b> — Я пишу карандашом.</div><div class="example"><b>Ta tuli oma perega.</b> — Он/она пришёл/пришла со своей семьёй.</div><p>Частое окончание — <b>-ga</b>: sõber → sõbraga; pliiats → pliiatsiga; pere → perega.</p>`},
+{title:'Сравнение похожих падежей',description:'Различаем куда, где, откуда; кому, у кого и от кого.',content:`<h3>Внутренние местные падежи</h3><div class="table-wrap"><table><tr><th>Куда?</th><th>Где?</th><th>Откуда?</th></tr><tr><td>majja — в дом</td><td>majas — в доме</td><td>majast — из дома</td></tr><tr><td>kooli — в школу</td><td>koolis — в школе</td><td>koolist — из школы</td></tr></table></div><h3>Внешние местные падежи</h3><div class="table-wrap"><table><tr><th>Куда/кому?</th><th>Где/у кого?</th><th>Откуда/от кого?</th></tr><tr><td>lauale — на стол</td><td>laual — на столе</td><td>laualt — со стола</td></tr><tr><td>sõbrale — другу</td><td>sõbral — у друга</td><td>sõbralt — от друга</td></tr></table></div><h3>Проверка смысла</h3><p>Сначала задай вопрос: движение к месту, нахождение или движение от места? Затем выбери нужную группу падежей.</p>`},
+{title:'Падежи в связном тексте',description:'Используем разные падежи в естественном рассказе.',content:`<h3>Прочитай текст</h3><div class="example"><b>Hommikul läksin sõbraga kohvikusse. Kohvikus kohtusime õpetajaga. Rääkisime reisist ja uuest koolist. Pärast võtsin laualt oma koti ning läksin koju.</b></div><p>Утром я пошёл/пошла с другом в кафе. В кафе мы встретили учителя. Мы говорили о поездке и новой школе. Потом я взял(а) со стола свою сумку и пошёл/пошла домой.</p><h3>Найди формы</h3><p>sõbraga — kaasaütlev; kohvikusse — sisseütlev; kohvikus — seesütlev; reisist — seestütlev; laualt — alaltütlev.</p><p>В этом уроке важно увидеть, как падежи работают вместе, а не только знать их окончания.</p>`}
+,{title:'Настоящее и простое прошедшее время',description:'Повторяем olevik и lihtminevik и учимся выбирать время в связном рассказе.',content:`<h3>Olevik — настоящее время</h3><p>Настоящее время описывает действие сейчас, регулярное действие или запланированное событие в будущем, если время понятно из контекста.</p><div class="example"><b>Õpin praegu eesti keelt.</b> — Сейчас я изучаю эстонский.</div><div class="example"><b>Homme sõidan Tartusse.</b> — Завтра я поеду в Тарту.</div><h3>Lihtminevik — простое прошедшее</h3><p>Используется для событий, которые произошли в прошлом. Формы нужно учить по типам глаголов и основным формам.</p><div class="example"><b>Eile õppisin kaks tundi.</b> — Вчера я учился/училась два часа.</div><div class="example"><b>Me kohtusime eelmisel nädalal.</b> — Мы встретились на прошлой неделе.</div><h3>Отрицание</h3><div class="example"><b>Ma ei õppinud eile.</b> — Я вчера не учился/училась.</div><p>В отрицательном lihtminevik используется <b>ei + форма на -nud</b>: ei tulnud, ei kirjutanud, ei läinud.</p>`},
+{title:'Täisminevik — перфект',description:'Говорим о прошлом опыте и действиях, важных для настоящего момента.',content:`<h3>Как образуется?</h3><p>Täisminevik строится с формой глагола <b>olema</b> в настоящем времени и причастием на <b>-nud</b>.</p><div class="example">Ma olen õppinud. — Я учился/училась; у меня есть такой опыт.</div><div class="example">Ta on Eestis käinud. — Он/она бывал(а) в Эстонии.</div><div class="example">Me oleme selle raamatu läbi lugenud. — Мы прочитали эту книгу.</div><h3>Когда использовать?</h3><ul><li>Говорим о жизненном опыте без точного времени.</li><li>Прошлое действие имеет связь с настоящим.</li><li>Подчёркиваем результат к текущему моменту.</li></ul><h3>Отрицание</h3><div class="example"><b>Ma ei ole seda filmi näinud.</b> — Я не видел(а) этот фильм.</div><div class="warning">Если названо конкретное завершённое время, часто используется lihtminevik: Eile käisin kinos. — Вчера я ходил(а) в кино.</div>`},
+{title:'Enneminevik — предпрошедшее время',description:'Показываем, что одно действие произошло раньше другого события в прошлом.',content:`<h3>Как образуется?</h3><p>Enneminevik образуется с прошедшей формой <b>olema</b> (olin, olid, oli, olime, olite, olid) и причастием на <b>-nud</b>.</p><div class="example"><b>Kui ma koju jõudsin, oli ema juba süüa teinud.</b> — Когда я пришёл/пришла домой, мама уже приготовила еду.</div><div class="example"><b>Ta oli enne seda Tallinnas elanud.</b> — До этого он/она жил(а) в Таллине.</div><h3>Зачем нужно?</h3><p>Это время помогает выстроить порядок двух прошлых событий: сначала произошло более раннее действие, затем — другое действие в прошлом.</p><div class="example">Enne olin õppinud, seejärel tegin testi. — Сначала я позанимался/позанималась, затем сделал(а) тест.</div><h3>Отрицание</h3><div class="example"><b>Ma ei olnud seda varem kuulnud.</b> — Я не слышал(а) этого раньше.</div>`},
+{title:'Будущее время и способы говорить о планах',description:'Выражаем будущее через настоящее время и конструкции с hakkama и kavatsen.',content:`<h3>Отдельной формы будущего времени нет</h3><p>В эстонском языке будущее часто выражается настоящим временем, если есть слово времени или контекст.</p><div class="example"><b>Homme lähen arsti juurde.</b> — Завтра я пойду к врачу.</div><h3>Полезные конструкции</h3><div class="example"><b>Ma hakkan õppima.</b> — Я начну учиться.</div><div class="example"><b>Kavatsen järgmisel aastal reisida.</b> — Я намерен(а) путешествовать в следующем году.</div><div class="example"><b>Me plaanime kolida.</b> — Мы планируем переехать.</div><p><b>hakkama + MA-infinitiiv</b> подчёркивает начало действия; <b>kavatsema/plaanima + DA-infinitiiv</b> выражает намерение или план.</p><div class="warning">Не переводи английское will или русское буду автоматически отдельным словом. Выбери эстонскую конструкцию по смыслу.</div>`},
+{title:'Astmevaheldus — чередование ступеней',description:'Понимаем сильную и слабую ступень и замечаем изменения основы.',content:`<h3>Что такое astmevaheldus?</h3><p>В некоторых эстонских словах согласные или сочетания звуков меняются в разных формах слова. Это называется чередованием ступеней.</p><div class="table-wrap"><table><tr><th>Основная форма</th><th>Форма omastav</th><th>Изменение</th></tr><tr><td>lukk</td><td>luku</td><td>kk → k</td></tr><tr><td>kapp</td><td>kapi</td><td>pp → p</td></tr><tr><td>pank</td><td>panga</td><td>nk → ng</td></tr><tr><td>tuba</td><td>toa</td><td>изменение основы</td></tr><tr><td>õppima</td><td>õpin</td><td>pp → p</td></tr></table></div><h3>Как учить?</h3><p>Запоминай существительное минимум в формах nimetav, omastav и osastav, а глагол — вместе с основными формами. Не пытайся вывести все формы по одному универсальному правилу.</p><div class="warning">Чередование ступеней бывает количественным и качественным. В этом курсе сначала учимся распознавать частые модели, затем будем расширять их на примерах.</div>`},
+{title:'Множественное число и формы падежей',description:'Образуем множественное число и различаем omastav pluralis и osastav pluralis.',content:`<h3>Множественное число</h3><p>В именительном падеже множественное число часто имеет окончание <b>-d</b>: raamatud, õpilased, majad. Но основы в других падежах могут отличаться.</p><div class="example">raamat — raamatud — raamatute — raamatuid</div><div class="example">õpilane — õpilased — õpilaste — õpilasi</div><h3>Omastav множественного числа</h3><p>Используется, например, для выражения принадлежности или как основа для ряда форм.</p><div class="example"><b>Õpilaste raamatud on klassis.</b> — Книги учеников находятся в классе.</div><h3>Osastav множественного числа</h3><p>Форма часто используется с неопределённым количеством и некоторыми глаголами.</p><div class="example"><b>Ma tunnen siin palju inimesi.</b> — Я знаю здесь много людей.</div><div class="warning">Формы множественного osastav могут быть разными: inimesi, raamatuid, õpilasi. Их нужно изучать по типам слов и на примерах.</div>`},
+{title:'Местоимения и указательные слова',description:'Используем местоимения в падежах и избегаем повторов в тексте.',content:`<h3>Личные и указательные местоимения</h3><p>mina/ma — я; sina/sa — ты; tema/ta — он/она; meie/me — мы; teie/te — вы; nemad/nad — они.</p><div class="example">See on minu raamat. — Это моя книга.</div><div class="example">Ma rääkisin temaga. — Я говорил(а) с ним/ней.</div><div class="example">Ma ei tea sellest midagi. — Я ничего об этом не знаю.</div><h3>Изменение по падежам</h3><p>Местоимения тоже изменяются: mina → minu → mind; tema → tema → teda; see → selle → seda.</p><h3>Связность текста</h3><p>Используй <b>see, selline, niisugune, sama</b>, чтобы ссылаться на уже названные предметы и идеи.</p><div class="example"><b>See oli huvitav kogemus. Sellist võimalust ei teki sageli.</b> — Это был интересный опыт. Такая возможность появляется нечасто.</div>`},
+{title:'Склонение прилагательных и числительных',description:'Согласуем определения с существительными и правильно используем количество.',content:`<h3>Прилагательное и существительное</h3><p>Прилагательное обычно согласуется с существительным в числе и падеже.</p><div class="example">uus maja — новый дом; uue maja — нового дома; uues majas — в новом доме.</div><div class="example">huvitavad raamatud — интересные книги; huvitavates raamatutes — в интересных книгах.</div><h3>Числительные</h3><p>После числительных от двух и выше существительное часто употребляется в форме partitiiv singularis: kaks raamatut, kolm õuna, viis inimest.</p><div class="example"><b>Ostsin kolm uut raamatut.</b> — Я купил(а) три новые книги.</div><p>Обращай внимание, что числительное и прилагательное тоже могут менять форму в зависимости от конструкции: kahe raamatu hind — цена двух книг.</p>`}
+
+];
+
+const vocabulary = {
+"Характер и отношения":[["iseloom","характер"],["usaldusväärne","надёжный"],["kannatlik","терпеливый"],["enesekindel","уверенный в себе"],["tagasihoidlik","скромный"],["julge","смелый"],["hooliv","заботливый"],["aus","честный"],["isekas","эгоистичный"],["sõbralik","дружелюбный"],["arusaamatus","недоразумение"],["kokkulepe","договорённость"],["kompromiss","компромисс"],["seisukoht","позиция"],["suhtumine","отношение"],["lähedane","близкий"],["tuttav","знакомый"],["toetama","поддерживать"],["usaldama","доверять"],["andestama","прощать"],["solvuma","обижаться"],["tülitsema","ссориться"],["leppima","мириться/соглашаться"],["läbi saama","ладить"],["ühine","общий"]],
+"Образование и обучение":[["õppeaine","учебный предмет"],["õppekava","учебная программа"],["eriala","специальность"],["teadmised","знания"],["oskus","навык"],["eesmärk","цель"],["õppeasutus","учебное заведение"],["õppematerjal","учебный материал"],["õppemeetod","метод обучения"],["kodutöö","домашняя работа"],["tähtaeg","срок"],["hindamiskriteerium","критерий оценки"],["tulemus","результат"],["edenemine","продвижение"],["areng","развитие"],["keskenduma","сосредоточиться"],["omandama","усваивать/приобретать"],["kordama","повторять"],["järele jõudma","догонять"],["vaeva nägema","прилагать усилия"],["edukas","успешный"],["kohustuslik","обязательный"],["valikaine","предмет по выбору"],["lõputöö","выпускная работа"],["stipendium","стипендия"]],
+"Работа и карьера":[["töökuulutus","объявление о работе"],["kandideerima","подавать заявку"],["töövestlus","собеседование"],["töökogemus","опыт работы"],["tööülesanne","рабочая задача"],["ametikoht","должность"],["tööandja","работодатель"],["töötaja","работник"],["tööleping","трудовой договор"],["töökoormus","рабочая нагрузка"],["tööaeg","рабочее время"],["puhkus","отпуск"],["palk","зарплата"],["lisatasu","доплата"],["oskused","навыки"],["vastutus","ответственность"],["täitma","выполнять"],["korraldama","организовывать"],["juhtima","руководить"],["ettevõte","предприятие"],["ettevõtja","предприниматель"],["töötingimused","условия труда"],["osalise tööajaga","на неполный день"],["täistööajaga","на полный день"],["ametialane","профессиональный"]],
+"Здоровье и образ жизни":[["enesetunne","самочувствие"],["tervislik eluviis","здоровый образ жизни"],["taastuma","восстанавливаться"],["sümptom","симптом"],["ravima","лечить"],["ravi","лечение"],["retsept","рецепт"],["vastuvõtt","приём"],["tervisekontroll","медосмотр"],["toitumine","питание"],["tasakaalustatud","сбалансированный"],["liikumisharjumus","привычка двигаться"],["puhkamine","отдых"],["une kvaliteet","качество сна"],["vaimne tervis","психическое здоровье"],["füüsiline koormus","физическая нагрузка"],["ennetama","предотвращать"],["kaebus","жалоба"],["paranema","улучшаться/выздоравливать"],["halvenema","ухудшаться"],["kurnatud","изнурённый"],["allergia","аллергия"],["tervishoid","здравоохранение"],["kiirabi","скорая помощь"],["soovitus","рекомендация"]],
+"Общество и государство":[["ühiskond","общество"],["kodanik","гражданин"],["kodakondsus","гражданство"],["õigus","право"],["kohustus","обязанность"],["seadus","закон"],["määrus","постановление"],["avalik teenus","общественная услуга"],["omavalitsus","местное самоуправление"],["ametiasutus","государственное учреждение"],["taotlus","заявление"],["avaldus","обращение/заявление"],["allkiri","подпись"],["isikut tõendav dokument","документ, удостоверяющий личность"],["elukoht","место жительства"],["registreerima","регистрировать"],["esitama","подавать/представлять"],["kehtima","действовать (о документе/правиле)"],["kehtivusaeg","срок действия"],["menetlus","процедура/рассмотрение"],["otsus","решение"],["vastuväide","возражение"],["kaebus","жалоба"],["ettepanek","предложение"],["avalik","общественный/публичный"]],
+"Путешествия и транспорт":[["sihtkoht","место назначения"],["majutus","размещение"],["broneering","бронирование"],["väljumine","отправление"],["saabumine","прибытие"],["ümberistumine","пересадка"],["hilinemine","задержка"],["tühistamine","отмена"],["tagasimakse","возврат денег"],["reisikindlustus","страховка путешественника"],["vaatamisväärsus","достопримечательность"],["matk","поход/экскурсия"],["marsruut","маршрут"],["ühistransport","общественный транспорт"],["sõiduplaan","расписание движения"],["piletihind","стоимость билета"],["peatuma","останавливаться"],["suund","направление"],["liiklusummik","пробка"],["liikluskorraldus","организация движения"],["pardaleminek","посадка"],["käsipagas","ручная кладь"],["registreeritud pagas","зарегистрированный багаж"],["reisikorraldaja","туроператор"],["reisielamus","впечатление от поездки"]],
+"Природа и экология":[["keskkonnakaitse","охрана окружающей среды"],["kliimamuutus","изменение климата"],["taastuvenergia","возобновляемая энергия"],["fossiilkütus","ископаемое топливо"],["jäätmed","отходы"],["taaskasutus","повторное использование"],["prügi sorteerimine","сортировка мусора"],["loodusvara","природный ресурс"],["elurikkus","биоразнообразие"],["elupaik","среда обитания"],["ohustatud liik","исчезающий вид"],["saastatus","загрязнение"],["heitgaas","выхлопной газ"],["säästma","экономить/сберегать"],["tarbimine","потребление"],["keskkonnasõbralik","экологичный"],["looduskaitseala","заповедная территория"],["põud","засуха"],["üleujutus","наводнение"],["ilmastik","климатические условия"],["loodusnähtus","природное явление"],["metsaistutus","посадка леса"],["veekogu","водоём"],["rannik","побережье"],["saastama","загрязнять"]],
+"Культура и медиа":[["kultuuripärand","культурное наследие"],["rahvatraditsioon","народная традиция"],["etendus","представление"],["näitus","выставка"],["arvustus","рецензия"],["lavastus","постановка"],["kirjandusteos","литературное произведение"],["tegelaskuju","персонаж"],["süžee","сюжет"],["vaatenurk","точка зрения"],["uudistekanal","новостной канал"],["meediapädevus","медиаграмотность"],["allikas","источник"],["usaldusväärne","надёжный"],["kajastama","освещать (событие)"],["väitma","утверждать"],["ümber lükkama","опровергать"],["levitama","распространять"],["sisu","содержание"],["publik","публика"],["autor","автор"],["looming","творчество"],["festival","фестиваль"],["käsitlema","рассматривать тему"],["kajastus","освещение/отражение"]],
+"Технологии и интернет":[["andmekaitse","защита данных"],["privaatsus","конфиденциальность"],["kasutajakonto","учётная запись"],["tarkvarauuendus","обновление ПО"],["võrguturvalisus","безопасность сети"],["andmebaas","база данных"],["faililaiend","расширение файла"],["pilveteenus","облачный сервис"],["otsingumootor","поисковая система"],["veebileht","веб-страница"],["kasutajaliides","интерфейс пользователя"],["seadistused","настройки"],["ühilduvus","совместимость"],["tõrge","сбой"],["taaskäivitama","перезагружать"],["salvestama","сохранять"],["varukoopia","резервная копия"],["ligipääs","доступ"],["parool","пароль"],["andmeleke","утечка данных"],["tehisintellekt","искусственный интеллект"],["automatiseerimine","автоматизация"],["digitaalne jalajälg","цифровой след"],["võrgustik","сеть"],["rakendus","приложение"]],
+"Деньги и потребление":[["eelarve","бюджет"],["sissetulek","доход"],["väljaminek","расход"],["sääst","сбережение"],["laen","заём"],["intress","процент"],["järelmaks","рассрочка"],["käibemaks","НДС"],["arve","счёт"],["kviitung","чек/квитанция"],["tagatisraha","залог"],["soodustus","скидка"],["allahindlus","уценка/скидка"],["tarbija","потребитель"],["tarbimine","потребление"],["kaup","товар"],["teenus","услуга"],["kvaliteet","качество"],["garantii","гарантия"],["tagastama","возвращать"],["vahetama","обменивать"],["hind võrdlema","сравнивать цену"],["ostukorv","корзина покупок"],["makseviis","способ оплаты"],["kulukas","дорогостоящий"]],
+"Эмоции и состояния":[["pettumus","разочарование"],["kergendus","облегчение"],["uhkus","гордость"],["ärevus","тревога"],["ebakindlus","неуверенность"],["uudishimu","любопытство"],["kahetsus","сожаление"],["rahulolu","удовлетворение"],["hämmastus","удивление"],["häbi","стыд"],["entusiasm","энтузиазм"],["mure","беспокойство"],["igatsus","тоска"],["põnevus","волнение"],["solvunud","обиженный"],["pettunud","разочарованный"],["rõõmustama","радовать"],["ärrituma","раздражаться"],["muretsema","беспокоиться"],["julgustama","ободрять"],["rahunema","успокаиваться"],["üllatuma","удивляться"],["kaasa tundma","сочувствовать"],["tundma uhkust","гордиться"],["meeleolu","настроение"]],
+"Мнение и аргументация":[["arvamus","мнение"],["seisukoht","позиция"],["põhjendus","обоснование"],["argument","аргумент"],["näide","пример"],["järeldus","вывод"],["väide","утверждение"],["vastuväide","контраргумент"],["tõestama","доказывать"],["põhjendama","обосновывать"],["rõhutama","подчёркивать"],["väitma","утверждать"],["nõustuma","соглашаться"],["mitte nõustuma","не соглашаться"],["kahtlema","сомневаться"],["veenduma","убеждаться"],["järeldama","делать вывод"],["võrdlema","сравнивать"],["lisaks","кроме того"],["teisalt","с другой стороны"],["minu hinnangul","по моей оценке"],["üldiselt","в целом"],["eelkõige","прежде всего"],["siiski","всё же"],["seetõttu","поэтому"]],
+"Глаголы для B1":[["saavutama","достигать"],["võimaldama","позволять"],["takistama","мешать"],["soodustama","способствовать"],["mõjutama","влиять"],["kaasnema","сопровождаться"],["eeldama","предполагать/требовать"],["vältima","избегать"],["käsitlema","рассматривать"],["lahendama","решать"],["selgitama","объяснять"],["täpsustama","уточнять"],["järeldama","делать вывод"],["võrdlema","сравнивать"],["korraldama","организовывать"],["panustama","вкладывать усилия"],["toetuma","опираться на"],["sõltuma","зависеть"],["keelduma","отказываться"],["nõustuma","соглашаться"],["õnnestuma","удаваться"],["ebaõnnestuma","терпеть неудачу"],["säilitama","сохранять"],["muutuma","становиться/меняться"],["kujunema","формироваться"]],
+"Прилагательные B1":[["oluline","важный"],["oluline tegur","важный фактор"],["märkimisväärne","значительный"],["tõenäoline","вероятный"],["võimalik","возможный"],["võimatu","невозможный"],["sobiv","подходящий"],["ebasobiv","неподходящий"],["vajalik","необходимый"],["tarbetu","ненужный"],["põhjalik","подробный"],["pealiskaudne","поверхностный"],["keeruline","сложный"],["mitmekesine","разнообразный"],["järjepidev","последовательный"],["paindlik","гибкий"],["tõhus","эффективный"],["kasulik","полезный"],["kahjulik","вредный"],["usaldusväärne","надёжный"],["kättesaadav","доступный"],["kohalik","местный"],["rahvusvaheline","международный"],["igapäevane","повседневный"],["ajutine","временный"]],
+"Связки и наречия":[["seetõttu","поэтому"],["sellest hoolimata","несмотря на это"],["lisaks sellele","в дополнение к этому"],["teisalt","с другой стороны"],["seevastu","напротив"],["järelikult","следовательно"],["tõenäoliselt","вероятно"],["vähemalt","по крайней мере"],["peamiselt","главным образом"],["üldjuhul","как правило"],["esialgu","поначалу"],["lõppkokkuvõttes","в конечном итоге"],["samal ajal","в то же время"],["vaatamata sellele","несмотря на это"],["juhul kui","в случае если"],["ennekõike","прежде всего"],["muuhulgas","среди прочего"],["paraku","к сожалению"],["õnneks","к счастью"],["igatahes","в любом случае"],["seejärel","затем"],["ühtlasi","одновременно/к тому же"],["enamasti","в большинстве случаев"],["harjumuspäraselt","по привычке"],["järjest","подряд"]],
+"Устойчивые выражения":[["arvamust avaldama","высказывать мнение"],["tähelepanu pöörama","обращать внимание"],["osa võtma","принимать участие"],["huvi tundma","интересоваться"],["vastutust kandma","нести ответственность"],["otsusele jõudma","приходить к решению"],["kokku leppima","договариваться"],["ühisel arvamusel olema","быть единого мнения"],["mõju avaldama","оказывать влияние"],["eesmärki saavutama","достигать цели"],["vaeva nägema","прилагать усилия"],["kahtluse alla seadma","ставить под сомнение"],["ühendust võtma","связываться"],["arvesse võtma","принимать во внимание"],["kõne alla tulema","рассматриваться/быть возможным"],["läbi viima","проводить"],["ettepanekut tegema","делать предложение"],["vastust andma","давать ответ"],["piiri panema","устанавливать предел"],["selgeks tegema","прояснять"],["meelde tuletama","напоминать"],["kaasa aitama","способствовать"],["valmis olema","быть готовым"],["silma paistma","выделяться"],["rahul olema","быть довольным"]],
+"Город и жильё":[["elamurajoon","жилой район"],["korteriühistu","квартирное товарищество"],["üürihind","арендная плата"],["üürileping","договор аренды"],["kommunaalkulud","коммунальные расходы"],["remont","ремонт"],["renoveerima","реновировать"],["naabruskond","окрестности/район"],["ühiskondlik hoone","общественное здание"],["liikluskorraldus","организация движения"],["kergliiklustee","велопешеходная дорожка"],["parkimiskoht","парковочное место"],["haljasala","зелёная зона"],["linnavalitsus","городская управа"],["ehitusluba","разрешение на строительство"],["elamispind","жилплощадь"],["omanik","владелец"],["üürnik","арендатор"],["kolima","переезжать"],["sisustus","обстановка/меблировка"],["kodumasin","бытовой прибор"],["küttesüsteem","система отопления"],["veevarustus","водоснабжение"],["prügivedu","вывоз мусора"],["ühiskasutatav","общего пользования"]],
+"Природные явления и погода":[["sademed","осадки"],["õhuniiskus","влажность воздуха"],["õhurõhk","атмосферное давление"],["tuuleiil","порыв ветра"],["kuumalaine","волна жары"],["külmalaine","волна холода"],["äikesetorm","гроза/шторм"],["udu","туман"],["rahe","град"],["lumesadu","снегопад"],["sula","оттепель"],["jäätumine","обледенение"],["pinnas","почва"],["põhjavesi","подземная вода"],["rannikuala","прибрежная зона"],["metsatulekahju","лесной пожар"],["põud","засуха"],["üleujutus","наводнение"],["ilmastikuolud","погодные условия"],["ennustama","прогнозировать"],["mõõtma","измерять"],["temperatuurilangus","понижение температуры"],["temperatuuritõus","повышение температуры"],["looduskatastroof","стихийное бедствие"],["keskmine temperatuur","средняя температура"]],
+"Время и события":[["ajavahemik","промежуток времени"],["tähtaeg","срок"],["sündmus","событие"],["kokkusaamine","встреча"],["ettevalmistus","подготовка"],["tagajärg","последствие"],["põhjus","причина"],["eeldus","предпосылка"],["juhus","случай"],["kogemus","опыт"],["mälestus","воспоминание"],["õppetund","урок/вывод"],["algus","начало"],["lõpp","конец"],["vahepeal","тем временем"],["varasem","предыдущий"],["järgnev","последующий"],["hiljutine","недавний"],["ammu","давно"],["õigeaegselt","своевременно"],["edasi lükkama","откладывать"],["ära jääma","не состояться"],["toimuma","происходить"],["aset leidma","иметь место"],["kestma","длиться"]]
+};
+
+let activeWordCategory=Object.keys(vocabulary)[0];
+function renderVocabulary(){const tabs=document.getElementById('wordTabs');tabs.innerHTML=Object.keys(vocabulary).map((cat,i)=>`<button class="${cat===activeWordCategory?'active':''}" onclick="selectWordCategory(${i})">${cat}</button>`).join('');const words=vocabulary[activeWordCategory]||[];const grid=document.getElementById('wordGrid');grid.innerHTML=words.map((w,i)=>{const key=activeWordCategory+'|'+i;const done=progress.learnedWords.includes(key);return `<div class="word-card ${done?'learned':''}"><div><strong>${w[0]}</strong><p>${w[1]}</p></div><button class="word-button" onclick="toggleWord('${encodeURIComponent(key)}')">${done?'Выучено ✓':'Выучила'}</button></div>`}).join('');const count=words.filter((w,i)=>progress.learnedWords.includes(activeWordCategory+'|'+i)).length;document.getElementById('wordCategoryProgress').innerHTML=`<div class="progress-top"><strong>${activeWordCategory}</strong><span>${count}/${words.length} · ${Math.round(count/words.length*100)}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${count/words.length*100}%"></div></div>`;renderVocabularyActions()}
+function selectWordCategory(i){activeWordCategory=Object.keys(vocabulary)[i];renderVocabulary();window.scrollTo({top:0,behavior:'smooth'})}
+function toggleWord(encoded){const key=decodeURIComponent(encoded);if(progress.learnedWords.includes(key))progress.learnedWords=progress.learnedWords.filter(x=>x!==key);else progress.learnedWords.push(key);saveProgress();renderVocabulary()}
+function renderVocabularyActions(){const cats=Object.keys(vocabulary),idx=cats.indexOf(activeWordCategory),words=vocabulary[activeWordCategory],done=words.every((w,i)=>progress.learnedWords.includes(activeWordCategory+'|'+i)),all=Object.values(vocabulary).flat().length===progress.learnedWords.length;let html='';if(done&&idx<cats.length-1)html=`<button class="primary-btn" onclick="selectWordCategory(${idx+1})">Следующая категория →</button>`;if(idx===cats.length-1){html=all?`<button class="primary-btn" onclick="startVocabQuiz()">Пройти словарный квиз →</button>`:`<button class="primary-btn" onclick="confirmVocabQuiz()">Пройти словарный квиз →</button>`}document.getElementById('wordCategoryActions').innerHTML=html;}
+function confirmVocabQuiz(){const total=Object.values(vocabulary).flat().length,learned=progress.learnedWords.length;document.getElementById('b1VocabMessage').textContent=`Ты отметила как выученные ${learned} из ${total} слов. Некоторые слова ещё не изучены. Ты можешь вернуться к ним или всё равно начать квиз.`;document.getElementById('b1VocabConfirm').style.display='flex'}
+function closeVocabConfirm(){document.getElementById('b1VocabConfirm').style.display='none'}
+let vocabQuiz=[],vocabIndex=0,vocabScore=0;
+function startVocabQuiz(){const all=Object.entries(vocabulary).flatMap(([cat,ws])=>ws.map(w=>({word:w[0],ru:w[1]})));vocabQuiz=all.sort(()=>Math.random()-.5).slice(0,20).map(w=>{const opts=[w,...all.filter(x=>x.word!==w.word).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);return {q:w,opts,correct:opts.findIndex(x=>x.word===w.word)}});vocabIndex=0;vocabScore=0;document.getElementById('vocabularyQuizArea').innerHTML=`<div class="question-box"><h3>Словарный квиз B1</h3><p id="vqQuestion"></p><div id="vqOptions"></div><div id="vqFeedback" class="feedback"></div><button id="vqNext" class="secondary-btn" style="display:none" onclick="nextVocabQuestion()">Следующий вопрос →</button></div>`;renderVocabQuestion();document.getElementById('vocabularyQuizArea').scrollIntoView({behavior:'smooth'})}
+function renderVocabQuestion(){const q=vocabQuiz[vocabIndex];document.getElementById('vqQuestion').textContent=`${vocabIndex+1}/${vocabQuiz.length}. Как по-эстонски: «${q.q.ru}»?`;document.getElementById('vqOptions').innerHTML=q.opts.map((o,i)=>`<button class="answer-option" onclick="answerVocab(${i})">${o.word}</button>`).join('');document.getElementById('vqFeedback').textContent='';document.getElementById('vqNext').style.display='none'}
+function answerVocab(i){const q=vocabQuiz[vocabIndex];document.querySelectorAll('#vqOptions button').forEach((b,j)=>{if(j===q.correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong');b.disabled=true});if(i===q.correct)vocabScore++;document.getElementById('vqFeedback').textContent=i===q.correct?'Правильно!':'Правильный ответ: '+q.opts[q.correct].word;document.getElementById('vqNext').style.display='inline-block';document.getElementById('vqNext').textContent=vocabIndex===vocabQuiz.length-1?'Результат':'Следующий вопрос →'}
+function nextVocabQuestion(){if(vocabIndex===vocabQuiz.length-1){document.getElementById('vocabularyQuizArea').innerHTML=`<div class="result-box"><h3>Квиз завершён!</h3><p>Твой результат: ${vocabScore} из ${vocabQuiz.length} (${Math.round(vocabScore/vocabQuiz.length*100)}%).</p><button class="primary-btn" onclick="startVocabQuiz()">Пройти ещё раз</button></div>`;return}vocabIndex++;renderVocabQuestion()}
+
+function renderLessons(){document.getElementById('lessonList').innerHTML=lessons.map((l,i)=>`<div class="lesson ${progress.completedLessons.includes(i)?'opened':''}"><div class="lesson-number">${progress.completedLessons.includes(i)?'✓':String(i+1).padStart(2,'0')}</div><div class="lesson-info"><h3>${l.title}</h3><p>${l.description}</p></div><div class="lesson-status">${progress.completedLessons.includes(i)?'Пройдено':'Урок '+(i+1)}</div><button class="secondary-btn" onclick="openLesson(${i})">Открыть</button></div>`).join('')}
+function openLesson(i){const done=progress.completedLessons.includes(i),next=i<lessons.length-1?`<button class="secondary-btn" onclick="openLesson(${i+1})">Следующий урок →</button>`:`<button class="secondary-btn" onclick="showPage('vocabulary')">Перейти к словарю →</button>`;document.getElementById('lessonContent').innerHTML=lessons[i].content+`<div class="lesson-actions"><button class="primary-btn" onclick="completeLesson(${i})">${done?'Урок пройден ✓':'Отметить как пройденный'}</button>${done?next:''}</div>`;document.getElementById('lessonContent').classList.add('show');document.getElementById('lessonContent').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function completeLesson(i){if(!progress.completedLessons.includes(i)){progress.completedLessons.push(i);saveProgress();renderLessons()}openLesson(i)}
+
+const practiceQuestions = [
+{q:'Vali õige vorm: Ma lähen raamatukokku, et seal ___.',a:['õppima','õppida','õppimast'],c:1,why:'После et для выражения цели часто используется DA-инфинитив: et õppida.'},
+{q:'Vali õige vorm: Ta tuli mind ___.',a:['aitama','aidata','aitamisest'],c:0,why:'После глагола движения tulema в этой конструкции используется MA-инфинитив: tuli aitama.'},
+{q:'Как переводится «usaldusväärne»?',a:['сомнительный','надёжный','временный'],c:1,why:'Usaldusväärne — надёжный, заслуживающий доверия.'},
+{q:'Выбери правильную форму: Ma tunnen ___ hästi.',a:['see inimene','seda inimest','selle inimesega'],c:1,why:'Глагол tundma в значении «знать/узнавать человека» употребляет объект в osastav.'},
+{q:'Выбери: Raamat on ___. (на столе)',a:['lauale','laual','laualt'],c:1,why:'Alalütlev (-l) обозначает местонахождение: laual — на столе.'},
+{q:'Выбери: Panin telefoni ___. (на стол)',a:['lauale','laual','laualt'],c:0,why:'Alaleütlev (-le) обозначает направление: lauale — на стол.'},
+{q:'Как сказать «без друга»?',a:['sõbraga','sõbrata','sõbrale'],c:1,why:'Ilmaütlev часто образуется с -ta: sõbrata.'},
+{q:'Как сказать «с другом»?',a:['sõbrata','sõbrale','sõbraga'],c:2,why:'Kaasaütlev с -ga: sõbraga.'},
+{q:'Выбери условную форму: Kui mul ___ aega, tuleksin kaasa.',a:['on','oleks','oli'],c:1,why:'В условном предложении используется tingiv kõneviis: oleks.'},
+{q:'Что означает «kuigi»?',a:['поскольку','хотя','поэтому'],c:1,why:'Kuigi вводит уступку: хотя.'},
+{q:'Выбери: Ta töötab arst___.',a:['-na','-ks','-ta'],c:0,why:'Olev (-na) обозначает роль или качество: arstina — врачом.'},
+{q:'Выбери: Ta õppis arst___.',a:['-na','-ks','-ga'],c:1,why:'Saav (-ks) обозначает становление/результат: arstiks — на врача.'},
+{q:'Как переводится «tähelepanu pöörama»?',a:['обращать внимание','принимать участие','нести ответственность'],c:0,why:'Tähelepanu pöörama — обращать внимание.'},
+{q:'Выбери правильный вариант: Ma ei ___ seda uudist.',a:['kuulsin','kuulnud','kuulma'],c:1,why:'В отрицательном прошедшем времени используется ei + форма на -nud: ei kuulnud.'},
+{q:'Как сказать «до вечера»?',a:['õhtul','õhtuni','õhtust'],c:1,why:'Rajav на -ni обозначает предел: õhtuni — до вечера.'},
+{q:'Выбери правильное предложение.',a:['Siin räägitakse eesti keelt.','Siin räägib eesti keelt.','Siin rääkida eesti keelt.'],c:0,why:'Räägitakse — безличная форма глагола rääkima.'},
+{q:'Что означает «järeldus»?',a:['предпосылка','вывод','сомнение'],c:1,why:'Järeldus — вывод.'},
+{q:'Выбери правильную форму: Ma huvitun ___.',a:['muusika','muusikast','muusikale'],c:1,why:'Huvituma требует seestütlev: huvituma millest? muusikast.'},
+{q:'Выбери: Ta loobus ___ plaanist.',a:['see','selle','sellest'],c:2,why:'Loobuma требует seestütlev: loobuma millest? sellest plaanist.'},
+{q:'Как переводится «sellest hoolimata»?',a:['в результате','несмотря на это','прежде всего'],c:1,why:'Sellest hoolimata — несмотря на это.'},
+{q:'Выбери правильную форму: ___ õppimine võtab aega.',a:['Eesti keelt','Eesti keele','Eesti keel'],c:1,why:'В конструкции «изучение эстонского языка» используется omastav + õppimine: eesti keele õppimine.'},
+{q:'Как сказать «я получил письмо от друга»?',a:['Sain sõbrale kirja.','Sain sõbral kirja.','Sain sõbralt kirja.'],c:2,why:'Alaltütlev обозначает источник: sõbralt — от друга.'},
+{q:'Выбери правильный порядок: «Я знаю, что он придёт».',a:['Ma tean, et ta tuleb.','Ma tean, et tuleb ta.','Ma tean et tulema ta.'],c:0,why:'В нейтральном придаточном предложении: et ta tuleb.'},
+{q:'Что означает «võimaldama»?',a:['запрещать','позволять','откладывать'],c:1,why:'Võimaldama — позволять, делать возможным.'},
+{q:'Выбери правильное: Ta on ___ kui mina.',a:['kannatlikum','kannatlikuma','kõige kannatlik'],c:0,why:'Сравнительная степень часто образуется с -m: kannatlikum.'},
+{q:'Как переводится «osa võtma»?',a:['отказываться','принимать участие','обращать внимание'],c:1,why:'Osa võtma — принимать участие.'},
+{q:'Выбери: Dokument tuleb homme ___.',a:['esitada','esitama','esitamast'],c:0,why:'После конструкции tuleb + инфинитив необходимости используется DA-инфинитив: esitada.'},
+{q:'Как переводится «vaatamata sellele»?',a:['в дополнение к этому','несмотря на это','в целом'],c:1,why:'Vaatamata sellele — несмотря на это.'},
+{q:'Выбери форму: Ma kirjutan ___.',a:['pliiatsiga','pliiatsita','pliiatsile'],c:0,why:'Kaasaütlev может обозначать инструмент: pliiatsiga — карандашом.'},
+{q:'Какой падеж в слове «majast»?',a:['Seesütlev','Sisseütlev','Seestütlev'],c:2,why:'Seestütlev (-st) обозначает движение изнутри: majast.'},
+{q:'Выбери форму: Ootan sind kella kuu___.',a:['-ni','-na','-ks'],c:0,why:'Rajav -ni: kuueni — до шести.'},
+{q:'Что означает «pealiskaudne»?',a:['подробный','поверхностный','последовательный'],c:1,why:'Pealiskaudne — поверхностный.'},
+{q:'Выбери условную форму: Ma ___ seda teisiti.',a:['teeksin','teen','tegin'],c:0,why:'Tingiv kõneviis: teeksin — я бы сделал(а).'},
+{q:'Как сказать «у меня есть время»?',a:['Minul on aega.','Mina olen aega.','Minu aega on.'],c:0,why:'Обладание выражается конструкцией alalütlev + olema: mul/minul on.'},
+{q:'Что означает «kättesaadav»?',a:['недоступный','доступный','обязательный'],c:1,why:'Kättesaadav — доступный.'},
+{q:'Выбери правильное: Ta olevat juba ___.',a:['lahkub','lahkunud','lahkuma'],c:1,why:'В косвенном наклонении прошедшее значение выражается формой на -nud.'},
+{q:'Как перевести «mõju avaldama»?',a:['оказывать влияние','делать вывод','ставить под сомнение'],c:0,why:'Mõju avaldama — оказывать влияние.'},
+{q:'Выбери: Ma lähen poodi midagi ___.',a:['ostma','osta','ostmast'],c:0,why:'После lähen в значении цели используется MA-инфинитив: ostma.'},
+{q:'Какой падеж в слове «sõbraga»?',a:['Kaasaütlev','Ilmaütlev','Saav'],c:0,why:'Kaasaütlev с -ga: sõbraga — с другом.'},
+{q:'Выбери правильное: ___ halb ilm, läksime välja.',a:['Kuigi oli','Sest oli','Seetõttu oli'],c:0,why:'Kuigi вводит придаточное уступки: хотя погода была плохой.'},
+{q:'Что означает «järjepidev»?',a:['случайный','последовательный/регулярный','временный'],c:1,why:'Järjepidev — последовательный, систематический.'},
+{q:'Выбери форму: See on minu ___ auto.',a:['venna','vennale','vennast'],c:0,why:'Omastav показывает принадлежность: venna auto — машина брата.'},
+{q:'Как сказать «я интересуюсь историей»?',a:['Ma huvitun ajaloost.','Ma huvitun ajaloole.','Ma huvitun ajalugu.'],c:0,why:'Huvituma требует seestütlev: ajaloost.'},
+{q:'Что означает «ära jääma»?',a:['состояться','не состояться/быть отменённым','продолжаться'],c:1,why:'Ära jääma — не состояться, не произойти.'},
+{q:'Выбери: Ta tuli koos ___ perega.',a:['oma','enda','omaga'],c:0,why:'Oma perega — со своей семьёй.'},
+{q:'Как перевести «lõppkokkuvõttes»?',a:['поначалу','в конечном итоге','в то же время'],c:1,why:'Lõppkokkuvõttes — в конечном итоге.'},
+{q:'Выбери правильное: Uus kool ___ sügisel.',a:['avatakse','avab','avama'],c:0,why:'Avatakse — безличная форма: школу откроют.'},
+{q:'Что означает «vastuväide»?',a:['контраргумент/возражение','предложение','результат'],c:0,why:'Vastuväide — возражение, контраргумент.'},
+{q:'Выбери: Ta töötab ___ .',a:['õpetajaks','õpetajana','õpetajata'],c:1,why:'Olev -na обозначает роль: õpetajana — учителем.'},
+{q:'Как перевести «arvesse võtma»?',a:['принимать во внимание','отказываться','достигать цели'],c:0,why:'Arvesse võtma — принимать во внимание.'},
+{q:'Выбери правильное: Ma ei saa seda ilma sin___.',a:['-ga','-ta','-le'],c:1,why:'Ilmaütlev -ta: sinuta — без тебя.'},
+{q:'Что означает «eeldama»?',a:['предполагать/требовать как условие','запоминать','сравнивать'],c:0,why:'Eeldama — предполагать, подразумевать, требовать как условие.'},
+{q:'Выбери правильное: Ma soovin, et sa ___ varem.',a:['tuleksid','tulema','tulid'],c:0,why:'В желании/пожелании используется условная форма: tuleksid.'},
+{q:'Как сказать «до леса»?',a:['metsas','metsast','metsani'],c:2,why:'Rajav -ni: metsani — до леса.'},
+{q:'Что означает «silmast silma»?',a:['по телефону','лицом к лицу','в письменной форме'],c:1,why:'Silmast silma — лицом к лицу.'},
+{q:'Выбери: Õpilased ___ uut projekti.',a:['arutasid','arutama','arutavad eile'],c:0,why:'Arutasid — правильная форма простого прошедшего времени.'},
+{q:'Как переводится «milleks?» в вопросе падежа saav?',a:['откуда?','кем/чем/для чего?','с кем?'],c:1,why:'Saav отвечает на вопрос kelleks? milleks? — кем/чем становится.'},
+{q:'Выбери правильное: Ma tulin koju midagi ___.',a:['ostmast','ostma','osta'],c:0,why:'MA-инфинитив в форме -mast может обозначать возвращение/приход после действия: tulin ostmast.'}
+,{q:'Vali õige vorm: Ma ___ Eestis juba kolm aastat elanud.',a:['olen','olin','oleksin'],c:0,why:'Täisminevik: olen + -nud vorm.'}
+,{q:'Kui me kohale jõudsime, ___ film juba alanud.',a:['on','oli','oleks'],c:1,why:'Enneminevik kirjeldab varasemat minevikusündmust: oli alanud.'}
+,{q:'Vali sobiv tulevikuväljend: Homme ma ___ Tallinnasse.',a:['sõitsin','sõidan','sõitnud'],c:1,why:'Будущее часто выражается olevik вместе со словом времени: homme sõidan.'}
+,{q:'Ma hakkan eesti keelt ___.',a:['õppida','õppima','õppimisest'],c:1,why:'Hakkama требует MA-инфинитив: hakkan õppima.'}
+,{q:'Ma kavatsen suvel reisile ___.',a:['minema','minna','läinud'],c:1,why:'Kavatsema обычно сочетается с DA-инфинитивом: kavatsen minna.'}
+,{q:'Выбери форму omastav: lukk → ___.',a:['lukku','luku','lukust'],c:1,why:'В этой форме происходит чередование kk → k: lukk — luku.'}
+,{q:'Какой вариант правильный: «цена двух книг»?',a:['kahe raamatut hind','kahe raamatu hind','kaks raamatu hind'],c:1,why:'В конструкции принадлежности: kahe raamatu hind.'}
+,{q:'Выбери форму: Ma tunnen palju ___.',a:['inimesed','inimeste','inimesi'],c:2,why:'После palju обычно используется partitiiv pluralis: inimesi.'}
+,{q:'Выбери правильную форму: Rääkisin ___. (с ним/ней)',a:['tema','temaga','temale'],c:1,why:'Kaasaütlev: temaga — с ним/ней.'}
+,{q:'Выбери: See on ___ maja. (нового дома — родительная форма)',a:['uus','uue','uues'],c:1,why:'Omastav: uue maja.'}
+,{q:'Vali õige: Ma ei ole seda filmi ___.',a:['nägin','näinud','nägema'],c:1,why:'Отрицание täisminevik: ei ole + -nud форма.'}
+,{q:'Что означает «elukestev õpe»?',a:['обучение в течение всей жизни','дистанционное обучение','обязательный экзамен'],c:0,why:'Elukestev õpe — обучение на протяжении всей жизни.'}
+
+];
+const practiceTopics=[{title:'MA- и DA-инфинитивы',start:0,end:6},{title:'Падежи: основные формы',start:6,end:14},{title:'Наклонения и времена',start:14,end:22},{title:'Глагольное управление',start:22,end:30},{title:'Лексика и устойчивые выражения',start:30,end:40},{title:'Сложные предложения и порядок слов',start:40,end:50},{title:'Падежи в контексте и грамматика B1',start:50,end:practiceQuestions.length}];
+let practiceIndex=0,practiceAnswered=false,activePracticeTopic=null;
+function renderPracticeTopics(){activePracticeTopic=null;document.getElementById('practiceTopicList').style.display='grid';document.getElementById('practiceExercise').style.display='none';document.getElementById('practiceTopicList').innerHTML=practiceTopics.map((t,i)=>{const done=progress.completedPracticeTopics.includes(i);return `<div class="practice-topic-card ${done?'is-complete':''}">${done?'<div class="practice-complete-label">✓ ТЕМА ВЫПОЛНЕНА</div>':''}<h3>${t.title}</h3><p>${t.end-t.start} заданий</p>${done?'<button class="primary-btn" disabled>Выполнено ✓</button>':`<button class="primary-btn" onclick="startPracticeTopic(${i})">Начать практику →</button>`}</div>`}).join('')}
+function startPracticeTopic(i){activePracticeTopic=i;practiceIndex=practiceTopics[i].start;document.getElementById('practiceTopicList').style.display='none';document.getElementById('practiceExercise').style.display='block';document.getElementById('practiceTopicLabel').textContent=practiceTopics[i].title;renderPractice()}
+function renderPractice(){const q=practiceQuestions[practiceIndex];practiceAnswered=false;document.getElementById('practiceQuestion').textContent=q.q;document.getElementById('practiceFeedback').textContent='';document.getElementById('practiceOptions').innerHTML=q.a.map((a,i)=>`<button class="answer-option" onclick="checkPractice(${i})">${a}</button>`).join('');let b=document.querySelector('#practiceExercise button[onclick="nextPractice()"]');b.textContent=practiceIndex+1>=practiceTopics[activePracticeTopic].end?'Завершить тему ✓':'Следующий вопрос →'}
+function checkPractice(i){if(practiceAnswered)return;practiceAnswered=true;const q=practiceQuestions[practiceIndex];if(!progress.completedPractice.includes(practiceIndex))progress.completedPractice.push(practiceIndex);saveProgress();document.querySelectorAll('#practiceOptions button').forEach((b,j)=>{if(j===q.c)b.classList.add('correct');else if(j===i)b.classList.add('wrong');b.disabled=true});document.getElementById('practiceFeedback').textContent=(i===q.c?'Правильно! ':'Неверно. ')+(q.why||('Правильный ответ: '+q.a[q.c]))}
+function nextPractice(){if(!practiceAnswered){document.getElementById('practiceFeedback').textContent='Сначала выбери ответ.';return}const t=practiceTopics[activePracticeTopic];if(practiceIndex+1>=t.end){if(!progress.completedPracticeTopics.includes(activePracticeTopic))progress.completedPracticeTopics.push(activePracticeTopic);saveProgress();renderPracticeTopics();document.getElementById('practiceTopicList').scrollIntoView({behavior:'smooth'});return}practiceIndex++;renderPractice()}
+
+const readings=[
+{title:'Noorte vaba aeg ja ekraaniaeg',level:'B1 · Общество',text:'Viimastel aastatel on noorte vaba aja veetmise viisid märgatavalt muutunud. Paljud kasutavad telefoni suhtlemiseks, õppimiseks ja meelelahutuseks. Tehnoloogia pakub palju võimalusi, kuid pidev ekraani kasutamine võib vähendada aega, mida veedetakse õues või sõpradega silmast silma. Seetõttu on oluline leida tasakaal digitaalse ja päriselu vahel. Mõned noored eelistavad sporti või muusikat, teised loevad raamatuid või osalevad huviringides. Kõige tähtsam on leida tegevus, mis pakub rõõmu ja aitab puhata.',questions:[['Mis on teksti peamine mõte?',['Telefon tuleb täielikult ära keelata.','Vaba aja veetmisel on oluline tasakaal.','Kõik noored peaksid sportima.'],1],['Milleks noored telefoni kasutavad?',['Suhtlemiseks, õppimiseks ja meelelahutuseks.','Ainult mängimiseks.','Ainult töö tegemiseks.'],0],['Mida tähendab „silmast silma“?',['Kirja teel','Näost näkku','Interneti kaudu'],1]]},
+{title:'Keskkonnasõbralikud valikud',level:'B1 · Keskkond',text:'Keskkonna hoidmine ei tähenda alati suuri muutusi. Ka igapäevased valikud võivad mõjutada loodust. Näiteks saab inimene kasutada korduvkasutatavat joogipudelit, sorteerida jäätmeid ja eelistada võimaluse korral ühistransporti. Samas ei sõltu keskkonna olukord ainult üksikisikutest. Olulist rolli mängivad ka ettevõtted ja riik, kes saavad toetada taastuvenergia kasutamist ning parandada jäätmekäitlust. Kõige parema tulemuse saavutamiseks peavad erinevad osapooled koostööd tegema.',questions:[['Milline on teksti põhisõnum?',['Ainult riik vastutab keskkonna eest.','Väikesed valikud ja ühine koostöö on tähtsad.','Ühistransporti ei tohiks kasutada.'],1],['Kes saavad keskkonda mõjutada?',['Ainult ettevõtted','Ainult üksikisikud','Üksikisikud, ettevõtted ja riik'],2],['Mida tähendab „jäätmekäitlus“?',['Отходы и их обработка','Путешествия','Обучение'],0]]},
+{title:'Esimene töökoht',level:'B1 · Работа',text:'Esimese töökoha leidmine võib olla keeruline, sest paljud tööandjad ootavad varasemat kogemust. Noorel inimesel tasub siiski kandideerida ka siis, kui ta ei vasta kõigile nõuetele. Oluline on näidata oma motivatsiooni, õppimisvalmidust ja vastutustunnet. Töövestlusel võiks kandidaat tuua näiteid olukordadest, kus ta on lahendanud probleeme või töötanud teistega koos. Iga kogemus, sealhulgas vabatahtlik töö ja kooliprojektid, võib aidata uusi oskusi arendada.',questions:[['Miks võib esimese töökoha leidmine olla keeruline?',['Tööandjad ootavad sageli kogemust.','Noored ei tohi kandideerida.','Kõik töökohad nõuavad kõrgharidust.'],0],['Mida tasub töövestlusel näidata?',['Ainult palgasoovi','Motivatsiooni ja vastutustunnet','Et ei soovi õppida'],1],['Milline kogemus võib kasulik olla?',['Ainult tasustatud töö','Ka vabatahtlik töö ja kooliprojektid','Mitte ükski kogemus'],1]]},
+{title:'Reisimine ja ootamatud olukorrad',level:'B1 · Путешествия',text:'Reisides ei lähe kõik alati plaani järgi. Mõnikord hilineb rong, lend tühistatakse või pagas ei jõua õigel ajal kohale. Sellises olukorras on tähtis säilitada rahu ja uurida, millised võimalused reisijal on. Tavaliselt saab abi küsida teenindajalt või pöörduda transpordiettevõtte poole. Kui reisija on ostnud reisikindlustuse, võib see katta osa ootamatutest kuludest. Enne reisi tasub kontrollida dokumente, sõiduplaani ja broneeringu tingimusi.',questions:[['Mida soovitab tekst ootamatu olukorra korral?',['Jääda rahulikuks ja uurida võimalusi.','Kohe koju minna.','Mitte kelleltki abi küsida.'],0],['Kelle poole võib pöörduda?',['Transpordiettevõtte poole','Ainult sõprade poole','Mitte kellegi poole'],0],['Mida tasub enne reisi kontrollida?',['Ainult ilma','Dokumente, sõiduplaani ja broneeringut','Ainult pagasi värvi'],1]]},
+{title:'Uudiste usaldusväärsus',level:'B1 · Meedia',text:'Internetis levib iga päev suur hulk uudiseid ja arvamusi. Kõik avaldatud info ei ole siiski täpne. Enne uudise jagamist võiks kontrollida selle allikat, avaldamise kuupäeva ja seda, kas sama sündmust kajastavad ka teised usaldusväärsed väljaanded. Mõnikord kasutatakse pealkirju, mis on kirjutatud lugeja tähelepanu püüdmiseks, kuid ei kajasta artikli tegelikku sisu. Meediapädevus aitab inimesel eristada fakte, arvamusi ja eksitavat teavet.',questions:[['Mida tuleks enne uudise jagamist teha?',['Kontrollida allikat ja infot.','Lugeda ainult pealkirja.','Uudis kohe edasi saata.'],0],['Miks võivad pealkirjad eksitada?',['Need võivad olla kirjutatud tähelepanu püüdmiseks.','Need on alati valed.','Need ei sisalda sõnu.'],0],['Mida aitab meediapädevus eristada?',['Fakte, arvamusi ja eksitavat teavet.','Ainult reklaame.','Ainult spordiuudiseid.'],0]]},
+{title:'Õppimine kogu elu jooksul',level:'B1 · Образование',text:'Tänapäeval muutuvad töö ja ühiskond kiiresti ning seetõttu ei lõpe õppimine kooli või ülikooli lõpetamisega. Inimesed omandavad uusi oskusi kursustel, töökohal ja iseseisvalt. Elukestev õpe aitab kohaneda muutustega ning annab võimaluse teha karjääris uusi valikuid. Samas nõuab õppimine aega ja järjepidevust. Eesmärkide seadmine ning oma arengu jälgimine aitavad motivatsiooni säilitada.',questions:[['Millal õppimine lõpeb?',['Pärast kooli','Pärast ülikooli','Õppimine võib jätkuda kogu elu'],2],['Kus saab uusi oskusi omandada?',['Ainult koolis','Kursustel, tööl ja iseseisvalt','Ainult kodus'],1],['Mis aitab motivatsiooni säilitada?',['Eesmärkide seadmine ja arengu jälgimine','Õppimise vältimine','Kõikide ülesannete edasilükkamine'],0]]}
+];
+let activeReading=0;
+function renderReadingList(){document.getElementById('readingList').innerHTML=readings.map((r,i)=>`<div class="lesson"><div class="lesson-number">${progress.completedReading.includes(i)?'✓':String(i+1).padStart(2,'0')}</div><div class="lesson-info"><h3>${r.title}</h3><p>${r.level} · ${progress.completedReading.includes(i)?'Прочитано':'Текст и вопросы'}</p></div><button class="secondary-btn" onclick="openReading(${i})">Открыть</button></div>`).join('')}
+function openReading(i){activeReading=i;const r=readings[i];document.getElementById('readingArea').innerHTML=`<div class="reading-text"><span class="grammar-tag">${r.level}</span><h3>${r.title}</h3><p>${r.text}</p><h3>Вопросы на понимание</h3>${r.questions.map((q,j)=>`<div class="reading-question"><b>${j+1}. ${q[0]}</b><div>${q[1].map((a,k)=>`<button class="answer-option" onclick="checkReading(${j},${k})">${a}</button>`).join('')}</div><div id="readFeedback${j}" class="feedback"></div></div>`).join('')}<button class="primary-btn" onclick="completeReading(${i})">Отметить текст как пройденный ✓</button></div>`;document.getElementById('readingArea').scrollIntoView({behavior:'smooth'})}
+function checkReading(qi,ai){const q=readings[activeReading].questions[qi];document.querySelectorAll('.reading-question')[qi].querySelectorAll('button').forEach((b,j)=>{b.disabled=true;if(j===q[2])b.classList.add('correct');else if(j===ai)b.classList.add('wrong')});document.getElementById('readFeedback'+qi).textContent=ai===q[2]?'Правильно!':'Правильный ответ: '+q[1][q[2]]}
+function completeReading(i){if(!progress.completedReading.includes(i))progress.completedReading.push(i);saveProgress();renderReadingList();document.getElementById('readingArea').insertAdjacentHTML('beforeend','<div class="result-box">Текст отмечен как пройденный. Отличная работа!</div>')}
+
+const writingTasks=[
+{title:'Личное письмо другу',goal:'Напиши другу о своём недавнем событии и предложи встретиться.',plan:['Поздоровайся и объясни, почему пишешь.','Расскажи, что произошло и какие у тебя впечатления.','Предложи день и место встречи.','Закончи письмо дружелюбно.'],sample:'Tere, Mari!\n\nTahtsin sulle kirjutada, sest mul juhtus eelmisel nädalal midagi huvitavat. Käisin koos perega Pärnus ja veetsime seal terve nädalavahetuse. Ilm oli küll tuuline, kuid meil oli väga tore. Eriti meeldis mulle mere ääres jalutamine.\n\nKas sul oleks järgmisel nädalal aega kokku saada? Võiksime minna kohvikusse ja muljetada. Anna teada, milline päev sulle sobib!\n\nParimate soovidega\nA.'},
+{title:'Официальное письмо с просьбой',goal:'Напиши в учреждение письмо с просьбой предоставить информацию или уточнить условия.',plan:['Укажи тему и вежливое обращение.','Кратко объясни ситуацию.','Сформулируй конкретные вопросы.','Поблагодари и попрощайся официально.'],sample:'Tere!\n\nSoovin saada lisateavet teie korraldatava keelekursuse kohta. Palun täpsustage, millal kursus algab, kui kaua see kestab ning kas õppematerjalid sisalduvad kursuse hinnas.\n\nOleksin tänulik, kui saaksite mulle saata ka registreerimise tingimused.\n\nEtte tänades\n[Teie nimi]'},
+{title:'Мнение: технологии в повседневной жизни',goal:'Напиши связный текст, в котором выражаешь мнение и приводишь аргументы.',plan:['Сформулируй своё мнение.','Приведи два аргумента.','Добавь пример из жизни.','Укажи возможный недостаток или другую точку зрения.','Сделай вывод.'],sample:'Minu arvates on tehnoloogia igapäevaelus väga kasulik, sest see aitab kiiresti infot leida ja inimestega suhelda. Näiteks saan õppematerjale kasutada ka siis, kui ma ei ole kodus.\n\nTeisalt võib liigne ekraaniaeg vähendada liikumist ja päris suhtlemist. Seetõttu tuleks tehnoloogiat kasutada mõistlikult. Kokkuvõttes sõltub mõju sellest, kuidas inimene oma aega planeerib.'},
+{title:'Рассказ о важном опыте',goal:'Опиши событие, которое чему-то тебя научило.',plan:['Укажи, когда и где произошло событие.','Опиши ситуацию и трудность.','Расскажи, что ты сделал(а).','Объясни, чему научился/научилась.'],sample:'Mõni kuu tagasi osalesin kooliprojektis, kus pidime koos teiste õpilastega esitluse koostama. Alguses oli ülesannete jagamine keeruline, sest kõigil olid erinevad ideed.\n\nOtsustasime kõigepealt oma mõtted kirja panna ja seejärel ühise lahenduse leida. Lõpuks valmis esitlus õigeks ajaks. See kogemus õpetas mulle, kui oluline on koostöö ja teiste kuulamine.'},
+{title:'Жалоба на услугу',goal:'Вежливо опиши проблему и попроси её решить.',plan:['Укажи, какую услугу ты получил(а).','Опиши, что пошло не так.','Объясни последствия.','Попроси конкретное решение.'],sample:'Tere!\n\nSoovin esitada kaebuse seoses hiljutise tellimusega. Pakk jõudis kohale lubatust mitu päeva hiljem ning üks toode oli kahjustatud.\n\nPalun andke teada, kas toodet on võimalik vahetada või kas saan raha tagasi. Loodan, et probleem leiab peagi lahenduse.\n\nLugupidamisega\n[Teie nimi]'},
+{title:'Сравнение двух вариантов',goal:'Сравни два решения и объясни, какое считаешь более подходящим.',plan:['Опиши оба варианта.','Сравни преимущества и недостатки.','Объясни, какие критерии для тебя важны.','Сделай вывод.'],sample:'Võrreldes ühistransporti ja autot, on mõlemal võimalusel eeliseid. Auto kasutamine on mugav, eriti siis, kui tuleb sõita kohtadesse, kuhu bussid sageli ei käi. Samas on ühistransport tavaliselt odavam ja keskkonnasõbralikum.\n\nMinu hinnangul on linnas parem kasutada ühistransporti, sest nii saab vähendada liiklusummikuid ja kulusid.'}
+];
+let activeWriting=0;
+function renderWritingList(){document.getElementById('writingList').innerHTML=writingTasks.map((t,i)=>`<div class="lesson ${progress.completedWriting.includes(i)?'opened':''}"><div class="lesson-number">${progress.completedWriting.includes(i)?'✓':String(i+1).padStart(2,'0')}</div><div class="lesson-info"><h3>${t.title}</h3><p>${t.goal}</p></div><button class="secondary-btn" onclick="openWriting(${i})">Открыть</button></div>`).join('')}
+function openWriting(i){activeWriting=i;const t=writingTasks[i];document.getElementById('writingArea').innerHTML=`<div class="writing-task"><h3>${t.title}</h3><p><b>Задание:</b> ${t.goal}</p><h3>План</h3><ol>${t.plan.map(x=>`<li>${x}</li>`).join('')}</ol><label for="writingAnswer"><b>Твой текст на эстонском</b></label><textarea id="writingAnswer" class="writing-answer" placeholder="Начни писать здесь..."></textarea><p class="small-note">Постарайся использовать связки, разные падежи и более точную лексику. Проверяй порядок слов и окончания.</p><button class="primary-btn" onclick="saveWriting(${i})">Отметить задание выполненным</button><button class="secondary-btn" onclick="toggleSample()">Показать пример</button><div id="writingSample" style="display:none" class="result-box"><b>Пример:</b><p style="white-space:pre-line">${t.sample}</p></div><div class="result-box"><b>Самопроверка</b><ul><li>Я выполнил(а) все пункты задания.</li><li>Мой текст имеет начало, основную часть и завершение.</li><li>Я использовал(а) связующие слова.</li><li>Я проверил(а) падежи, времена и порядок слов.</li></ul></div></div>`;document.getElementById('writingArea').scrollIntoView({behavior:'smooth'})}
+function toggleSample(){const e=document.getElementById('writingSample');e.style.display=e.style.display==='none'?'block':'none'}
+function saveWriting(i){const val=document.getElementById('writingAnswer').value.trim();if(val.length<40){alert('Напиши немного более полный текст, прежде чем отмечать задание выполненным.');return}if(!progress.completedWriting.includes(i))progress.completedWriting.push(i);saveProgress();renderWritingList();alert('Задание отмечено как выполненное. Молодец!')}
+
+const opinions=[
+{title:'Kas kodutööd on vajalikud?',q:'Домашние задания полезны или создают лишнюю нагрузку?',phrases:['Minu arvates… — По моему мнению…','Ühelt poolt… teiselt poolt… — С одной стороны… с другой стороны…','Selle põhjuseks on… — Причина этого…','Näiteks… — Например…','Kokkuvõttes… — В итоге…'],sample:'Minu arvates on kodutööd kasulikud, kui neid ei ole liiga palju. Ühelt poolt aitavad need õpitut korrata. Teiselt poolt võib liiga suur koormus vähendada puhkeaega. Seetõttu peaks kodutöö olema eesmärgipärane ja mõistliku mahuga.'},
+{title:'Kas ühistransport peaks olema odavam?',q:'Обсуди доступность общественного транспорта и его влияние на город.',phrases:['Ma olen veendunud, et… — Я убеждён(а), что…','See võimaldaks… — Это позволило бы…','Samas tuleb arvestada… — В то же время нужно учитывать…','Teine oluline põhjus on… — Другая важная причина…'],sample:'Minu hinnangul peaks ühistransport olema taskukohane, sest see aitab inimestel liikuda ja võib vähendada autode arvu linnas. Samas peab linn leidma raha, et parandada sõidugraafikuid ja teenuse kvaliteeti.'},
+{title:'Kas sotsiaalmeedia ühendab inimesi?',q:'Обсуди преимущества и недостатки социальных сетей.',phrases:['Ühest küljest… — С одной стороны…','Teisest küljest… — С другой стороны…','Sellele vaatamata… — Несмотря на это…','Oluline on meeles pidada, et… — Важно помнить, что…'],sample:'Sotsiaalmeedia aitab hoida kontakti inimestega, kes elavad kaugel. Samas ei asenda internetisuhtlus alati päris kohtumisi. Minu arvates sõltub tulemus sellest, kui teadlikult inimene sotsiaalmeediat kasutab.'},
+{title:'Kas noored peaksid töötama õppimise kõrvalt?',q:'Рассмотри опыт, самостоятельность, время и нагрузку.',phrases:['Üks võimalus on… — Один вариант…','See annab võimaluse… — Это даёт возможность…','Peamine puudus on… — Главный недостаток…','Sobiva tasakaalu leidmine… — Поиск подходящего баланса…'],sample:'Õppimise kõrvalt töötamine võib anda noorele kogemuse ja õpetada raha kasutama. Samas võib töö võtta liiga palju aega ning õppimine kannatada. Seetõttu peaks töökoormus olema väike ja paindlik.'},
+{title:'Kas keskkonnakaitse algab üksikisikust?',q:'Обсуди личную ответственность и роль государства и предприятий.',phrases:['Iga inimene saab… — Каждый человек может…','Suuremat mõju avaldavad… — Большое влияние оказывают…','Koostöö on vajalik, sest… — Сотрудничество необходимо, потому что…'],sample:'Üksikisik saab teha keskkonnasõbralikke valikuid, näiteks sorteerida jäätmeid. Kuid suurte muutuste saavutamiseks on vaja ka ettevõtete ja riigi panust. Kõige tõhusam lahendus on koostöö.'}
+];
+function renderOpinion(){document.getElementById('opinionList').innerHTML=opinions.map((o,i)=>`<div class="opinion-card"><span class="grammar-tag">Arutelu ${i+1}</span><h3>${o.title}</h3><p>${o.q}</p><b>Полезные выражения</b><ul>${o.phrases.map(p=>`<li>${p}</li>`).join('')}</ul><button class="secondary-btn" onclick="toggleOpinion(${i})">Показать пример аргументации</button><div id="opinionSample${i}" class="result-box" style="display:none">${o.sample}</div></div>`).join('')}
+function toggleOpinion(i){const e=document.getElementById('opinionSample'+i);e.style.display=e.style.display==='none'?'block':'none'}
+
+const tests=[
+{title:'Падежи: внутренние местные',questions:[['Где находится книга? Raamat on ___.',['lauale','laual','laualt'],1],['Я иду в школу. Ma lähen ___.',['koolis','koolist','kooli'],2],['Я возвращаюсь из магазина. Tulen ___.',['poest','poodi','poes'],0],['Какой падеж у sõbrale?',['Alaleütlev','Alalütlev','Alaltütlev'],0],['Как сказать «на столе»?',['laualt','laual','lauale'],1]]},
+{title:'Падежи: saav, olev, rajav',questions:[['Ta töötab õpetaja___.',['-ks','-na','-ta'],1],['Ta õppis arsti___.',['-ks','-na','-ga'],0],['Ootan kella kuu___.',['-ni','-na','-st'],0],['Как переводится sõbrata?',['с другом','без друга','другу'],1],['Какой падеж у pliiatsiga?',['Kaasaütlev','Ilmaütlev','Saav'],0]]},
+{title:'MA- и DA-инфинитивы',questions:[['Ma lähen poodi midagi ___.',['osta','ostma','ostmast'],1],['Ma tahan eesti keelt ___.',['õppima','õppida','õppimast'],1],['Ta tuli mind ___.',['aitama','aidata','aitamisest'],0],['Oskan hästi ___.',['ujuma','ujuda','ujumast'],1],['Ta on praegu ___.',['ujuda','ujumas','ujumata'],1]]},
+{title:'Глагольное управление',questions:[['Ma huvitun ___ kunstist.',['see','selle','sellest'],2],['Ma ootan ___.',['buss','bussi','bussile'],1],['Ta loobus ___ plaanist.',['see','selle','sellest'],2],['Ma mõtlen ___ probleemile.',['sellele','sellest','seda'],0],['Ma usun ___.',['sina','sind','sinule'],1]]},
+{title:'Наклонения',questions:[['Kui mul oleks aega, ma ___.',['tulen','tuleksin','tulin'],1],['Kas sa ___ mind aidata?',['saaksid','saad','said'],0],['Ta olevat juba ___.',['lahkub','lahkunud','lahkuma'],1],['Palun ___ uks!',['ava','avama','avada'],0],['Siin ___ eesti keelt.',['räägib','räägitakse','rääkima'],1]]},
+{title:'Сложные предложения',questions:[['___ ilm oli halb, läksime välja.',['Kuigi','Seetõttu','Sest'],0],['Ma jäin koju, ___ olin haige.',['kuigi','sest','siiski'],1],['Что означает seetõttu?',['поэтому','несмотря на','вдобавок'],0],['Выбери правильное: Ma tean, et ___.',['ta tuleb','tuleb ta','ta tulema'],0],['Kokkuvõttes означает…',['в конечном итоге','поначалу','с другой стороны'],0]]},
+{title:'Лексика: общество и работа',questions:[['töövestlus — это…',['собеседование','отпуск','зарплата'],0],['usaldusväärne — это…',['временный','надёжный','неподходящий'],1],['taotlus — это…',['заявление','вывод','событие'],0],['sissetulek — это…',['расход','доход','скидка'],1],['jäätmekäitlus — это…',['обработка отходов','путешествие','обучение'],0]]},
+{title:'Падежи в контексте',questions:[['Sain kirja ___.',['sõbrale','sõbralt','sõbral'],1],['Panin telefoni ___.',['laual','laualt','lauale'],2],['Mul on uus telefon. Mul — какой падеж?',['Alalütlev','Alaleütlev','Alaltütlev'],0],['Ma kirjutan ___.',['pliiatsita','pliiatsiga','pliiatsile'],1],['Ma ei saa ___ elada.',['kohvita','kohviga','kohvile'],0]]},
+{title:'Причастия и -mine',questions:[['lugema → ___',['lugemine','lugemast','lugema'],0],['avatud uks — это…',['открытая дверь','закрывать дверь','дверь открывается'],0],['jooksev vesi — это…',['текущая вода','питьевая вода','вода без движения'],0],['õppinud õpilane содержит форму…',['-nud','-tud','-mata'],0],['Как сказать «изучение языка»?',['keele õppimine','keelt õppima','keel õppis'],0]]},
+{title:'Итоговый B1: комплексный',questions:[['Vali õige: Ma lähen raamatukokku, et ___.',['õppima','õppida','õppimast'],1],['Как сказать «несмотря на это»?',['sellest hoolimata','selle tõttu','ennekõike'],0],['Ta töötab arst___.',['-na','-ks','-ta'],0],['Выбери безличную форму.',['Inimesed räägivad siin eesti keelt.','Siin räägitakse eesti keelt.','Siin rääkida eesti keelt.'],1],['Как переводится «arvesse võtma»?',['принимать во внимание','отказываться','достигать цели'],0],['Kui mul ___ rohkem aega, reisiksin.',['on','oleks','oli'],1]]}
+];
+let activeTest=0,testQuestion=0,testAnswers=[];
+function renderTestList(){document.getElementById('testList').innerHTML=tests.map((t,i)=>{const n=i+1,done=progress.completedTests.includes(n),unlocked=n<=progress.unlockedTest;return `<div class="lesson ${done?'opened':''}"><div class="lesson-number">${done?'✓':n}</div><div class="lesson-info"><h3>${t.title}</h3><p>${done?'Лучший результат: '+(progress.bestScores[n]||0)+'%':t.questions.length+' вопросов · '+(unlocked?'Доступен':'Сначала пройди предыдущий тест')}</p></div><button class="secondary-btn" ${unlocked?'':'disabled'} onclick="startTest(${i})">${done?'Пройти ещё раз':unlocked?'Начать':'Закрыт'}</button></div>`}).join('')}
+function startTest(i){activeTest=i;testQuestion=0;testAnswers=[];document.getElementById('testArea').innerHTML='<div class="question-box"><div class="test-pill" id="testPill"></div><h3 id="testQuestion"></h3><div id="testOptions"></div><div class="feedback" id="testFeedback"></div><button class="secondary-btn" id="testNext" onclick="nextTestQuestion()">Следующий вопрос →</button></div>';renderTestQuestion();document.getElementById('testArea').scrollIntoView({behavior:'smooth'})}
+function renderTestQuestion(){const t=tests[activeTest],q=t.questions[testQuestion];document.getElementById('testPill').textContent=`Тест ${activeTest+1} · Вопрос ${testQuestion+1}/${t.questions.length}`;document.getElementById('testQuestion').textContent=q[0];document.getElementById('testOptions').innerHTML=q[1].map((a,i)=>`<button class="answer-option" onclick="answerTest(${i})">${a}</button>`).join('');document.getElementById('testFeedback').textContent='';document.getElementById('testNext').style.display='none'}
+function answerTest(i){if(testAnswers[testQuestion]!==undefined)return;const q=tests[activeTest].questions[testQuestion];testAnswers[testQuestion]=i;document.querySelectorAll('#testOptions button').forEach((b,j)=>{if(j===q[2])b.classList.add('correct');else if(j===i)b.classList.add('wrong');b.disabled=true});document.getElementById('testFeedback').textContent=i===q[2]?'Правильно!':'Правильный ответ: '+q[1][q[2]];document.getElementById('testNext').style.display='inline-block';document.getElementById('testNext').textContent=testQuestion===tests[activeTest].questions.length-1?'Завершить тест':'Следующий вопрос →'}
+function nextTestQuestion(){if(testAnswers[testQuestion]===undefined){document.getElementById('testFeedback').textContent='Сначала выбери ответ.';return}if(testQuestion<tests[activeTest].questions.length-1){testQuestion++;renderTestQuestion();return}finishTest()}
+function finishTest(){const t=tests[activeTest],correct=testAnswers.filter((a,i)=>a===t.questions[i][2]).length,score=Math.round(correct/t.questions.length*100),n=activeTest+1;progress.bestScores[n]=Math.max(progress.bestScores[n]||0,score);if(score>=80){if(!progress.completedTests.includes(n))progress.completedTests.push(n);progress.unlockedTest=Math.max(progress.unlockedTest,n+1)}saveProgress();document.getElementById('testArea').innerHTML=`<div class="result-box"><h3>Тест завершён</h3><p>Результат: ${correct}/${t.questions.length} — ${score}%</p><p>${score>=80?'Отлично! Следующий тест открыт.':'Нужно набрать минимум 80%. Попробуй ещё раз.'}</p><button class="primary-btn" onclick="renderTestList();document.getElementById('testArea').innerHTML='';">К списку тестов</button>${score<80?`<button class="secondary-btn" onclick="startTest(${activeTest})">Повторить тест</button>`:''}</div>`;renderTestList()}
+function renderProgressTests(){document.getElementById('progressTestList').innerHTML=tests.map((t,i)=>`<div class="lesson"><div class="lesson-number">${progress.completedTests.includes(i+1)?'✓':i+1}</div><div class="lesson-info"><h3>${t.title}</h3><p>${progress.bestScores[i+1]===undefined?'Пока не пройден':'Лучший результат: '+progress.bestScores[i+1]+'%'}</p></div></div>`).join('')}
+function updateProgress(){const totalWords=Object.values(vocabulary).reduce((s,a)=>s+a.length,0),lesson=progress.completedLessons.length,word=progress.learnedWords.length,prac=progress.completedPractice.length,test=progress.completedTests.length,reading=(progress.completedReading||[]).length,writing=(progress.completedWriting||[]).length;const p=Math.round((lesson/lessons.length+word/totalWords+prac/practiceQuestions.length+test/tests.length+reading/readings.length+writing/writingTasks.length)/6*100);['homePercent','progressPercent'].forEach(id=>document.getElementById(id).textContent=p+'%');document.getElementById('homeProgress').style.width=p+'%';document.getElementById('progressBar').style.width=p+'%';document.getElementById('statLessons').textContent=lesson+'/'+lessons.length;document.getElementById('statTests').textContent=test+'/'+tests.length;document.getElementById('statWords').textContent=word+'/'+totalWords;document.getElementById('progressLessons').textContent=lesson+'/'+lessons.length;document.getElementById('progressTests').textContent=test+'/'+tests.length;document.getElementById('progressWords').textContent=word+'/'+totalWords;document.getElementById('progressReading').textContent=reading+'/'+readings.length;document.getElementById('progressWriting').textContent=writing+'/'+writingTasks.length}
+function resetProgress(){if(!confirm('Ты действительно хочешь сбросить весь прогресс B1?'))return;progress=defaultProgress();saveProgress();renderLessons();renderVocabulary();renderPracticeTopics();renderTestList();renderProgressTests();renderReadingList();renderWritingList();alert('Прогресс B1 сброшен.')}
+renderLessons();renderVocabulary();renderPracticeTopics();renderTestList();renderReadingList();renderWritingList();renderOpinion();updateProgress();
+</script></body></html>
