@@ -5,43 +5,793 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>B2 Academy | Eesti Keel Online</title>
 <style>
-:root{--green:#183d30;--green2:#285642;--green3:#356d50;--cream:#f5f1e7;--paper:#fffdf7;--gold:#c6a45b;--ink:#24352d;--muted:#78847b;--line:#e6e1d5;--red:#b94b43;--shadow:0 12px 35px rgba(24,61,48,.09)}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
-button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:var(--green);color:white;padding:15px max(20px,calc((100% - 1180px)/2));display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;box-shadow:0 5px 20px #10291f22}.brand{font-weight:800;letter-spacing:.3px}.brand small{display:block;color:#d5c69f;font-weight:500;font-size:11px;letter-spacing:2px}.avatar{width:42px;height:42px;border-radius:50%;border:1px solid #d5c69f;background:#285642;color:white;font-weight:800}.topright{margin-left:auto;color:#e8dfc8;font-size:13px}
-.shell{max-width:1180px;margin:28px auto;padding:0 18px 60px}.hero{background:linear-gradient(120deg,#183d30,#285642);border-radius:24px;color:white;padding:30px;position:relative;overflow:hidden}.hero:after{content:"B2";position:absolute;right:28px;top:-34px;font-size:170px;font-weight:900;color:#ffffff0d}.eyebrow{color:#ddc58e;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800}.hero h1{font-size:clamp(30px,5vw,48px);margin:8px 0}.hero p{max-width:680px;color:#e2e9e2;margin:0}.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.stat{border:1px solid #ffffff2b;background:#ffffff10;border-radius:13px;padding:10px 14px;font-size:13px}.layout{display:grid;grid-template-columns:245px 1fr;gap:22px;margin-top:22px}.sidebar,.content{background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.sidebar{padding:14px;height:max-content;position:sticky;top:85px}.navbtn{width:100%;border:0;background:transparent;color:var(--ink);text-align:left;padding:11px 12px;border-radius:11px;margin:2px 0;font-weight:650;display:flex;justify-content:space-between;gap:8px}.navbtn:hover,.navbtn.active{background:#eaf0e9;color:var(--green)}.navbtn span:last-child{color:var(--muted);font-size:11px}.content{padding:clamp(18px,3vw,30px);min-height:600px}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}.section-head h2{margin:0;color:var(--green);font-size:27px}.sub{color:var(--muted);margin:4px 0 0}.pill{display:inline-flex;background:#edf2eb;color:var(--green);border-radius:30px;padding:5px 10px;font-size:11px;font-weight:800}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.card h3{margin:0 0 7px;color:var(--green);font-size:17px}.card p{margin:5px 0;color:#59665e;font-size:14px}.muted{color:var(--muted)}.gold{color:#9b792e}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.btn{border:0;border-radius:11px;background:var(--green);color:white;padding:10px 15px;font-weight:700}.btn:hover{background:var(--green2)}.btn.secondary{background:#edf1eb;color:var(--green);border:1px solid #dbe4d8}.btn.goldbtn{background:var(--gold);color:#26372d}.btn:disabled{opacity:.45;cursor:not-allowed}.back{background:transparent;border:0;color:var(--green);font-weight:800;padding:4px 0;margin-bottom:12px}.wordlist{width:100%;border-collapse:collapse;font-size:14px}.wordlist th{text-align:left;background:#edf2eb;color:var(--green);padding:11px}.wordlist td{padding:11px;border-bottom:1px solid var(--line);vertical-align:top}.wordlist tr:last-child td{border-bottom:0}.word{font-weight:800;color:var(--green)}.example{font-style:italic;color:#53635a}.lesson{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fff}.lesson h3{margin:0 0 8px;color:var(--green)}.lesson p{margin:6px 0}.callout{background:#f4f0e4;border-left:4px solid var(--gold);padding:13px 15px;border-radius:9px;margin:13px 0}.question{padding:16px 0;border-bottom:1px solid var(--line)}.question:last-child{border:0}.option{display:block;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;cursor:pointer}.option input{margin-right:8px}.option.correct{border-color:#5a956d;background:#edf7ef}.option.wrong{border-color:#c66b62;background:#fff0ee}.feedback{font-size:13px;margin-top:6px}.result{padding:15px;border-radius:13px;background:#edf2eb;margin:14px 0}.field{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:white}.textarea{min-height:180px;resize:vertical}.progressbar{height:9px;background:#e8e7df;border-radius:20px;overflow:hidden}.progressbar i{display:block;height:100%;background:var(--green3);width:0}.tag{font-size:11px;color:#7c6b45;background:#f5f0e2;padding:4px 8px;border-radius:20px}.hidden{display:none!important}.lesson-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.small{font-size:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.topic-card{display:flex;flex-direction:column;min-height:145px}.topic-card .btn{margin-top:auto;align-self:flex-start}.empty{padding:22px;text-align:center;border:1px dashed #cfcbbf;border-radius:14px;color:var(--muted)}.mobile-menu{display:none}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px}.navbtn{font-size:12px;padding:9px}.top{padding:12px 15px}.topright{display:none}.hero{padding:23px}.hero:after{font-size:110px;right:10px}.wordlist{font-size:12px}.wordlist th,.wordlist td{padding:8px}.two{grid-template-columns:1fr}}
-@media(max-width:480px){.sidebar{grid-template-columns:1fr 1fr}.navbtn{font-size:11px}.content{padding:16px}.stats{gap:7px}.stat{font-size:11px;padding:8px}}
+:root {
+  --green:#173f32;
+  --green2:#245743;
+  --green3:#326d51;
+  --light:#f5f5ed;
+  --cream:#fffef8;
+  --gold:#c5a66a;
+  --text:#26372e;
+  --muted:#78847b;
+  --border:#e6e9df;
+  --red:#c64d4d;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+button { font:inherit; cursor:pointer; }
+
+.topbar {
+  height:76px;
+  background:var(--cream);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 5%;
+  gap:18px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.profile-button {
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:#f2eee1;
+  color:var(--green);
+  font-size:22px;
+}
+
+.brand {
+  font-size:19px;
+  font-weight:800;
+  color:var(--green);
+  letter-spacing:-.5px;
+}
+
+.brand span { color:var(--gold); }
+
+.top-right {
+  margin-left:auto;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.overlay {
+  position:fixed;
+  inset:0;
+  background:#10271e80;
+  z-index:29;
+  display:none;
+}
+
+.overlay.show { display:block; }
+
+.sidebar {
+  position:fixed;
+  z-index:30;
+  left:0;
+  top:0;
+  bottom:0;
+  width:290px;
+  background:var(--cream);
+  padding:28px 22px;
+  transform:translateX(-105%);
+  transition:.3s;
+  overflow-y:auto;
+  box-shadow:10px 0 35px #00000012;
+}
+
+.sidebar.open { transform:translateX(0); }
+
+.sidebar-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.sidebar-title {
+  color:var(--green);
+  font-weight:800;
+  font-size:19px;
+}
+
+.close-menu {
+  border:0;
+  background:transparent;
+  font-size:25px;
+  color:var(--muted);
+}
+
+.nav-label {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  margin:25px 10px 10px;
+  text-transform:uppercase;
+}
+
+.nav-link {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:13px 14px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  text-align:left;
+  color:var(--text);
+  font-size:14px;
+  margin:4px 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:700;
+}
+
+.nav-icon { width:22px; font-size:17px; }
+
+.level-link {
+  display:flex;
+  justify-content:space-between;
+  padding:12px 14px;
+  color:var(--muted);
+  font-size:14px;
+  text-decoration:none;
+  border-radius:10px;
+}
+
+.level-link.current {
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:800;
+}
+
+.level-link:hover { background:#f0f1e9; }
+
+main {
+  max-width:1160px;
+  margin:auto;
+  padding:36px 28px 80px;
+}
+
+.page { display:none; }
+.page.active { display:block; }
+
+.breadcrumb {
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.hero {
+  background:var(--green);
+  color:white;
+  padding:43px;
+  border-radius:22px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:25px;
+}
+
+.hero:after {
+  content:"Õ";
+  position:absolute;
+  right:55px;
+  top:-65px;
+  font-size:260px;
+  font-weight:900;
+  color:#ffffff0c;
+}
+
+.hero small {
+  color:#d5c18e;
+  letter-spacing:2px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.hero h1 {
+  font-size:36px;
+  margin:13px 0;
+  position:relative;
+  z-index:1;
+}
+
+.hero p {
+  color:#d6e0d8;
+  max-width:590px;
+  line-height:1.7;
+  font-size:15px;
+  position:relative;
+  z-index:1;
+}
+
+.hero-tag {
+  display:inline-block;
+  margin-top:12px;
+  background:#ffffff18;
+  border:1px solid #ffffff30;
+  padding:8px 13px;
+  border-radius:30px;
+  font-size:12px;
+}
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:15px;
+  margin:35px 0 17px;
+}
+
+.section-heading h2 {
+  margin:0;
+  color:var(--green);
+  font-size:23px;
+}
+
+.section-heading p {
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.progress-card {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+  margin-bottom:25px;
+}
+
+.progress-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:13px;
+  gap:12px;
+}
+
+.progress-top strong { color:var(--green); }
+
+.progress-track {
+  height:9px;
+  background:#e9ece4;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-fill {
+  height:100%;
+  width:0%;
+  background:var(--green3);
+  border-radius:20px;
+  transition:.4s;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:25px;
+}
+.stats-extra{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 25px}
+
+.stat {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:19px;
+}
+
+.stat-number {
+  font-size:25px;
+  color:var(--green);
+  font-weight:800;
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.card {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:23px;
+  transition:.2s;
+}
+
+.card:hover {
+  transform:translateY(-3px);
+  border-color:#c9d5c8;
+}
+
+.card-icon {
+  width:44px;
+  height:44px;
+  border-radius:13px;
+  background:#eaf0e9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  margin-bottom:16px;
+}
+
+.card h3 {
+  color:var(--green);
+  margin:0 0 9px;
+  font-size:17px;
+}
+
+.card p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin:0 0 17px;
+}
+
+.primary-btn,
+.secondary-btn {
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.primary-btn {
+  background:var(--green);
+  color:white;
+}
+
+.primary-btn:hover { background:var(--green2); }
+
+.secondary-btn {
+  background:#eaf0e9;
+  color:var(--green);
+}
+
+.full-btn { width:100%; }
+
+.lesson-list {
+  display:grid;
+  gap:13px;
+}
+
+.lesson {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:19px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.lesson-number {
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eaf0e9;
+  color:var(--green);
+  font-weight:800;
+  flex-shrink:0;
+}
+
+.lesson-info { flex:1; }
+
+.lesson-info h3 {
+  margin:0 0 5px;
+  font-size:15px;
+  color:var(--green);
+}
+
+.lesson-info p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.lesson-status {
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.lesson.opened { border-color:#b8cdb9; }
+
+.lesson-content {
+  display:none;
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:25px;
+  margin-top:15px;
+  line-height:1.8;
+}
+
+.lesson-content.show { display:block; }
+
+.lesson-content h2,.lesson-content h3 { color:var(--green); line-height:1.35; }
+.lesson-content h2 { margin:0 0 8px; font-size:23px; }
+.lesson-content h3 { margin:24px 0 10px; padding-top:12px; border-top:1px solid var(--border); font-size:17px; }
+.lesson-content p,.lesson-content li { max-width:780px; line-height:1.85; font-size:15px; }
+.lesson-content .example { display:block; line-height:1.8; padding:15px 17px; margin:13px 0; border-left:3px solid var(--gold); }
+.lesson-content .example b { color:var(--green); }
+.lesson-content .lesson-lead { color:var(--muted); margin:0 0 18px; }
+.lesson-content .lesson-tip { background:#f7f3e8; border:1px solid #eadfc8; border-radius:12px; padding:14px 16px; margin:16px 0; line-height:1.7; }
+
+.example {
+  background:#eef2e9;
+  padding:13px 16px;
+  border-radius:10px;
+  margin:10px 0;
+}
+
+.example strong { color:var(--green); }
+
+.word-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.word {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:15px;
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.word strong { color:var(--green); display:block; margin-bottom:5px; }
+.word span { color:var(--muted); font-size:13px; line-height:1.5; }
+.word-learned { border-color:#b8cdb9; background:#f1f6ef; }
+.word .secondary-btn { flex-shrink:0; align-self:center; white-space:nowrap; }
+.category-tabs .tab-btn { min-height:38px; }
+@media(max-width:520px){.word{align-items:flex-start;flex-direction:column}.word .secondary-btn{width:100%}}
+
+.category-tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.tab-btn {
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:9px 15px;
+  background:var(--cream);
+  color:var(--text);
+  font-size:12px;
+}
+
+.tab-btn.active {
+  background:var(--green);
+  color:white;
+  border-color:var(--green);
+}
+
+.question-box {
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:25px;
+  margin-top:15px;
+}
+
+.question-box h3 {
+  color:var(--green);
+  margin-top:0;
+}
+
+.answer-option {
+  display:block;
+  width:100%;
+  text-align:left;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:white;
+  padding:14px;
+  margin:9px 0;
+  color:var(--text);
+  transition:.15s;
+}
+
+.answer-option:hover { border-color:var(--green3); }
+
+.answer-option.correct {
+  border:2px solid #398454;
+  background:#eaf5ed;
+}
+
+.answer-option.wrong {
+  border:2px solid var(--red);
+  background:#fff0ef;
+}
+
+.feedback {
+  min-height:24px;
+  margin:12px 0;
+  font-size:13px;
+  font-weight:700;
+}
+
+.test-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.test-pill {
+  background:#eaf0e9;
+  color:var(--green);
+  padding:7px 11px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.test-dots {
+  display:flex;
+  gap:6px;
+  margin:15px 0;
+}
+
+.test-dot {
+  height:6px;
+  flex:1;
+  border-radius:10px;
+  background:#e4e8df;
+}
+
+.test-dot.done { background:var(--green3); }
+
+.result {
+  text-align:center;
+  padding:25px 10px;
+}
+
+.result h2 { color:var(--green); }
+
+.result-score {
+  font-size:45px;
+  color:var(--green);
+  font-weight:900;
+  margin:15px 0;
+}
+
+.locked {
+  opacity:.55;
+  background:#f1f1eb;
+}
+
+.notice {
+  background:#f2eee1;
+  border:1px solid #e7ddc4;
+  border-radius:12px;
+  padding:15px;
+  color:#665535;
+  font-size:13px;
+  line-height:1.6;
+  margin:18px 0;
+}
+
+@media(max-width:700px) {
+  main { padding:25px 16px 60px; }
+  .topbar { padding:0 17px; }
+  .top-right { display:none; }
+  .hero { padding:28px 23px; }
+  .hero h1 { font-size:28px; }
+  .hero:after { right:0; font-size:180px; }
+  .grid,.word-grid { grid-template-columns:1fr; }
+  .stats { gap:8px; }
+  .stat { padding:13px; }
+  .stat-number { font-size:21px; }
+  .lesson { align-items:flex-start; }
+  .lesson-status { display:none; }
+}
+
+
+/* Навигация и прогресс разделов */
+.back-home {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--border);
+  background:var(--cream);
+  color:var(--green);
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  margin:0 0 18px;
+}
+.back-home:hover { background:#eaf0e9; }
+.section-progress {
+  background:var(--cream);
+  border:1px solid var(--border);
+  padding:17px 20px;
+  border-radius:14px;
+  margin:0 0 22px;
+}
+.section-progress-top {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:13px;
+  margin-bottom:10px;
+}
+.section-progress-top strong { color:var(--green); }
+.section-progress-top span { color:var(--muted); }
+.word-learned { border-color:#b8cdb9; background:#f3f7ef; }
+@media(max-width:700px) {
+  .section-progress { padding:14px; }
+  .back-home { margin-bottom:14px; }
+}
+
+
+/* Последовательное обучение: переходы, словарный квиз и практика по темам */
+.lesson-actions,.word-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.practice-topic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.practice-topic-card{background:var(--cream);border:1px solid var(--border);border-radius:15px;padding:19px}
+.practice-topic-card h3{color:var(--green);font-size:15px;margin:0 0 7px}
+.practice-topic-card p{color:var(--muted);font-size:12px;margin:0 0 14px}
+.vocab-quiz{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px;margin-top:22px}
+.vocab-quiz h3{color:var(--green);margin-top:0}
+.vocab-quiz-result{text-align:center;padding:18px}
+.word-category-actions{margin:18px 0 24px;}
+.word-category-actions .primary-btn{width:100%;min-height:48px;}
+.practice-topic-card.is-complete{border-color:#b8cdb9;background:#f3f7ef;}
+.practice-complete-label{display:inline-flex;align-items:center;gap:6px;color:#285642;font-size:12px;font-weight:800;margin-bottom:10px;}
+.practice-topic-card .primary-btn:disabled{opacity:.7;cursor:default;}
+.vocab-confirm-backdrop{position:fixed;inset:0;background:rgba(12,25,19,.62);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;}
+.vocab-confirm{width:min(100%,420px);background:var(--cream);border:1px solid var(--border);border-radius:20px;padding:25px;box-shadow:0 18px 60px rgba(0,0,0,.25);text-align:center;}
+.vocab-confirm-mark{width:48px;height:48px;border-radius:50%;margin:0 auto 14px;background:#f5ead0;color:#8a6727;display:grid;place-items:center;font-size:24px;font-weight:800;}
+.vocab-confirm h3{color:var(--green);margin:0 0 9px;font-size:20px;}
+.vocab-confirm p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 20px;}
+.vocab-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.vocab-confirm-actions button{min-height:45px;}
+@media(max-width:700px){.practice-topic-list{grid-template-columns:1fr}.lesson-actions>*{flex:1}.vocab-confirm{padding:22px 18px}.vocab-confirm-actions{grid-template-columns:1fr;}}
+
+
+
+
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.resource-card{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px}.resource-card h3{color:var(--green);margin:8px 0}.resource-card p{color:var(--muted);font-size:14px;line-height:1.6}.resource-card .primary-btn{margin-top:12px}.reading-text,.writing-task,.opinion-card{background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:24px;margin:16px 0;line-height:1.8}.reading-text h3,.writing-task h3,.opinion-card h3{color:var(--green)}
+.reading-body{font-size:16px;line-height:2;letter-spacing:.1px;max-width:780px}
+.reading-question{padding:16px 0;border-top:1px solid var(--border)}
+.reading-question b{display:block;line-height:1.6;margin-bottom:8px}
+.reading-question .answer-option{line-height:1.5}
+.opinion-card{max-width:850px;padding:20px 22px}
+.opinion-card .opinion-steps{display:grid;gap:9px;margin:14px 0}
+.opinion-card .opinion-step{background:#f0f3eb;border-radius:10px;padding:11px 13px;line-height:1.6}
+.opinion-card .opinion-phrases{columns:2;column-gap:28px}
+@media(max-width:600px){.opinion-card .opinion-phrases{columns:1}}.reading-question{padding:14px 0;border-top:1px solid var(--border)}.reading-question button{display:block;width:100%;text-align:left;margin:7px 0}.writing-answer{width:100%;min-height:190px;border:1px solid var(--border);border-radius:12px;padding:14px;font:inherit;background:#fffefb;resize:vertical}.small-note{font-size:12px;color:var(--muted)}
+.writing-guide{background:#eef2e9;border-radius:12px;padding:16px 18px;margin:15px 0;line-height:1.75}
+.writing-guide h4{margin:0 0 8px;color:var(--green)}
+.writing-guide ol{padding-left:22px}
+.writing-checklist{background:#fff;border:1px solid var(--border);border-radius:12px;padding:15px;margin:14px 0}.grammar-tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#eaf0e9;color:var(--green);font-size:11px;font-weight:700;margin:3px}.lesson-content h3{margin-top:24px}.lesson-content ul{line-height:1.8}.lesson-content .warning{background:#fff7e7;border-left:4px solid var(--gold);padding:13px 16px;border-radius:8px;margin:14px 0}.lesson-content .table-wrap{overflow-x:auto}.lesson-content table{border-collapse:collapse;width:100%;margin:14px 0;background:#fffefb}.lesson-content th,.lesson-content td{border:1px solid var(--border);padding:10px;text-align:left}.lesson-content th{background:#edf2eb;color:var(--green)}.section-intro{max-width:760px;color:var(--muted);line-height:1.7}.resource-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.resource-tabs button{border:1px solid var(--border);background:var(--cream);padding:9px 13px;border-radius:20px;color:var(--text)}.resource-tabs button.active{background:var(--green);color:white}.result-box{padding:16px;background:#edf2eb;border-radius:12px;margin-top:12px;line-height:1.7}
+.practice-topic-card .result-box{margin:12px 0;text-align:left;font-size:13px}
+.practice-topic-card .primary-btn{width:100%;margin-top:8px}
+.mistake-details{background:#fff8f6;border:1px solid #efd8d4;border-radius:10px;padding:11px 13px;margin:10px 0;font-size:13px;line-height:1.65}
+.mistake-details summary{cursor:pointer;color:var(--red);font-weight:700}
+.mistake-details li{margin:9px 0}
+#readingFinish:disabled{opacity:.55;cursor:not-allowed}
+.reading-result-mistakes li{margin:10px 0;line-height:1.6}
+@media(max-width:700px){.home-grid{grid-template-columns:1fr}.reading-text,.writing-task,.opinion-card{padding:17px}}
+
+
+/* B2 content, styled to use the same visual language as A1/A2/B1 */
+.navbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:13px 14px;border:0;border-radius:12px;background:transparent;text-align:left;color:var(--text);font-size:14px;margin:4px 0;font-weight:500}
+.navbtn:hover,.navbtn.active{background:#eaf0e9;color:var(--green);font-weight:700}
+.navbtn span:last-child{color:var(--muted);font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;flex-wrap:wrap;margin:35px 0 17px}
+.section-head h2{margin:0;color:var(--green);font-size:23px}
+.section-head .sub,.sub{margin:6px 0 0;color:var(--muted);font-size:13px}
+.pill,.tag{display:inline-block;background:#eaf0e9;color:var(--green);border-radius:30px;padding:6px 11px;font-size:11px;font-weight:800}
+.callout{background:#f2eee1;border:1px solid #e7ddc4;border-radius:12px;padding:15px;color:#665535;font-size:13px;line-height:1.7;margin:18px 0}
+.toolbar,.lesson-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:13px;background:var(--green);color:white}
+.btn:hover{background:var(--green2)}
+.btn.secondary{background:#eaf0e9;color:var(--green)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.topic-card{display:flex;flex-direction:column;min-height:145px}
+.topic-card .lesson-actions{margin-top:auto}
+.wordlist{width:100%;border-collapse:collapse;background:var(--cream);font-size:14px}
+.wordlist th{text-align:left;background:#eaf0e9;color:var(--green);padding:12px}
+.wordlist td{padding:12px;border-bottom:1px solid var(--border);vertical-align:top}
+.wordlist tr:last-child td{border-bottom:0}
+.word{font-weight:800;color:var(--green)}
+.example{background:#eef2e9;padding:12px 15px;border-radius:10px;margin:8px 0;color:var(--text);font-style:normal}
+.lesson{display:block;background:var(--cream);border:1px solid var(--border);border-radius:15px;padding:19px;margin:13px 0;line-height:1.8}
+.lesson h3{margin:0 0 8px;color:var(--green);font-size:17px}
+.lesson p{font-size:14px;line-height:1.8}
+.question{padding:16px 0;border-bottom:1px solid var(--border)}
+.option{display:block;padding:11px 13px;border:1px solid var(--border);border-radius:10px;margin:7px 0;background:white;cursor:pointer}
+.option.correct{border:2px solid #398454;background:#eaf5ed}
+.option.wrong{border:2px solid var(--red);background:#fff0ef}
+.feedback{font-size:13px;margin-top:7px;line-height:1.6}
+.result{padding:16px;background:#edf2eb;border-radius:12px;margin:14px 0;line-height:1.7}
+.field{width:100%;border:1px solid var(--border);border-radius:11px;padding:12px;background:white}
+.textarea{min-height:180px;resize:vertical}
+.progressbar{height:9px;background:#e8e7df;border-radius:20px;overflow:hidden}
+.progressbar i{display:block;height:100%;background:var(--green3)}
+.small{font-size:12px}.muted{color:var(--muted)}.gold{color:#9b792e}
+.back{border:1px solid var(--border);background:var(--cream);color:var(--green);padding:10px 15px;border-radius:10px;font-weight:700;margin:0 0 16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hidden{display:none!important}
+#main>.hero{margin-bottom:25px}
+@media(max-width:700px){.section-head{align-items:flex-start}.wordlist{font-size:12px}.wordlist th,.wordlist td{padding:8px}.two{grid-template-columns:1fr}.navbtn{font-size:13px}}
 </style>
 </head>
 <body>
-<header class="top">
-<button class="avatar" id="menuToggle" aria-label="Открыть меню">EK</button>
-<div class="brand">EESTI KEEL ONLINE<small>INDEPENDENT LANGUAGE ACADEMY</small></div>
-<div class="topright">B2 · Iseseisev keelekasutaja</div>
+<header class="topbar">
+<button class="profile-button" id="menuToggle" onclick="toggleMenu()" aria-label="Открыть меню">♙</button>
+<div class="brand">EESTI KEEL <span>ONLINE</span></div>
+<div class="top-right">Õpi eesti keelt lihtsalt ja targalt</div>
 </header>
-<div class="shell">
-<section class="hero">
-<div class="eyebrow">Järgmine tase · B2</div>
-<h1>Iseseisev keelekasutaja</h1>
-<p>Уверенно используй эстонский язык: обсуждай сложные темы, аргументируй свою позицию, анализируй тексты и выражай мысли ясно и точно.</p>
-<div class="stats"><div class="stat">16 категорий словаря</div><div class="stat">30+ уроков грамматики</div><div class="stat">Чтение · письмо · практика</div></div>
-</section>
-<div class="layout">
-<nav class="sidebar" id="sidebar">
-<button class="navbtn active" data-section="vocab">Словарный запас <span>01</span></button>
-<button class="navbtn" data-section="topics">Темы <span>02</span></button>
-<button class="navbtn" data-section="grammar">Грамматика <span>03</span></button>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-head"><div class="sidebar-title">Eesti Keel Online</div><button class="close-menu" onclick="toggleMenu()">×</button></div>
+<div class="nav-label">Обучение</div>
+<button class="navbtn active" data-section="vocab">📖 Словарный запас <span>01</span></button>
+<button class="navbtn" data-section="topics">📚 Темы <span>02</span></button>
+<button class="navbtn" data-section="grammar">✍️ Грамматика <span>03</span></button>
 <button class="navbtn" data-section="practice">Практика <span>04</span></button>
-<button class="navbtn" data-section="reading">Чтение <span>05</span></button>
-<button class="navbtn" data-section="writing">Письмо <span>06</span></button>
-<button class="navbtn" data-section="opinion">Выражение мнения <span>07</span></button>
-<button class="navbtn" data-section="tests">Тесты <span>08</span></button>
-<button class="navbtn" data-section="progress">Мой прогресс <span>09</span></button>
-</nav>
-<main class="content" id="main"></main>
-</div>
-</div>
+<button class="navbtn" data-section="reading">📘 Чтение <span>05</span></button>
+<button class="navbtn" data-section="writing">📝 Письмо <span>06</span></button>
+<button class="navbtn" data-section="opinion">💬 Выражение мнения <span>07</span></button>
+<button class="navbtn" data-section="tests">✓ Тесты <span>08</span></button>
+<div class="nav-label">Личный кабинет</div>
+<button class="navbtn" data-section="progress">◷ Мой прогресс <span>09</span></button>
+<div class="nav-label">Уровни обучения</div>
+<a class="level-link" href="a1.html">A1 — Начальный</a>
+<a class="level-link" href="a2.html">A2 — Элементарный</a>
+<a class="level-link" href="b1.html">B1 — Средний</a>
+<a class="level-link current" href="b2.html">B2 — Выше среднего <span>●</span></a>
+</aside>
+<main id="main"></main>
 <script>
+function toggleMenu(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
+</script>
+<script>
+
 const vocab = [
 ["Ühiskond","Общество",[
 ["ühiskond","общество","Ühiskond muutub pidevalt.","Общество постоянно меняется."],
@@ -108,8 +858,8 @@ const state={section:"vocab",done:{},quizResult:{},answers:{},openLesson:null,wr
 const main=document.getElementById("main");
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function setSection(s){state.section=s;document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.section===s));render();}
-document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>setSection(b.dataset.section)));
-document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("sidebar").scrollIntoView({behavior:"smooth",block:"start"}));
+document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>{setSection(b.dataset.section);document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show");}));
+
 function sectionHead(title,sub){return `<div class="section-head"><div><h2>${title}</h2><p class="sub">${sub}</p></div><span class="pill">B2 · Eesti keel</span></div>`}
 function mark(key){state.done[key]=!state.done[key];save();render();}
 function save(){try{sessionStorage.setItem("eko_b2_progress",JSON.stringify({done:state.done,quizResult:state.quizResult}));}catch(e){}}
@@ -138,8 +888,9 @@ function checkQuiz(key,arr){let correct=0;arr.forEach((q,i)=>{let sel=document.q
 function startDemoTest(i){state.quizCustom={title:tests[i],key:"test"+i,qs:[{q:"Что означает «ühiskondlik vastutus»?",opts:["общественная ответственность","личная свобода","экономический рост","уровень жизни"],correct:0,ex:"Ühiskondlik vastutus — общественная ответственность."},{q:"Выберите выражение «обращать внимание».",opts:["tähelepanu juhtima","mõju avaldama","seisukohta väljendama","osa võtma"],correct:0,ex:"Tähelepanu juhtima — обращать внимание."},{q:"Как переводится «säästev areng»?",opts:["устойчивое развитие","быстрый рост","социальная поддержка","свободный рынок"],correct:0,ex:"Säästev areng — устойчивое развитие."},{q:"Что означает «ebavõrdsus»?",opts:["равенство","неравенство","солидарность","разнообразие"],correct:1,ex:"Ebavõrdsus — неравенство."},{q:"Как сказать «оказывать влияние»?",opts:["mõju avaldama","probleemi lahendama","tähelepanu juhtima","ühiskonnas osalema"],correct:0,ex:"Mõju avaldama — оказывать влияние."}]};state.section="quiz";render();}
 function quizView(){let q=state.quizCustom;if(!q)return testsView();return `<button class="back" onclick="setSection('tests')">← Назад к тестам</button>${sectionHead(q.title,"Демонстрационный тест · выберите один ответ")}<form id="customQuiz">${q.qs.map((x,i)=>`<div class="question"><b>${i+1}. ${x.q}</b>${x.opts.map((o,j)=>`<label class="option"><input type="radio" name="cq${i}" value="${j}">${o}</label>`).join("")}<div class="feedback hidden" id="cfeed${i}"></div></div>`).join("")}<button type="button" class="btn" onclick="checkCustom()">Проверить тест</button></form><div id="customResult" class="hidden"></div>`}
 function checkCustom(){let q=state.quizCustom,correct=0;q.qs.forEach((x,i)=>{let el=document.querySelector(`input[name=cq${i}]:checked`),v=el?Number(el.value):-1,ok=v===x.correct;if(ok)correct++;document.querySelectorAll(`input[name=cq${i}]`).forEach((e,j)=>{e.disabled=true;e.parentElement.classList.toggle("correct",j===x.correct);e.parentElement.classList.toggle("wrong",j===v&&!ok)});let f=document.getElementById("cfeed"+i);f.classList.remove("hidden");f.textContent=(ok?"Правильно. ":"Ошибка. Верный ответ: "+x.opts[x.correct]+". ")+x.ex;});let p=Math.round(correct/q.qs.length*100);state.quizResult[q.key]=p;save();let r=document.getElementById("customResult");r.className="result";r.classList.remove("hidden");r.innerHTML=`<b>Результат: ${correct}/${q.qs.length} · ${p}%</b><p>${q.qs.length-correct} ошибок. Ответы и объяснения показаны в заданиях.</p><button class="btn secondary" onclick="setSection('tests')">К списку тестов</button>`;}
-function render(){if(state.section==="detail"){let d=state.detail;main.innerHTML=d.type==="grammar"?grammarDetail(d.a,d.b):d.type==="writing"?writingDetail(d.i):d.type==="practice"?practiceDetail(d.i):genericDetail(d.type,d.i);return;}if(state.section==="quiz"){main.innerHTML=quizView();return;}let views={vocab:vocabView,topics:topicsView,grammar:grammarView,practice:practiceView,reading:readingView,writing:writingView,opinion:opinionView,tests:testsView,progress:progressView};main.innerHTML=views[state.section]();}
+function render(){let body;if(state.section==="detail"){let d=state.detail;body=d.type==="grammar"?grammarDetail(d.a,d.b):d.type==="writing"?writingDetail(d.i):d.type==="practice"?practiceDetail(d.i):genericDetail(d.type,d.i);}else if(state.section==="quiz"){body=quizView();}else{let views={vocab:vocabView,topics:topicsView,grammar:grammarView,practice:practiceView,reading:readingView,writing:writingView,opinion:opinionView,tests:testsView,progress:progressView};body=views[state.section]();}main.innerHTML=`<div class="breadcrumb">Главная / Уровни / B2</div><div class="hero"><small>ESTONIAN LANGUAGE COURSE</small><h1>Уверенно используй эстонский 🇪🇪</h1><p>Добро пожаловать на B2 — самостоятельный уровень. Учись обсуждать сложные темы, аргументировать свою позицию, анализировать тексты и выражать мысли ясно и точно.</p><div class="hero-tag">B2 · Upper Intermediate · Полноценный курс</div></div>${body}`;}
 load();render();
+
 </script>
 </body>
 </html>
