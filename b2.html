@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -758,6 +759,27 @@ main {
 .hidden{display:none!important}
 #main>.hero{margin-bottom:25px}
 @media(max-width:700px){.section-head{align-items:flex-start}.wordlist{font-size:12px}.wordlist th,.wordlist td{padding:8px}.two{grid-template-columns:1fr}.navbtn{font-size:13px}}
+
+/* Главная страница B2 оформлена по структуре B1 */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.resource-card{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px}
+.resource-card h3{color:var(--green);margin:8px 0}
+.resource-card p{color:var(--muted);font-size:14px;line-height:1.6}
+.resource-card .primary-btn{margin-top:12px}
+.card-icon{font-size:25px}
+.section-heading{display:flex;justify-content:space-between;align-items:flex-end;margin:30px 0 16px}
+.section-heading h2{margin:0;color:var(--green);font-size:23px}
+.section-heading p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.progress-card{background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:20px;margin:20px 0}
+.progress-top{display:flex;justify-content:space-between;align-items:center}
+.progress-track{height:9px;background:#e8e7df;border-radius:20px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;background:var(--green3);border-radius:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 28px}
+.stat{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:17px}
+.stat-number{font-size:25px;font-weight:800;color:var(--green)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:5px}
+@media(max-width:600px){.home-grid{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat-number{font-size:21px}}
+
 </style>
 </head>
 <body>
@@ -770,16 +792,17 @@ main {
 <aside class="sidebar" id="sidebar">
 <div class="sidebar-head"><div class="sidebar-title">Eesti Keel Online</div><button class="close-menu" onclick="toggleMenu()">×</button></div>
 <div class="nav-label">Обучение</div>
-<button class="navbtn active" data-section="vocab">📖 Словарный запас <span>01</span></button>
-<button class="navbtn" data-section="topics">📚 Темы <span>02</span></button>
-<button class="navbtn" data-section="grammar">✍️ Грамматика <span>03</span></button>
-<button class="navbtn" data-section="practice">Практика <span>04</span></button>
-<button class="navbtn" data-section="reading">📘 Чтение <span>05</span></button>
-<button class="navbtn" data-section="writing">📝 Письмо <span>06</span></button>
-<button class="navbtn" data-section="opinion">💬 Выражение мнения <span>07</span></button>
-<button class="navbtn" data-section="tests">✓ Тесты <span>08</span></button>
+<button class="navbtn nav-link active" data-section="home">⌂ Главная</button>
+<button class="navbtn nav-link" data-section="vocab">📖 Словарный запас</button>
+<button class="navbtn nav-link" data-section="topics">📚 Темы</button>
+<button class="navbtn nav-link" data-section="grammar">✍️ Грамматика</button>
+<button class="navbtn nav-link" data-section="practice">Практика</button>
+<button class="navbtn nav-link" data-section="reading">📘 Чтение</button>
+<button class="navbtn nav-link" data-section="writing">📝 Письмо</button>
+<button class="navbtn nav-link" data-section="opinion">💬 Выражение мнения</button>
+<button class="navbtn nav-link" data-section="tests">✓ Тесты</button>
 <div class="nav-label">Личный кабинет</div>
-<button class="navbtn" data-section="progress">◷ Мой прогресс <span>09</span></button>
+<button class="navbtn nav-link" data-section="progress">◷ Мой прогресс</button>
 <div class="nav-label">Уровни обучения</div>
 <a class="level-link" href="a1.html">A1 — Начальный</a>
 <a class="level-link" href="a2.html">A2 — Элементарный</a>
@@ -860,7 +883,7 @@ const readingTitles=["Tehnoloogia ja ühiskondlikud muutused","Hariduse tulevik"
 const writingTitles=["Argumenteeriva teksti ülesehitus","Sissejuhatuse kirjutamine","Argumentide arendamine","Näidete ja tõendite kasutamine","Kokkuvõtte kirjutamine","Ametlik kiri","Mitteametlik kiri","Arvamusartikkel","Probleemi analüüs ja raport","Täielik B2-taseme essee"];
 const opinionTitles=["Oma seisukoha sõnastamine","Nõustumine ja toetamine","Viisakas mittenõustumine","Tugevate argumentide esitamine","Vastuargumentide kasutamine","Erinevate vaatenurkade võrdlemine","Põhjuste ja tagajärgede selgitamine","Lahenduste pakkumine","Ametlik arutelu","Keerulistele küsimustele vastamine","Oma seisukoha kaitsmine","Täielik arutelu"];
 const tests=["Grammatika 1: liitlaused","Grammatika 2: kõneviisid","Grammatika 3: kesksõnad","Grammatika 4: verbikonstruktsioonid","Grammatika 5: sõnamoodustus","Grammatika 6: sõnajärg ja stiil","Grammatika 7: rektsioon","Grammatika 8: astmevaheldus","Grammatika 9: eitus","Grammatika 10: segagrammatika","Sõnavara 1: ühiskond","Sõnavara 2: poliitika ja riik","Sõnavara 3: majandus","Sõnavara 4: haridus ja teadus","Sõnavara 5: psühholoogia","Sõnavara 6: keskkond","Sõnavara 7: tehnoloogia","Sõnavara 8: kultuur","Teemad 1–4","Teemad 5–8","Teemad 9–12","Teemad 13–16","Lugemine 1","Lugemine 2","Lugemine 3","Lugemine 4","Segatest 1","Segatest 2","Segatest 3","Segatest 4","B2 vahetest","B2 lõputest 1","B2 lõputest 2","B2 oskuste koondtest","B2 grammatika lõpueksam","B2 üldine lõpueksam"];
-const state={section:"vocab",done:{},quizResult:{},answers:{},openLesson:null,writingText:"",detail:null,returnSection:"vocab"};
+const state={section:"home",done:{},quizResult:{},answers:{},openLesson:null,writingText:"",detail:null,returnSection:"vocab"};
 const main=document.getElementById("main");
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function setSection(s){state.section=s;state.detail=null;state.returnSection=s;document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.section===s));render();}
@@ -943,7 +966,25 @@ function checkQuiz(key,arr){let correct=0;arr.forEach((q,i)=>{let sel=document.q
 function startDemoTest(i){state.quizCustom={title:tests[i],key:"test"+i,qs:[{q:"Что означает «ühiskondlik vastutus»?",opts:["общественная ответственность","личная свобода","экономический рост","уровень жизни"],correct:0,ex:"Ühiskondlik vastutus — общественная ответственность."},{q:"Выберите выражение «обращать внимание».",opts:["tähelepanu juhtima","mõju avaldama","seisukohta väljendama","osa võtma"],correct:0,ex:"Tähelepanu juhtima — обращать внимание."},{q:"Как переводится «säästev areng»?",opts:["устойчивое развитие","быстрый рост","социальная поддержка","свободный рынок"],correct:0,ex:"Säästev areng — устойчивое развитие."},{q:"Что означает «ebavõrdsus»?",opts:["равенство","неравенство","солидарность","разнообразие"],correct:1,ex:"Ebavõrdsus — неравенство."},{q:"Как сказать «оказывать влияние»?",opts:["mõju avaldama","probleemi lahendama","tähelepanu juhtima","ühiskonnas osalema"],correct:0,ex:"Mõju avaldama — оказывать влияние."}]};state.section="quiz";render();}
 function quizView(){let q=state.quizCustom;if(!q)return testsView();let backLabel=state.returnSection==="vocab"?"← Назад к словам":"← Назад к тестам";return `<button class="back" onclick="backToSection()">${backLabel}</button>${sectionHead(q.title,"Демонстрационный тест · выберите один ответ")}<form id="customQuiz">${q.qs.map((x,i)=>`<div class="question"><b>${i+1}. ${x.q}</b>${x.opts.map((o,j)=>`<label class="option"><input type="radio" name="cq${i}" value="${j}">${o}</label>`).join("")}<div class="feedback hidden" id="cfeed${i}"></div></div>`).join("")}<button type="button" class="btn" onclick="checkCustom()">Проверить тест</button></form><div id="customResult" class="hidden"></div>`}
 function checkCustom(){let q=state.quizCustom,correct=0;q.qs.forEach((x,i)=>{let el=document.querySelector(`input[name=cq${i}]:checked`),v=el?Number(el.value):-1,ok=v===x.correct;if(ok)correct++;document.querySelectorAll(`input[name=cq${i}]`).forEach((e,j)=>{e.disabled=true;e.parentElement.classList.toggle("correct",j===x.correct);e.parentElement.classList.toggle("wrong",j===v&&!ok)});let f=document.getElementById("cfeed"+i);f.classList.remove("hidden");f.textContent=(ok?"Правильно. ":"Ошибка. Верный ответ: "+x.opts[x.correct]+". ")+x.ex;});let p=Math.round(correct/q.qs.length*100);state.quizResult[q.key]=p;save();let r=document.getElementById("customResult");r.className="result";r.classList.remove("hidden");r.innerHTML=`<b>Результат: ${correct}/${q.qs.length} · ${p}%</b><p>${q.qs.length-correct} ошибок. Ответы и объяснения показаны в заданиях.</p><button class="btn secondary" onclick="backToSection()">Вернуться</button>`;}
-function render(){let body;if(state.section==="detail"){let d=state.detail;body=d.type==="grammar"?grammarDetail(d.i):d.type==="writing"?writingDetail(d.i):d.type==="practice"?practiceDetail(d.i):genericDetail(d.type,d.i);}else if(state.section==="quiz"){body=quizView();}else{let views={vocab:vocabView,topics:topicsView,grammar:grammarView,practice:practiceView,reading:readingView,writing:writingView,opinion:opinionView,tests:testsView,progress:progressView};body=views[state.section]();}main.innerHTML=`<div class="breadcrumb">Главная / Уровни / B2</div><div class="hero"><small>ESTONIAN LANGUAGE COURSE</small><h1>Уверенно используй эстонский 🇪🇪</h1><p>Добро пожаловать на B2 — самостоятельный уровень. Учись обсуждать сложные темы, аргументировать свою позицию, анализировать тексты и выражать мысли ясно и точно.</p><div class="hero-tag">B2 · Upper Intermediate · Полноценный курс</div></div>${body}`;}
+function homeView(){
+ const completed=Object.keys(state.done).filter(k=>state.done[k]).length;
+ const max=vocab.length+topicLessons.length+grammarLessons.length+writingPlans.length;
+ const pct=Math.round(completed/max*100);
+ const words=vocab.reduce((n,c)=>n+c[2].length,0);
+ const cards=[
+  ["📖","Словарный запас","16 тематических категорий, полезные выражения и примеры.","vocab","Изучать слова →"],
+  ["📚","Темы","16 тематических уроков об обществе, технологиях, культуре и других темах.","topics","Открыть темы →"],
+  ["✍️","Грамматика","30 уроков: сложные предложения, времена, наклонения, формы и конструкции.","grammar","Изучать грамматику →"],
+  ["🧩","Практика","6 тренировок для закрепления лексики, грамматики и навыков B2.","practice","Начать практику →"],
+  ["📘","Чтение","12 эстонских текстов с вопросами на понимание и анализ.","reading","Перейти к чтению →"],
+  ["📝","Письмо","10 уроков по созданию писем, статей, отчётов и эссе.","writing","Учиться писать →"],
+  ["💬","Выражение мнения","12 уроков: аргументы, контраргументы и обсуждение сложных вопросов.","opinion","Тренировать речь →"],
+  ["✓","Тесты B2","36 тестов для проверки знаний и закрепления материала.","tests","К тестам →"],
+  ["◷","Мой прогресс","Завершённые уроки и результаты проверочных работ.","progress","Посмотреть прогресс →"]
+ ];
+ return `<div class="breadcrumb">Главная / Уровни / B2</div><div class="hero"><small>ESTONIAN LANGUAGE COURSE</small><h1>Уверенно используй эстонский 🇪🇪</h1><p>Добро пожаловать на B2 — самостоятельный уровень. Учись обсуждать сложные темы, аргументировать свою позицию, анализировать тексты и выражать мысли ясно и точно.</p><div class="hero-tag">B2 · Upper Intermediate · Полноценный курс</div></div><div class="progress-card"><div class="progress-top"><strong>Твой прогресс B2</strong><span>${pct}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div><p style="color:var(--muted);font-size:12px;margin:12px 0 0">Проходи уроки, учи слова, читай тексты и выполняй задания. Прогресс сохраняется в этом браузере.</p></div><div class="stats"><div class="stat"><div class="stat-number">${completed}</div><div class="stat-label">Элементов завершено</div></div><div class="stat"><div class="stat-number">${tests.length}</div><div class="stat-label">Тестов доступно</div></div><div class="stat"><div class="stat-number">${words}</div><div class="stat-label">Слов и выражений</div></div></div><div class="section-heading"><div><h2>Учебные разделы</h2><p>Выбирай направление и двигайся постепенно</p></div></div><div class="home-grid">${cards.map(c=>`<div class="resource-card"><div class="card-icon">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p><button class="primary-btn" onclick="setSection('${c[3]}')">${c[4]}</button></div>`).join('')}</div>`;
+}
+function render(){if(state.section==="home"){main.innerHTML=homeView();document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.section==="home"));return;}let body;if(state.section==="detail"){let d=state.detail;body=d.type==="grammar"?grammarDetail(d.i):d.type==="writing"?writingDetail(d.i):d.type==="practice"?practiceDetail(d.i):genericDetail(d.type,d.i);}else if(state.section==="quiz"){body=quizView();}else{let views={vocab:vocabView,topics:topicsView,grammar:grammarView,practice:practiceView,reading:readingView,writing:writingView,opinion:opinionView,tests:testsView,progress:progressView};body=views[state.section]();}main.innerHTML=`<div class="breadcrumb">Главная / Уровни / B2</div>${state.section!=="detail"&&state.section!=="quiz"?`<button class="back-home" onclick="setSection('home')">← Назад к началу B2</button>`:""}${body}`;}
 load();render();
 
 </script>
