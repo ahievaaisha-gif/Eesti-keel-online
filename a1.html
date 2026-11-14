@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -657,6 +658,18 @@ main {
   .back-home { margin-bottom:14px; }
 }
 
+
+/* Последовательное обучение: переходы, словарный квиз и практика по темам */
+.lesson-actions,.word-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.practice-topic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.practice-topic-card{background:var(--cream);border:1px solid var(--border);border-radius:15px;padding:19px}
+.practice-topic-card h3{color:var(--green);font-size:15px;margin:0 0 7px}
+.practice-topic-card p{color:var(--muted);font-size:12px;margin:0 0 14px}
+.vocab-quiz{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px;margin-top:22px}
+.vocab-quiz h3{color:var(--green);margin-top:0}
+.vocab-quiz-result{text-align:center;padding:18px}
+@media(max-width:700px){.practice-topic-list{grid-template-columns:1fr}.lesson-actions>*{flex:1}}
+
 </style>
 </head>
 
@@ -822,6 +835,7 @@ main {
   <div class="category-tabs" id="wordTabs"></div>
   <div class="section-progress" id="wordCategoryProgress"></div>
   <div class="word-grid" id="wordGrid"></div>
+  <div id="vocabularyQuizArea"></div>
 </section>
 
 <!-- ПРАКТИКА -->
@@ -837,9 +851,11 @@ main {
     </div>
   </div>
 
-  <div class="question-box">
-    <div class="test-pill">Небольшое упражнение</div>
-    <h3 id="practiceQuestion" style="margin-top:20px">Загрузка...</h3>
+  <div id="practiceTopicList" class="practice-topic-list"></div>
+  <div id="practiceExercise" class="question-box" style="display:none">
+    <button class="back-home" onclick="renderPracticeTopics()">← К темам практики</button>
+    <div class="test-pill" id="practiceTopicLabel">Практика по теме</div>
+    <h3 id="practiceQuestion" style="margin-top:20px">Выбери тему</h3>
     <div id="practiceOptions"></div>
     <div class="feedback" id="practiceFeedback"></div>
     <button class="secondary-btn" onclick="nextPractice()">Следующий вопрос →</button>
@@ -1274,11 +1290,18 @@ function renderLessons() {
 
 function openLesson(index) {
   const box = document.getElementById("lessonContent");
+  const done = progress.completedLessons.includes(index);
+  const nextButton = index < lessons.length - 1
+    ? `<button class="secondary-btn" onclick="openLesson(${index+1})">Следующий урок →</button>`
+    : `<button class="secondary-btn" onclick="showPage('vocabulary')">Перейти к словарю →</button>`;
   box.innerHTML = `
     ${lessons[index].content}
-    <button class="primary-btn" onclick="completeLesson(${index})">
-      ${progress.completedLessons.includes(index) ? "Урок пройден ✓" : "Отметить как пройденный"}
-    </button>
+    <div class="lesson-actions">
+      <button class="primary-btn" onclick="completeLesson(${index})">
+        ${done ? "Урок пройден ✓" : "Отметить как пройденный"}
+      </button>
+      ${done ? nextButton : ""}
+    </div>
   `;
   box.classList.add("show");
   box.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -1358,9 +1381,11 @@ const vocabulary = {
 let currentCategory = "Знакомство";
 
 function renderVocabulary() {
+  const categories = Object.keys(vocabulary);
+  if (!categories.includes(currentCategory)) currentCategory = categories[0];
   const tabs = document.getElementById("wordTabs");
 
-  tabs.innerHTML = Object.keys(vocabulary).map(category => `
+  tabs.innerHTML = categories.map(category => `
     <button class="tab-btn ${category===currentCategory ? "active":""}"
       onclick="selectCategory('${category}')">${category}</button>
   `).join("");
@@ -1370,30 +1395,36 @@ function renderVocabulary() {
     progress.learnedWords.includes(currentCategory + ":" + word[0])
   ).length;
   const categoryPercent = Math.round(learnedInCategory / words.length * 100);
+  const categoryIndex = categories.indexOf(currentCategory);
+  const allWordsLearned = categories.every(category =>
+    vocabulary[category].every(word => progress.learnedWords.includes(category + ":" + word[0]))
+  );
+  const nextCategory = categories[categoryIndex+1];
   document.getElementById("wordCategoryProgress").innerHTML = `
     <div class="section-progress-top">
       <strong>Выучено в категории «${currentCategory}»</strong>
       <span>${learnedInCategory} из ${words.length} · ${categoryPercent}%</span>
     </div>
     <div class="progress-track"><div class="progress-fill" style="width:${categoryPercent}%"></div></div>
+    <div class="word-actions">
+      ${learnedInCategory === words.length ? (nextCategory
+        ? `<button class="primary-btn" onclick="selectCategory('${nextCategory}')">Следующая категория →</button>`
+        : `<button class="primary-btn" onclick="${allWordsLearned ? "startVocabularyQuiz()" : "showVocabularyQuizNotice()"}">Пройти словарный квиз →</button>`)
+        : `<span style="color:var(--muted);font-size:12px">Отметь все слова как выученные, чтобы перейти дальше.</span>`}
+    </div>
   `;
 
-  document.getElementById("wordGrid").innerHTML = words.map((word,i) => {
+  document.getElementById("wordGrid").innerHTML = words.map(word => {
     const id = currentCategory + ":" + word[0];
     const learned = progress.learnedWords.includes(id);
-
     return `
       <div class="word ${learned ? "word-learned" : ""}">
-        <div>
-          <strong>${word[0]}</strong><br>
-          <span>${word[1]}</span>
-        </div>
-        <button class="secondary-btn" onclick="learnWord('${id}')">
-          ${learned ? "✓" : "Выучил"}
-        </button>
+        <div><strong>${word[0]}</strong><br><span>${word[1]}</span></div>
+        <button class="secondary-btn" onclick="learnWord('${id}')">${learned ? "✓ Выучено" : "Выучил"}</button>
       </div>
     `;
   }).join("");
+  renderVocabularyQuizArea();
 }
 
 function selectCategory(category) {
@@ -1407,6 +1438,68 @@ function learnWord(id) {
     saveProgress();
   }
   renderVocabulary();
+}
+
+let vocabularyQuizQuestions = [];
+let vocabularyQuizIndex = 0;
+let vocabularyQuizScore = 0;
+let vocabularyQuizAnswered = false;
+
+function showVocabularyQuizNotice() {
+  alert("Сначала отметь все слова во всех категориях как выученные.");
+}
+
+function renderVocabularyQuizArea() {
+  const area = document.getElementById("vocabularyQuizArea");
+  if (!area) return;
+  const categories = Object.keys(vocabulary);
+  const allLearned = categories.every(category =>
+    vocabulary[category].every(word => progress.learnedWords.includes(category + ":" + word[0]))
+  );
+  area.innerHTML = allLearned ? `<div class="vocab-quiz"><h3>Словарный квиз</h3><p>Все слова выучены! Проверь себя: перевод с русского на эстонский.</p><button class="primary-btn" onclick="startVocabularyQuiz()">Начать квиз →</button></div>` : "";
+}
+
+function startVocabularyQuiz() {
+  const allWords = Object.values(vocabulary).flat();
+  const shuffled = [...allWords].sort(() => Math.random() - 0.5).slice(0, Math.min(10, allWords.length));
+  vocabularyQuizQuestions = shuffled.map(word => {
+    const distractors = allWords.filter(item => item[0] !== word[0]).sort(() => Math.random() - 0.5).slice(0,3);
+    const options = [...distractors.map(item => item[0]), word[0]].sort(() => Math.random() - 0.5);
+    return {question:word[1], options, correct:options.indexOf(word[0])};
+  });
+  vocabularyQuizIndex = 0;
+  vocabularyQuizScore = 0;
+  renderVocabularyQuizQuestion();
+}
+
+function renderVocabularyQuizQuestion() {
+  const area = document.getElementById("vocabularyQuizArea");
+  if (vocabularyQuizIndex >= vocabularyQuizQuestions.length) {
+    const percent = Math.round(vocabularyQuizScore / vocabularyQuizQuestions.length * 100);
+    area.innerHTML = `<div class="vocab-quiz vocab-quiz-result"><h3>Квиз завершён!</h3><div class="result-score">${percent}%</div><p>Правильных ответов: ${vocabularyQuizScore} из ${vocabularyQuizQuestions.length}</p><button class="primary-btn" onclick="startVocabularyQuiz()">Пройти ещё раз</button></div>`;
+    return;
+  }
+  const q = vocabularyQuizQuestions[vocabularyQuizIndex];
+  area.innerHTML = `<div class="vocab-quiz"><div class="test-pill">Вопрос ${vocabularyQuizIndex+1} из ${vocabularyQuizQuestions.length}</div><h3>Как по-эстонски: «${q.question}»?</h3><div id="vocabQuizOptions">${q.options.map((option,i)=>`<button class="answer-option" onclick="answerVocabularyQuiz(${i})">${option}</button>`).join("")}</div><div class="feedback" id="vocabQuizFeedback"></div><button class="secondary-btn" id="vocabQuizNext" style="display:none" onclick="nextVocabularyQuiz()">Дальше →</button></div>`;
+  vocabularyQuizAnswered = false;
+}
+
+function answerVocabularyQuiz(index) {
+  if (vocabularyQuizAnswered) return;
+  vocabularyQuizAnswered = true;
+  const q = vocabularyQuizQuestions[vocabularyQuizIndex];
+  document.querySelectorAll("#vocabQuizOptions .answer-option").forEach((button,i) => {
+    if (i === q.correct) button.classList.add("correct");
+    else if (i === index) button.classList.add("wrong");
+  });
+  if (index === q.correct) vocabularyQuizScore++;
+  document.getElementById("vocabQuizFeedback").textContent = index === q.correct ? "Правильно!" : "Неверно. Правильный ответ: " + q.options[q.correct];
+  document.getElementById("vocabQuizNext").style.display = "inline-block";
+}
+
+function nextVocabularyQuiz() {
+  vocabularyQuizIndex++;
+  renderVocabularyQuizQuestion();
 }
 
 /* ------------------------------
@@ -1448,42 +1541,88 @@ const practiceQuestions = [
 
 let practiceIndex = 0;
 let practiceAnswered = false;
+let activePracticeTopic = null;
+
+const practiceTopics = [
+  {
+    "title": "Приветствия и знакомство",
+    "start": 0,
+    "end": 2
+  },
+  {
+    "title": "Простые предложения",
+    "start": 2,
+    "end": 4
+  },
+  {
+    "title": "Базовые слова",
+    "start": 4,
+    "end": 6
+  }
+];
+
+function renderPracticeTopics() {
+  activePracticeTopic = null;
+  document.getElementById("practiceTopicList").style.display = "grid";
+  document.getElementById("practiceExercise").style.display = "none";
+  document.getElementById("practiceTopicList").innerHTML = practiceTopics.map((topic,i) => `
+    <div class="practice-topic-card">
+      <h3>${topic.title}</h3>
+      <p>${topic.end-topic.start} небольших задания</p>
+      <button class="primary-btn" onclick="startPracticeTopic(${i})">Начать практику →</button>
+    </div>
+  `).join("");
+}
+
+function startPracticeTopic(topicIndex) {
+  activePracticeTopic = topicIndex;
+  practiceIndex = practiceTopics[topicIndex].start;
+  document.getElementById("practiceTopicList").style.display = "none";
+  document.getElementById("practiceExercise").style.display = "block";
+  document.getElementById("practiceTopicLabel").textContent = practiceTopics[topicIndex].title;
+  renderPractice();
+}
 
 function renderPractice() {
+  if (activePracticeTopic === null) return renderPracticeTopics();
   const q = practiceQuestions[practiceIndex];
   practiceAnswered = false;
-
   document.getElementById("practiceQuestion").textContent = q.q;
   document.getElementById("practiceFeedback").textContent = "";
-
   document.getElementById("practiceOptions").innerHTML = q.a.map((answer,i) => `
     <button class="answer-option" onclick="checkPractice(${i})">${answer}</button>
   `).join("");
+  const nextButton = document.querySelector('#practiceExercise button[onclick="nextPractice()"]');
+  if (nextButton) nextButton.textContent = practiceIndex + 1 >= practiceTopics[activePracticeTopic].end ? "Завершить тему ✓" : "Следующий вопрос →";
 }
 
 function checkPractice(index) {
   if (practiceAnswered) return;
   practiceAnswered = true;
-
   if (!progress.completedPractice.includes(practiceIndex)) {
     progress.completedPractice.push(practiceIndex);
     saveProgress();
   }
-
   const q = practiceQuestions[practiceIndex];
-  const buttons = document.querySelectorAll("#practiceOptions .answer-option");
-
-  buttons.forEach((button,i) => {
+  document.querySelectorAll("#practiceOptions .answer-option").forEach((button,i) => {
     if (i === q.c) button.classList.add("correct");
     else if (i === index) button.classList.add("wrong");
   });
-
   document.getElementById("practiceFeedback").textContent =
     index === q.c ? "Правильно! Отличная работа." : "Пока неправильно. Правильный ответ: " + q.a[q.c];
 }
 
 function nextPractice() {
-  practiceIndex = (practiceIndex + 1) % practiceQuestions.length;
+  if (!practiceAnswered) {
+    document.getElementById("practiceFeedback").textContent = "Сначала выбери ответ.";
+    return;
+  }
+  const topic = practiceTopics[activePracticeTopic];
+  if (practiceIndex + 1 >= topic.end) {
+    renderPracticeTopics();
+    return;
+  }
+  practiceIndex++;
   renderPractice();
 }
 
@@ -1816,7 +1955,7 @@ function resetProgress() {
 
 renderLessons();
 renderVocabulary();
-renderPractice();
+renderPracticeTopics();
 renderTestList();
 updateProgress();
 
