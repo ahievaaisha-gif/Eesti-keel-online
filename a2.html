@@ -668,7 +668,20 @@ main {
 .vocab-quiz{background:var(--cream);border:1px solid var(--border);border-radius:17px;padding:22px;margin-top:22px}
 .vocab-quiz h3{color:var(--green);margin-top:0}
 .vocab-quiz-result{text-align:center;padding:18px}
-@media(max-width:700px){.practice-topic-list{grid-template-columns:1fr}.lesson-actions>*{flex:1}}
+.word-category-actions{margin:18px 0 24px;}
+.word-category-actions .primary-btn{width:100%;min-height:48px;}
+.practice-topic-card.is-complete{border-color:#b8cdb9;background:#f3f7ef;}
+.practice-complete-label{display:inline-flex;align-items:center;gap:6px;color:#285642;font-size:12px;font-weight:800;margin-bottom:10px;}
+.practice-topic-card .primary-btn:disabled{opacity:.7;cursor:default;}
+.vocab-confirm-backdrop{position:fixed;inset:0;background:rgba(12,25,19,.62);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;}
+.vocab-confirm{width:min(100%,420px);background:var(--cream);border:1px solid var(--border);border-radius:20px;padding:25px;box-shadow:0 18px 60px rgba(0,0,0,.25);text-align:center;}
+.vocab-confirm-mark{width:48px;height:48px;border-radius:50%;margin:0 auto 14px;background:#f5ead0;color:#8a6727;display:grid;place-items:center;font-size:24px;font-weight:800;}
+.vocab-confirm h3{color:var(--green);margin:0 0 9px;font-size:20px;}
+.vocab-confirm p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 20px;}
+.vocab-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.vocab-confirm-actions button{min-height:45px;}
+@media(max-width:700px){.practice-topic-list{grid-template-columns:1fr}.lesson-actions>*{flex:1}.vocab-confirm{padding:22px 18px}.vocab-confirm-actions{grid-template-columns:1fr;}}
+
 
 </style>
 </head>
@@ -835,6 +848,7 @@ main {
   <div class="category-tabs" id="wordTabs"></div>
   <div class="section-progress" id="wordCategoryProgress"></div>
   <div class="word-grid" id="wordGrid"></div>
+  <div id="wordCategoryActions" class="word-actions word-category-actions"></div>
   <div id="vocabularyQuizArea"></div>
 </section>
 
@@ -954,6 +968,7 @@ function getDefaultProgress() {
     completedLessons: [],
     learnedWords: [],
     completedPractice: [],
+    completedPracticeTopics: [],
     completedTests: [],
     bestScores: {},
     unlockedTest: 1
@@ -971,6 +986,7 @@ function loadProgress() {
       completedLessons: saved.completedLessons || [],
       learnedWords: saved.learnedWords || [],
       completedPractice: saved.completedPractice || [],
+      completedPracticeTopics: saved.completedPracticeTopics || [],
       completedTests: saved.completedTests || [],
       bestScores: saved.bestScores || {}
     };
@@ -1401,9 +1417,6 @@ function renderVocabulary() {
   ).length;
   const categoryPercent = Math.round(learnedInCategory / words.length * 100);
   const categoryIndex = categories.indexOf(currentCategory);
-  const allWordsLearned = categories.every(category =>
-    vocabulary[category].every(word => progress.learnedWords.includes(category + ":" + word[0]))
-  );
   const nextCategory = categories[categoryIndex+1];
   document.getElementById("wordCategoryProgress").innerHTML = `
     <div class="section-progress-top">
@@ -1411,12 +1424,6 @@ function renderVocabulary() {
       <span>${learnedInCategory} из ${words.length} · ${categoryPercent}%</span>
     </div>
     <div class="progress-track"><div class="progress-fill" style="width:${categoryPercent}%"></div></div>
-    <div class="word-actions">
-      ${learnedInCategory === words.length ? (nextCategory
-        ? `<button class="primary-btn" onclick="selectCategory('${nextCategory}')">Следующая категория →</button>`
-        : `<button class="primary-btn" onclick="${allWordsLearned ? "startVocabularyQuiz()" : "showVocabularyQuizNotice()"}">Пройти словарный квиз →</button>`)
-        : `<span style="color:var(--muted);font-size:12px">Отметь все слова как выученные, чтобы перейти дальше.</span>`}
-    </div>
   `;
 
   document.getElementById("wordGrid").innerHTML = words.map(word => {
@@ -1429,12 +1436,22 @@ function renderVocabulary() {
       </div>
     `;
   }).join("");
+
+  const actions = document.getElementById("wordCategoryActions");
+  if (learnedInCategory === words.length) {
+    actions.innerHTML = nextCategory
+      ? `<button class="primary-btn" onclick="selectCategory('${nextCategory}')">Следующая категория →</button>`
+      : `<button class="primary-btn" onclick="requestVocabularyQuiz()">Пройти словарный квиз →</button>`;
+  } else {
+    actions.innerHTML = `<span style="color:var(--muted);font-size:12px">Отметь все слова в этой категории, чтобы перейти дальше.</span>`;
+  }
   renderVocabularyQuizArea();
 }
 
 function selectCategory(category) {
   currentCategory = category;
   renderVocabulary();
+  document.getElementById("wordGrid").scrollIntoView({behavior:"smooth", block:"start"});
 }
 
 function learnWord(id) {
@@ -1443,6 +1460,11 @@ function learnWord(id) {
     saveProgress();
   }
   renderVocabulary();
+  // После отметки последнего слова оставляем пользователя у нижней кнопки перехода.
+  const actions = document.getElementById("wordCategoryActions");
+  if (actions && actions.querySelector("button")) {
+    actions.scrollIntoView({behavior:"smooth", block:"center"});
+  }
 }
 
 let vocabularyQuizQuestions = [];
@@ -1450,18 +1472,38 @@ let vocabularyQuizIndex = 0;
 let vocabularyQuizScore = 0;
 let vocabularyQuizAnswered = false;
 
+function requestVocabularyQuiz() {
+  const categories = Object.keys(vocabulary);
+  const allLearned = categories.every(category =>
+    vocabulary[category].every(word => progress.learnedWords.includes(category + ":" + word[0]))
+  );
+  if (allLearned) {
+    startVocabularyQuiz();
+    return;
+  }
+  showVocabularyQuizNotice();
+}
+
 function showVocabularyQuizNotice() {
-  alert("Сначала отметь все слова во всех категориях как выученные.");
+  const area = document.getElementById("vocabularyQuizArea");
+  area.innerHTML = `
+    <div class="vocab-confirm-backdrop" role="dialog" aria-modal="true" aria-labelledby="vocabConfirmTitle">
+      <div class="vocab-confirm">
+        <div class="vocab-confirm-mark">?</div>
+        <h3 id="vocabConfirmTitle">Вы уверены?</h3>
+        <p>Ты ещё не отметила все слова как выученные. Можно сначала закончить словарь или всё равно перейти к квизу.</p>
+        <div class="vocab-confirm-actions">
+          <button class="secondary-btn" onclick="renderVocabularyQuizArea()">Продолжить учить</button>
+          <button class="primary-btn" onclick="startVocabularyQuiz()">Всё равно пройти</button>
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderVocabularyQuizArea() {
   const area = document.getElementById("vocabularyQuizArea");
   if (!area) return;
-  const categories = Object.keys(vocabulary);
-  const allLearned = categories.every(category =>
-    vocabulary[category].every(word => progress.learnedWords.includes(category + ":" + word[0]))
-  );
-  area.innerHTML = allLearned ? `<div class="vocab-quiz"><h3>Словарный квиз</h3><p>Все слова выучены! Проверь себя: перевод с русского на эстонский.</p><button class="primary-btn" onclick="startVocabularyQuiz()">Начать квиз →</button></div>` : "";
+  area.innerHTML = "";
 }
 
 function startVocabularyQuiz() {
@@ -1475,6 +1517,7 @@ function startVocabularyQuiz() {
   vocabularyQuizIndex = 0;
   vocabularyQuizScore = 0;
   renderVocabularyQuizQuestion();
+  document.getElementById("vocabularyQuizArea").scrollIntoView({behavior:"smooth", block:"start"});
 }
 
 function renderVocabularyQuizQuestion() {
@@ -1516,14 +1559,39 @@ const practiceQuestions = [
   {q:"Как переводится «tavaliselt»?",a:["редко","обычно","никогда"],c:1},
   {q:"Выбери правильное отрицание в прошедшем времени.",a:["Ma ei läinud.","Ma ei läheb.","Ma ei läks."],c:0},
   {q:"Как сказать «в магазине»?",a:["poodi","poest","poes"],c:2},
-  {q:"Выбери сравнительную степень слова «suur».",a:["suurem","suurimalt","kõige suur"],c:0},
+  {q:"Выбери сравнительную степень слова «suur». ",a:["suurem","suurimalt","kõige suur"],c:0},
   {q:"Что означает «Ma pean õppima»?",a:["Я могу учиться","Я должен / должна учиться","Я хочу учиться"],c:1},
   {q:"Как переводится «sest»?",a:["но","если","потому что"],c:2},
   {q:"Вставь подходящую форму: Ma joon ___.",a:["vesi","vett","vees"],c:1},
   {q:"Как сказать «из школы»?",a:["kooli","koolis","koolist"],c:2},
   {q:"Что означает «kahjuks»?",a:["к счастью","к сожалению","возможно"],c:1},
   {q:"Выбери правильное предложение.",a:["Homme ma lähen arsti juurde.","Homme ma läks arsti juurde.","Homme ma läinud arsti juurde."],c:0},
-  {q:"Как переводится «kõige parem»?",a:["лучше","самый лучший","плохой"],c:1}
+  {q:"Как переводится «kõige parem»?",a:["лучше","самый лучший","плохой"],c:1},
+  {q:"Как переводится «sageli»?",a:["часто","редко","вчера"],c:0},
+  {q:"Выбери правильную форму прошедшего времени: Ta ___ eile kodus.",a:["on","oli","olema"],c:1},
+  {q:"Как сказать «мы ходили»?",a:["me käime","me käisime","me käib"],c:1},
+  {q:"Выбери правильное предложение.",a:["Ma ei ostnud leiba.","Ma ei ostan leiba.","Ma ei ostnud leib."],c:0},
+  {q:"Что означает «enne»?",a:["после","до / раньше","вместе"],c:1},
+  {q:"Вставь правильную форму: Ma tulen ___.",a:["koolist","koolis","kooli"],c:0},
+  {q:"Как сказать «я иду в школу»?",a:["Ma olen koolis.","Ma lähen kooli.","Ma tulen koolist."],c:1},
+  {q:"Выбери сравнительную степень слова «hea». ",a:["heaem","parem","kõige hea"],c:1},
+  {q:"Как переводится «odavam»?",a:["дороже","дешевле","самый дешёвый"],c:1},
+  {q:"Вставь правильную форму: Ma soovin ___.",a:["kohv","kohvi","kohvis"],c:1},
+  {q:"Что означает «võib-olla»?",a:["обязательно","возможно","к сожалению"],c:1},
+  {q:"Как переводится «ettepanek»?",a:["предложение","ответ","вопрос"],c:0},
+  {q:"Выбери правильное предложение о будущем плане.",a:["Homme ma kavatsen õppida.","Homme ma kavatses õppida.","Homme ma kavatsen õppisin."],c:0},
+  {q:"Как сказать «я должен прийти»?",a:["Ma pean tulema.","Ma võin tulin.","Ma tahan tulen."],c:0},
+  {q:"Что означает «kokkulepe»?",a:["договорённость","путешествие","погода"],c:0},
+  {q:"Выбери подходящее слово: Ma olen sinuga ___. (Я с тобой согласен.)",a:["nõus","valmis","väsinud"],c:0},
+  {q:"Как переводится «kuigi»?",a:["потому что","хотя","поэтому"],c:1},
+  {q:"Выбери правильную форму: Mul ___ aega.",a:["on","olen","olema"],c:0},
+  {q:"Что означает «tervise pärast»?",a:["из-за здоровья","ради здоровья","без здоровья"],c:1},
+  {q:"Как переводится «selgitama»?",a:["объяснять","приглашать","отказываться"],c:0},
+  {q:"Выбери правильное предложение.",a:["Ma küsisin õpetajalt abi.","Ma küsisin õpetaja abi.","Ma küsisin õpetajale abi."],c:0},
+  {q:"Как сказать «у меня болит голова»?",a:["Mul valutab pea.","Ma valutan pea.","Minu pea valutab mind."],c:0},
+  {q:"Что означает «õnneks»?",a:["к сожалению","к счастью","возможно"],c:1},
+  {q:"Выбери правильную форму: See on ___ kui teine.",a:["huvitavam","huvitavama","kõige huvitav"],c:0},
+  {q:"Как переводится «keelduma»?",a:["советовать","отказываться","отвечать"],c:1}
 ];
 
 let practiceIndex = 0;
@@ -1531,39 +1599,34 @@ let practiceAnswered = false;
 let activePracticeTopic = null;
 
 const practiceTopics = [
-  {
-    "title": "Повседневность и привычки",
-    "start": 0,
-    "end": 3
-  },
-  {
-    "title": "Прошедшее время",
-    "start": 3,
-    "end": 6
-  },
-  {
-    "title": "Падежи и сравнение",
-    "start": 6,
-    "end": 9
-  },
-  {
-    "title": "Планы и общение",
-    "start": 9,
-    "end": 12
-  }
+  {title:"Повседневность и привычки",start:0,end:6},
+  {title:"Прошедшее время",start:6,end:12},
+  {title:"Падежи и формы слов",start:12,end:18},
+  {title:"Сравнение и выражение мнения",start:18,end:24},
+  {title:"Планы и обязанности",start:24,end:30},
+  {title:"Общение и ситуации из жизни",start:30,end:36}
 ];
 
 function renderPracticeTopics() {
   activePracticeTopic = null;
   document.getElementById("practiceTopicList").style.display = "grid";
   document.getElementById("practiceExercise").style.display = "none";
-  document.getElementById("practiceTopicList").innerHTML = practiceTopics.map((topic,i) => `
-    <div class="practice-topic-card">
-      <h3>${topic.title}</h3>
-      <p>${topic.end-topic.start} небольших задания</p>
-      <button class="primary-btn" onclick="startPracticeTopic(${i})">Начать практику →</button>
-    </div>
-  `).join("");
+  document.getElementById("practiceTopicList").innerHTML = practiceTopics.map((topic,i) => {
+    const topicDone = (progress.completedPracticeTopics || []).includes(i) ||
+      Array.from({length:topic.end-topic.start}, (_,offset) => topic.start+offset)
+        .every(questionIndex => progress.completedPractice.includes(questionIndex));
+    return `
+      <div class="practice-topic-card ${topicDone ? "is-complete" : ""}">
+        ${topicDone ? `<div class="practice-complete-label">✓ ТЕМА ВЫПОЛНЕНА</div>` : ""}
+        <h3>${topic.title}</h3>
+        <p>${topic.end-topic.start} небольших задания</p>
+        ${topicDone
+          ? `<button class="primary-btn" disabled>Выполнено ✓</button>`
+          : `<button class="primary-btn" onclick="startPracticeTopic(${i})">Начать практику →</button>`}
+      </div>
+    `;
+  }).join("");
+  updateSectionProgress("practice");
 }
 
 function startPracticeTopic(topicIndex) {
@@ -1611,7 +1674,12 @@ function nextPractice() {
   }
   const topic = practiceTopics[activePracticeTopic];
   if (practiceIndex + 1 >= topic.end) {
+    if (!progress.completedPracticeTopics.includes(activePracticeTopic)) {
+      progress.completedPracticeTopics.push(activePracticeTopic);
+      saveProgress();
+    }
     renderPracticeTopics();
+    document.getElementById("practiceTopicList").scrollIntoView({behavior:"smooth", block:"start"});
     return;
   }
   practiceIndex++;
