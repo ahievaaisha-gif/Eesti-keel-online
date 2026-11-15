@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -304,7 +303,39 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
         <div class="form-field"><label for="loginPassword">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Пароль"></div>
         <button class="button full" id="loginSubmit" type="submit">Войти</button>
       </form>
+      <button class="text-button" id="forgotPasswordButton" type="button">Забыли пароль?</button>
       <div class="form-message" id="loginMessage" aria-live="polite"></div>
+    </div>
+
+    <div id="forgotPasswordScreen" hidden>
+      <button class="back-button" id="forgotBackButton" type="button">← Назад ко входу</button>
+      <h2>Восстановление пароля</h2>
+      <p class="account-subtitle">Укажи почту, с которой регистрировалась. Мы отправим ссылку для сброса пароля.</p>
+      <form id="forgotPasswordForm">
+        <div class="form-field">
+          <label for="resetEmail">Электронная почта</label>
+          <input id="resetEmail" type="email" autocomplete="email" required placeholder="name@example.com">
+        </div>
+        <button class="button full" id="resetSubmit" type="submit">Отправить ссылку</button>
+      </form>
+      <div class="form-message" id="resetMessage" aria-live="polite"></div>
+    </div>
+
+    <div id="newPasswordScreen" hidden>
+      <h2>Придумай новый пароль</h2>
+      <p class="account-subtitle">Введи новый пароль для своего аккаунта. Используй не менее 8 символов.</p>
+      <form id="newPasswordForm">
+        <div class="form-field">
+          <label for="newResetPassword">Новый пароль</label>
+          <input id="newResetPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Новый пароль">
+        </div>
+        <div class="form-field">
+          <label for="confirmResetPassword">Повтори новый пароль</label>
+          <input id="confirmResetPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Повтори пароль">
+        </div>
+        <button class="button full" id="newPasswordSubmit" type="submit">Сохранить пароль</button>
+      </form>
+      <div class="form-message" id="newPasswordMessage" aria-live="polite"></div>
     </div>
   </div>
 </div>
@@ -343,6 +374,8 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
   const welcomeScreen = document.getElementById('welcomeScreen');
   const registerScreen = document.getElementById('registerScreen');
   const loginScreen = document.getElementById('loginScreen');
+  const forgotPasswordScreen = document.getElementById('forgotPasswordScreen');
+  const newPasswordScreen = document.getElementById('newPasswordScreen');
   const profileMenu = document.getElementById('profileMenu');
 
   window.showAccountScreen = function(screen) {
@@ -350,6 +383,8 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
     welcomeScreen.hidden = screen !== 'welcome';
     registerScreen.hidden = screen !== 'register';
     loginScreen.hidden = screen !== 'login';
+    forgotPasswordScreen.hidden = screen !== 'forgot';
+    newPasswordScreen.hidden = screen !== 'newPassword';
     pathOverlay.hidden = true;
     successOverlay.hidden = true;
     profileMenu.hidden = true;
@@ -375,6 +410,12 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
 
   document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
   document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
+  document.getElementById('forgotPasswordButton').addEventListener('click', () => {
+    document.getElementById('resetEmail').value = document.getElementById('loginEmail').value.trim();
+    document.getElementById('resetMessage').textContent = '';
+    showAccountScreen('forgot');
+  });
+  document.getElementById('forgotBackButton').addEventListener('click', () => showAccountScreen('login'));
   document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
   document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
 
@@ -418,14 +459,26 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
 
   const registerForm = document.getElementById('registerForm');
   const loginForm = document.getElementById('loginForm');
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  const newPasswordForm = document.getElementById('newPasswordForm');
   const registerMessage = document.getElementById('registerMessage');
   const loginMessage = document.getElementById('loginMessage');
+  const resetMessage = document.getElementById('resetMessage');
+  const newPasswordMessage = document.getElementById('newPasswordMessage');
   const registerSubmit = document.getElementById('registerSubmit');
   const loginSubmit = document.getElementById('loginSubmit');
+  const resetSubmit = document.getElementById('resetSubmit');
+  const newPasswordSubmit = document.getElementById('newPasswordSubmit');
 
   function setBusy(button, busy, text) {
     button.disabled = busy;
-    button.textContent = busy ? text : (button === registerSubmit ? 'Зарегистрироваться' : 'Войти');
+    const normalLabels = new Map([
+      [registerSubmit, 'Зарегистрироваться'],
+      [loginSubmit, 'Войти'],
+      [resetSubmit, 'Отправить ссылку'],
+      [newPasswordSubmit, 'Сохранить пароль']
+    ]);
+    button.textContent = busy ? text : (normalLabels.get(button) || 'Продолжить');
     button.style.opacity = busy ? '.7' : '1';
   }
 
@@ -465,9 +518,24 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
     }
 
     registerMessage.textContent = '';
-    setBusy(registerSubmit, true, 'Создаём аккаунт…');
+    setBusy(registerSubmit, true, 'Проверяем ник…');
 
     try {
+      const { data: usernameAvailable, error: usernameCheckError } = await supabase.rpc(
+        'is_username_available',
+        { p_username: username }
+      );
+
+      if (usernameCheckError) {
+        registerMessage.textContent = 'Проверка уникальности ника ещё не настроена. Сначала выполни SQL-инструкцию из файла setup_username.sql в Supabase.';
+        return;
+      }
+      if (usernameAvailable !== true) {
+        registerMessage.textContent = 'Такой ник уже есть. Придумай другой.';
+        return;
+      }
+
+      setBusy(registerSubmit, true, 'Создаём аккаунт…');
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -478,7 +546,27 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
       });
 
       if (error) {
-        registerMessage.textContent = error.message;
+        const errorText = (error.message || '').toLowerCase();
+        if (
+          errorText.includes('already registered') ||
+          errorText.includes('already been registered') ||
+          errorText.includes('user already exists') ||
+          errorText.includes('email_exists') ||
+          errorText.includes('already in use')
+        ) {
+          registerMessage.textContent = 'Этот аккаунт уже используется. Попробуй войти или укажи другую почту.';
+        } else if (errorText.includes('duplicate key') || errorText.includes('unique constraint')) {
+          registerMessage.textContent = 'Такой ник уже есть. Придумай другой.';
+        } else {
+          registerMessage.textContent = error.message;
+        }
+        return;
+      }
+
+      // При включённом подтверждении почты Supabase иногда возвращает
+      // пользователя с пустым identities для уже зарегистрированного адреса.
+      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        registerMessage.textContent = 'Этот аккаунт уже используется. Попробуй войти или укажи другую почту.';
         return;
       }
 
@@ -528,6 +616,72 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
     }
   });
 
+  forgotPasswordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!supabase) {
+      resetMessage.textContent = 'Не удалось подключиться к Supabase. Обнови страницу и попробуй снова.';
+      return;
+    }
+
+    const email = document.getElementById('resetEmail').value.trim();
+    resetMessage.textContent = 'Отправляем письмо…';
+    setBusy(resetSubmit, true, 'Отправляем…');
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      if (error) {
+        resetMessage.textContent = error.message;
+      } else {
+        resetMessage.textContent = 'Если аккаунт с этой почтой существует, мы отправили письмо со ссылкой для сброса пароля. Проверь также папку «Спам».';
+      }
+    } catch (error) {
+      resetMessage.textContent = 'Не удалось отправить письмо. Проверь интернет и попробуй ещё раз.';
+    } finally {
+      setBusy(resetSubmit, false);
+    }
+  });
+
+  newPasswordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!supabase) {
+      newPasswordMessage.textContent = 'Не удалось подключиться к Supabase. Обнови страницу и попробуй снова.';
+      return;
+    }
+
+    const password = document.getElementById('newResetPassword').value;
+    const confirmation = document.getElementById('confirmResetPassword').value;
+    if (password.length < 8) {
+      newPasswordMessage.textContent = 'Пароль должен содержать не менее 8 символов.';
+      return;
+    }
+    if (password !== confirmation) {
+      newPasswordMessage.textContent = 'Пароли не совпадают. Проверь оба поля.';
+      return;
+    }
+
+    newPasswordMessage.textContent = 'Сохраняем пароль…';
+    setBusy(newPasswordSubmit, true, 'Сохраняем…');
+    try {
+      const { data, error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        newPasswordMessage.textContent = error.message;
+      } else {
+        newPasswordForm.reset();
+        newPasswordMessage.textContent = 'Пароль успешно изменён.';
+        if (data.user) {
+          currentUser = data.user;
+          setSignedInUser(data.user);
+        }
+      }
+    } catch (error) {
+      newPasswordMessage.textContent = 'Не удалось изменить пароль. Открой ссылку из письма ещё раз и попробуй снова.';
+    } finally {
+      setBusy(newPasswordSubmit, false);
+    }
+  });
+
   try {
     if (!SUPABASE_URL.startsWith('https://') || !SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')) {
       throw new Error('Проверь URL и Publishable key в настройках Supabase.');
@@ -544,7 +698,11 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
       setSignedInUser(session.user);
     }
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        window.showAccountScreen('newPassword');
+        return;
+      }
       if (session?.user) {
         currentUser = session.user;
         setSignedInUser(session.user);
