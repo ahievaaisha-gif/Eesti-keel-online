@@ -1,5 +1,3 @@
-
- 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -275,13 +273,14 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
     <div id="registerScreen" hidden>
       <button class="back-button" data-back>← Назад</button>
       <h2>Создать аккаунт</h2>
-      <p class="account-subtitle">Придумай имя пользователя и пароль. Почту можно будет добавить позже.</p>
+      <p class="account-subtitle">Укажи почту, придумай имя пользователя и пароль.</p>
       <form id="registerForm">
-        <div class="form-field"><label for="newUsername">Имя пользователя</label><input id="newUsername" autocomplete="username" placeholder="Например, EestiLearner"></div>
-        <div class="form-field"><label for="newPassword">Пароль</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="Придумай пароль"></div>
+        <div class="form-field"><label for="newUsername">Имя пользователя</label><input id="newUsername" autocomplete="username" minlength="3" maxlength="20" required placeholder="Например, EestiLearner"></div>
+        <div class="form-field"><label for="newEmail">Электронная почта</label><input id="newEmail" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+        <div class="form-field"><label for="newPassword">Пароль (не менее 8 символов)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Придумай пароль"></div>
         <button class="button full" type="submit">Зарегистрироваться</button>
       </form>
-      <div class="demo-note">Регистрация пока показана как макет. Не вводи настоящий пароль: серверная авторизация ещё не подключена.</div>
+      <div class="demo-note">После регистрации Supabase может отправить письмо для подтверждения адреса. Используй почту, к которой у тебя есть доступ.</div>
       <div class="form-message" id="registerMessage" aria-live="polite"></div>
     </div>
 
@@ -290,11 +289,10 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
       <h2>С возвращением!</h2>
       <p class="account-subtitle">Войди в свой аккаунт Eesti Keel Online.</p>
       <form id="loginForm">
-        <div class="form-field"><label for="loginUsername">Имя пользователя</label><input id="loginUsername" autocomplete="username" placeholder="Имя пользователя"></div>
-        <div class="form-field"><label for="loginPassword">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Пароль"></div>
+        <div class="form-field"><label for="loginEmail">Электронная почта</label><input id="loginEmail" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+        <div class="form-field"><label for="loginPassword">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Пароль"></div>
         <button class="button full" type="submit">Войти</button>
       </form>
-      <div class="demo-note">Вход пока не подключён к базе данных. Не вводи настоящий пароль.</div>
       <div class="form-message" id="loginMessage" aria-live="polite"></div>
     </div>
   </div>
@@ -313,7 +311,16 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
   </div>
 </div>
 
-<script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// ВСТАВЬ СЮДА Project URL и Publishable key из Supabase → Settings → API Keys.
+// Publishable key можно использовать в браузере. Secret key сюда НЕ вставлять.
+const SUPABASE_URL = https://wcjhxlagvtlardiehrcc.supabase.co;
+const SUPABASE_PUBLISHABLE_KEY = sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m;
+const supabaseReady = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_');
+const supabase = supabaseReady ? createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+
 const accountOverlay = document.getElementById('accountOverlay');
 const pathOverlay = document.getElementById('pathOverlay');
 const welcomeScreen = document.getElementById('welcomeScreen');
@@ -321,6 +328,7 @@ const registerScreen = document.getElementById('registerScreen');
 const loginScreen = document.getElementById('loginScreen');
 const profileMenu = document.getElementById('profileMenu');
 let isGuest = true;
+let currentUser = null;
 
 function showAccountScreen(screen) {
   accountOverlay.hidden = false;
@@ -332,34 +340,95 @@ function showAccountScreen(screen) {
 }
 function enterGuestMode() {
   isGuest = true;
+  currentUser = null;
   accountOverlay.hidden = true;
   pathOverlay.hidden = true;
   document.getElementById('profileStatus').textContent = 'Гостевой режим';
   document.getElementById('profileButton').textContent = '♙';
+  document.getElementById('menuLogin').textContent = 'Войти / регистрация';
+}
+function setSignedInUser(user) {
+  currentUser = user;
+  isGuest = false;
+  accountOverlay.hidden = true;
+  pathOverlay.hidden = true;
+  const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Профиль';
+  document.getElementById('profileStatus').textContent = username;
+  document.getElementById('profileButton').textContent = username.slice(0, 1).toUpperCase();
+  document.getElementById('menuLogin').textContent = 'Выйти из аккаунта';
 }
 function openPathGate() {
-  if (isGuest) pathOverlay.hidden = false;
-  else pathOverlay.hidden = false; // До подключения аккаунтов путь пока находится в разработке.
+  pathOverlay.hidden = false;
 }
-document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
+
+ document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
 document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
 document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
 document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
-document.getElementById('registerForm').addEventListener('submit', event => {
+
+document.getElementById('registerForm').addEventListener('submit', async event => {
   event.preventDefault();
-  document.getElementById('registerMessage').textContent = 'Макет готов. Настоящее создание аккаунта подключим после настройки безопасной авторизации.';
+  const message = document.getElementById('registerMessage');
+  if (!supabase) { message.textContent = 'Сначала нужно вставить Project URL и Publishable key в настройки этого файла.'; return; }
+  const username = document.getElementById('newUsername').value.trim();
+  const email = document.getElementById('newEmail').value.trim();
+  const password = document.getElementById('newPassword').value;
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) { message.textContent = 'Имя: 3–20 символов, только латинские буквы, цифры и _. '; return; }
+  message.textContent = 'Создаём аккаунт…';
+  const { data, error } = await supabase.auth.signUp({
+    email, password,
+    options: {
+      data: { username },
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  if (error) { message.textContent = error.message; return; }
+  if (data.session && data.user) {
+    setSignedInUser(data.user);
+  } else {
+    message.textContent = 'Аккаунт создан! Проверь почту и нажми ссылку подтверждения, затем вернись на сайт и войди.';
+  }
 });
-document.getElementById('loginForm').addEventListener('submit', event => {
+
+document.getElementById('loginForm').addEventListener('submit', async event => {
   event.preventDefault();
-  document.getElementById('loginMessage').textContent = 'Вход пока не подключён. Сначала настроим серверную авторизацию.';
+  const message = document.getElementById('loginMessage');
+  if (!supabase) { message.textContent = 'Сначала нужно вставить Project URL и Publishable key в настройки этого файла.'; return; }
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  message.textContent = 'Входим…';
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) { message.textContent = error.message; return; }
+  setSignedInUser(data.user);
 });
+
 document.getElementById('pathTopButton').addEventListener('click', openPathGate);
 document.getElementById('pathMainButton').addEventListener('click', openPathGate);
 document.getElementById('pathClose').addEventListener('click', () => pathOverlay.hidden = true);
 document.getElementById('pathRegister').addEventListener('click', () => showAccountScreen('register'));
 document.getElementById('pathLogin').addEventListener('click', () => showAccountScreen('login'));
 document.getElementById('profileButton').addEventListener('click', () => profileMenu.hidden = !profileMenu.hidden);
-document.getElementById('menuLogin').addEventListener('click', () => showAccountScreen('welcome'));
+document.getElementById('menuLogin').addEventListener('click', async () => {
+  if (currentUser && supabase) {
+    const { error } = await supabase.auth.signOut();
+    if (error) { alert(error.message); return; }
+    enterGuestMode();
+    profileMenu.hidden = true;
+  } else {
+    showAccountScreen('welcome');
+  }
+});
+
+if (supabase) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user) setSignedInUser(session.user);
+  else accountOverlay.hidden = false;
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) setSignedInUser(session.user);
+  });
+} else {
+  accountOverlay.hidden = false;
+}
 document.addEventListener('click', event => {
   if (!event.target.closest('#profileButton') && !event.target.closest('#profileMenu')) profileMenu.hidden = true;
 });
