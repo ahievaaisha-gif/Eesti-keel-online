@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -99,7 +100,6 @@ section { padding: 62px 7%; }
 footer { background:var(--green); color:white; padding:30px 15px; text-align:center; }
 footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
 
-/* Welcome / account screens */
 .screen-overlay {
   position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center;
   padding:18px; background:rgba(18,48,38,.48); backdrop-filter:blur(5px);
@@ -256,7 +256,6 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
   <p>© 2026 Eesti Keel Online</p>
 </footer>
 
-<!-- Первый экран выбора: регистрация, вход или гостевой режим -->
 <div class="screen-overlay" id="accountOverlay">
   <div class="account-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
     <div class="account-logo">🇪🇪 Eesti Keel Online</div>
@@ -314,10 +313,10 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// ВСТАВЬ СЮДА Project URL и Publishable key из Supabase → Settings → API Keys.
-// Publishable key можно использовать в браузере. Secret key сюда НЕ вставлять.
-const SUPABASE_URL = https://wcjhxlagvtlardiehrcc.supabase.co;
-const SUPABASE_PUBLISHABLE_KEY = sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m;
+// Project URL и Publishable key из Supabase → Settings → API Keys.
+const SUPABASE_URL = 'https://wcjhxlagvtlardiehrcc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m';
+
 const supabaseReady = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_');
 const supabase = supabaseReady ? createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
 
@@ -361,7 +360,7 @@ function openPathGate() {
   pathOverlay.hidden = false;
 }
 
- document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
+document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
 document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
 document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
 document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
@@ -369,37 +368,45 @@ document.querySelectorAll('[data-back]').forEach(button => button.addEventListen
 document.getElementById('registerForm').addEventListener('submit', async event => {
   event.preventDefault();
   const message = document.getElementById('registerMessage');
-  if (!supabase) { message.textContent = 'Сначала нужно вставить Project URL и Publishable key в настройки этого файла.'; return; }
+  if (!supabase) { message.textContent = 'Не удалось подключить Supabase. Проверь настройки файла.'; return; }
   const username = document.getElementById('newUsername').value.trim();
   const email = document.getElementById('newEmail').value.trim();
   const password = document.getElementById('newPassword').value;
   if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) { message.textContent = 'Имя: 3–20 символов, только латинские буквы, цифры и _. '; return; }
   message.textContent = 'Создаём аккаунт…';
-  const { data, error } = await supabase.auth.signUp({
-    email, password,
-    options: {
-      data: { username },
-      emailRedirectTo: window.location.origin + window.location.pathname
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email, password,
+      options: {
+        data: { username },
+        emailRedirectTo: window.location.origin + window.location.pathname
+      }
+    });
+    if (error) { message.textContent = error.message; return; }
+    if (data.session && data.user) {
+      setSignedInUser(data.user);
+    } else {
+      message.textContent = 'Аккаунт создан! Проверь почту и нажми ссылку подтверждения, затем вернись на сайт и войди.';
     }
-  });
-  if (error) { message.textContent = error.message; return; }
-  if (data.session && data.user) {
-    setSignedInUser(data.user);
-  } else {
-    message.textContent = 'Аккаунт создан! Проверь почту и нажми ссылку подтверждения, затем вернись на сайт и войди.';
+  } catch (error) {
+    message.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
   }
 });
 
 document.getElementById('loginForm').addEventListener('submit', async event => {
   event.preventDefault();
   const message = document.getElementById('loginMessage');
-  if (!supabase) { message.textContent = 'Сначала нужно вставить Project URL и Publishable key в настройки этого файла.'; return; }
+  if (!supabase) { message.textContent = 'Не удалось подключить Supabase. Проверь настройки файла.'; return; }
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
   message.textContent = 'Входим…';
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) { message.textContent = error.message; return; }
-  setSignedInUser(data.user);
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) { message.textContent = error.message; return; }
+    setSignedInUser(data.user);
+  } catch (error) {
+    message.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
+  }
 });
 
 document.getElementById('pathTopButton').addEventListener('click', openPathGate);
@@ -420,12 +427,16 @@ document.getElementById('menuLogin').addEventListener('click', async () => {
 });
 
 if (supabase) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) setSignedInUser(session.user);
-  else accountOverlay.hidden = false;
-  supabase.auth.onAuthStateChange((_event, session) => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) setSignedInUser(session.user);
-  });
+    else accountOverlay.hidden = false;
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) setSignedInUser(session.user);
+    });
+  } catch (error) {
+    accountOverlay.hidden = false;
+  }
 } else {
   accountOverlay.hidden = false;
 }
