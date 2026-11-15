@@ -156,6 +156,18 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
   border-radius:9px; padding:11px; cursor:pointer;
 }
 .profile-menu button:hover { background:#f1f7f2; }
+
+/* Отдельное окно после регистрации */
+.success-card { text-align:center; }
+.success-icon {
+  width:66px; height:66px; display:grid; place-items:center; margin:0 auto 20px;
+  border-radius:50%; background:#eaf5ee; color:var(--green2); font-size:32px;
+}
+.success-card h2 { margin-bottom:12px; }
+.success-card .account-subtitle { margin-bottom:18px; }
+.success-email {
+  overflow-wrap:anywhere; color:var(--green2); font-weight:700;
+}
 @media(max-width:650px) {
   header { justify-content:center; text-align:center; padding:16px 18px; }
   nav { justify-content:center; gap:13px; }
@@ -277,7 +289,7 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
         <div class="form-field"><label for="newUsername">Имя пользователя</label><input id="newUsername" autocomplete="username" minlength="3" maxlength="20" required placeholder="Например, EestiLearner"></div>
         <div class="form-field"><label for="newEmail">Электронная почта</label><input id="newEmail" type="email" autocomplete="email" required placeholder="name@example.com"></div>
         <div class="form-field"><label for="newPassword">Пароль (не менее 8 символов)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Придумай пароль"></div>
-        <button class="button full" type="submit">Зарегистрироваться</button>
+        <button class="button full" id="registerSubmit" type="submit">Зарегистрироваться</button>
       </form>
       <div class="demo-note">После регистрации Supabase может отправить письмо для подтверждения адреса. Используй почту, к которой у тебя есть доступ.</div>
       <div class="form-message" id="registerMessage" aria-live="polite"></div>
@@ -290,7 +302,7 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
       <form id="loginForm">
         <div class="form-field"><label for="loginEmail">Электронная почта</label><input id="loginEmail" type="email" autocomplete="email" required placeholder="name@example.com"></div>
         <div class="form-field"><label for="loginPassword">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Пароль"></div>
-        <button class="button full" type="submit">Войти</button>
+        <button class="button full" id="loginSubmit" type="submit">Войти</button>
       </form>
       <div class="form-message" id="loginMessage" aria-live="polite"></div>
     </div>
@@ -310,139 +322,242 @@ footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
   </div>
 </div>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+<div class="screen-overlay" id="successOverlay" hidden>
+  <div class="account-card success-card" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="success-icon">✉</div>
+    <h2 id="successTitle">Аккаунт почти готов!</h2>
+    <p class="account-subtitle">
+      Мы отправили письмо на адрес
+      <span class="success-email" id="successEmail"></span>.
+      Открой почту и подтверди адрес, нажав на ссылку в письме. После этого возвращайся на сайт и войди в аккаунт.
+    </p>
+    <button class="button full" id="goToLogin">Перейти ко входу</button>
+  </div>
+</div>
 
-// Project URL и Publishable key из Supabase → Settings → API Keys.
-const SUPABASE_URL = 'https://wcjhxlagvtlardiehrcc.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m';
+<script>
+(() => {
+  const accountOverlay = document.getElementById('accountOverlay');
+  const pathOverlay = document.getElementById('pathOverlay');
+  const successOverlay = document.getElementById('successOverlay');
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  const registerScreen = document.getElementById('registerScreen');
+  const loginScreen = document.getElementById('loginScreen');
+  const profileMenu = document.getElementById('profileMenu');
 
-const supabaseReady = SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_');
-const supabase = supabaseReady ? createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+  window.showAccountScreen = function(screen) {
+    accountOverlay.hidden = false;
+    welcomeScreen.hidden = screen !== 'welcome';
+    registerScreen.hidden = screen !== 'register';
+    loginScreen.hidden = screen !== 'login';
+    pathOverlay.hidden = true;
+    successOverlay.hidden = true;
+    profileMenu.hidden = true;
+  };
 
-const accountOverlay = document.getElementById('accountOverlay');
-const pathOverlay = document.getElementById('pathOverlay');
-const welcomeScreen = document.getElementById('welcomeScreen');
-const registerScreen = document.getElementById('registerScreen');
-const loginScreen = document.getElementById('loginScreen');
-const profileMenu = document.getElementById('profileMenu');
-let isGuest = true;
-let currentUser = null;
+  window.enterGuestMode = function() {
+    accountOverlay.hidden = true;
+    pathOverlay.hidden = true;
+    successOverlay.hidden = true;
+    document.getElementById('profileStatus').textContent = 'Гостевой режим';
+    document.getElementById('profileButton').textContent = '♙';
+  };
 
-function showAccountScreen(screen) {
-  accountOverlay.hidden = false;
-  welcomeScreen.hidden = screen !== 'welcome';
-  registerScreen.hidden = screen !== 'register';
-  loginScreen.hidden = screen !== 'login';
-  pathOverlay.hidden = true;
-  profileMenu.hidden = true;
-}
-function enterGuestMode() {
-  isGuest = true;
-  currentUser = null;
-  accountOverlay.hidden = true;
-  pathOverlay.hidden = true;
-  document.getElementById('profileStatus').textContent = 'Гостевой режим';
-  document.getElementById('profileButton').textContent = '♙';
-  document.getElementById('menuLogin').textContent = 'Войти / регистрация';
-}
-function setSignedInUser(user) {
-  currentUser = user;
-  isGuest = false;
-  accountOverlay.hidden = true;
-  pathOverlay.hidden = true;
-  const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Профиль';
-  document.getElementById('profileStatus').textContent = username;
-  document.getElementById('profileButton').textContent = username.slice(0, 1).toUpperCase();
-  document.getElementById('menuLogin').textContent = 'Выйти из аккаунта';
-}
-function openPathGate() {
-  pathOverlay.hidden = false;
-}
+  window.setSignedInUser = function(user) {
+    accountOverlay.hidden = true;
+    pathOverlay.hidden = true;
+    successOverlay.hidden = true;
+    const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Профиль';
+    document.getElementById('profileStatus').textContent = username;
+    document.getElementById('profileButton').textContent = username.slice(0, 1).toUpperCase();
+    document.getElementById('menuLogin').textContent = 'Выйти из аккаунта';
+  };
 
-document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
-document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
-document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
-document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
+  document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
+  document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
+  document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
+  document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
 
-document.getElementById('registerForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const message = document.getElementById('registerMessage');
-  if (!supabase) { message.textContent = 'Не удалось подключить Supabase. Проверь настройки файла.'; return; }
-  const username = document.getElementById('newUsername').value.trim();
-  const email = document.getElementById('newEmail').value.trim();
-  const password = document.getElementById('newPassword').value;
-  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) { message.textContent = 'Имя: 3–20 символов, только латинские буквы, цифры и _. '; return; }
-  message.textContent = 'Создаём аккаунт…';
+  document.getElementById('pathTopButton').addEventListener('click', () => pathOverlay.hidden = false);
+  document.getElementById('pathMainButton').addEventListener('click', () => pathOverlay.hidden = false);
+  document.getElementById('pathClose').addEventListener('click', () => pathOverlay.hidden = true);
+  document.getElementById('pathRegister').addEventListener('click', () => showAccountScreen('register'));
+  document.getElementById('pathLogin').addEventListener('click', () => showAccountScreen('login'));
+
+  document.getElementById('profileButton').addEventListener('click', () => profileMenu.hidden = !profileMenu.hidden);
+  document.getElementById('menuLogin').addEventListener('click', () => {
+    if (window.eko?.currentUser) {
+      window.eko.signOut();
+    } else {
+      showAccountScreen('welcome');
+    }
+  });
+
+  document.getElementById('goToLogin').addEventListener('click', () => {
+    const email = document.getElementById('successEmail').textContent;
+    showAccountScreen('login');
+    document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPassword').focus();
+  });
+
+  document.addEventListener('click', event => {
+    if (!event.target.closest('#profileButton') && !event.target.closest('#profileMenu')) {
+      profileMenu.hidden = true;
+    }
+  });
+})();
+</script>
+
+<!-- Supabase загружается отдельно, поэтому ошибка подключения не ломает гостевой режим и кнопки. -->
+<script>
+(async () => {
+  const SUPABASE_URL = 'https://wcjhxlagvtlardiehrcc.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m';
+  let supabase = null;
+  let currentUser = null;
+
+  const registerForm = document.getElementById('registerForm');
+  const loginForm = document.getElementById('loginForm');
+  const registerMessage = document.getElementById('registerMessage');
+  const loginMessage = document.getElementById('loginMessage');
+  const registerSubmit = document.getElementById('registerSubmit');
+  const loginSubmit = document.getElementById('loginSubmit');
+
+  function setBusy(button, busy, text) {
+    button.disabled = busy;
+    button.textContent = busy ? text : (button === registerSubmit ? 'Зарегистрироваться' : 'Войти');
+    button.style.opacity = busy ? '.7' : '1';
+  }
+
+  async function signOut() {
+    if (!supabase || !currentUser) return;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) { alert(error.message); return; }
+      currentUser = null;
+      document.getElementById('menuLogin').textContent = 'Войти / регистрация';
+      document.getElementById('profileStatus').textContent = 'Гостевой режим';
+      document.getElementById('profileButton').textContent = '♙';
+      document.getElementById('profileMenu').hidden = true;
+      enterGuestMode();
+    } catch (error) {
+      alert('Не удалось выйти из аккаунта. Проверь интернет.');
+    }
+  }
+
+  // Передаём функцию выхода обычному скрипту интерфейса.
+  window.eko = { signOut, get currentUser() { return currentUser; } };
+
+  registerForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!supabase) {
+      registerMessage.textContent = 'Подключение к Supabase ещё не готово. Обнови страницу и попробуй снова.';
+      return;
+    }
+
+    const username = document.getElementById('newUsername').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    const password = document.getElementById('newPassword').value;
+
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+      registerMessage.textContent = 'Имя: 3–20 символов, только латинские буквы, цифры и _.';
+      return;
+    }
+
+    registerMessage.textContent = '';
+    setBusy(registerSubmit, true, 'Создаём аккаунт…');
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+          emailRedirectTo: window.location.origin + window.location.pathname
+        }
+      });
+
+      if (error) {
+        registerMessage.textContent = error.message;
+        return;
+      }
+
+      if (data.session && data.user) {
+        currentUser = data.user;
+        setSignedInUser(data.user);
+      } else {
+        document.getElementById('successEmail').textContent = email;
+        document.getElementById('accountOverlay').hidden = true;
+        document.getElementById('pathOverlay').hidden = true;
+        document.getElementById('successOverlay').hidden = false;
+        document.getElementById('registerForm').reset();
+        registerMessage.textContent = '';
+      }
+    } catch (error) {
+      registerMessage.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
+    } finally {
+      setBusy(registerSubmit, false);
+    }
+  });
+
+  loginForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!supabase) {
+      loginMessage.textContent = 'Подключение к Supabase ещё не готово. Обнови страницу и попробуй снова.';
+      return;
+    }
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    loginMessage.textContent = 'Входим…';
+    setBusy(loginSubmit, true, 'Входим…');
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginMessage.textContent = error.message;
+        return;
+      }
+      currentUser = data.user;
+      loginMessage.textContent = '';
+      setSignedInUser(data.user);
+    } catch (error) {
+      loginMessage.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
+    } finally {
+      setBusy(loginSubmit, false);
+    }
+  });
+
   try {
-    const { data, error } = await supabase.auth.signUp({
-      email, password,
-      options: {
-        data: { username },
-        emailRedirectTo: window.location.origin + window.location.pathname
+    if (!SUPABASE_URL.startsWith('https://') || !SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')) {
+      throw new Error('Проверь URL и Publishable key в настройках Supabase.');
+    }
+
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+    supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+
+    if (session?.user) {
+      currentUser = session.user;
+      setSignedInUser(session.user);
+    }
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        currentUser = session.user;
+        setSignedInUser(session.user);
+      } else {
+        currentUser = null;
       }
     });
-    if (error) { message.textContent = error.message; return; }
-    if (data.session && data.user) {
-      setSignedInUser(data.user);
-    } else {
-      message.textContent = 'Аккаунт создан! Проверь почту и нажми ссылку подтверждения, затем вернись на сайт и войди.';
-    }
   } catch (error) {
-    message.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
+    console.error('Supabase connection error:', error);
+    registerMessage.textContent = 'Не удалось подключиться к Supabase. Гостевой режим продолжает работать.';
+    loginMessage.textContent = 'Не удалось подключиться к Supabase. Гостевой режим продолжает работать.';
   }
-});
-
-document.getElementById('loginForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const message = document.getElementById('loginMessage');
-  if (!supabase) { message.textContent = 'Не удалось подключить Supabase. Проверь настройки файла.'; return; }
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  message.textContent = 'Входим…';
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) { message.textContent = error.message; return; }
-    setSignedInUser(data.user);
-  } catch (error) {
-    message.textContent = 'Не удалось связаться с сервером. Проверь интернет и попробуй ещё раз.';
-  }
-});
-
-document.getElementById('pathTopButton').addEventListener('click', openPathGate);
-document.getElementById('pathMainButton').addEventListener('click', openPathGate);
-document.getElementById('pathClose').addEventListener('click', () => pathOverlay.hidden = true);
-document.getElementById('pathRegister').addEventListener('click', () => showAccountScreen('register'));
-document.getElementById('pathLogin').addEventListener('click', () => showAccountScreen('login'));
-document.getElementById('profileButton').addEventListener('click', () => profileMenu.hidden = !profileMenu.hidden);
-document.getElementById('menuLogin').addEventListener('click', async () => {
-  if (currentUser && supabase) {
-    const { error } = await supabase.auth.signOut();
-    if (error) { alert(error.message); return; }
-    enterGuestMode();
-    profileMenu.hidden = true;
-  } else {
-    showAccountScreen('welcome');
-  }
-});
-
-if (supabase) {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) setSignedInUser(session.user);
-    else accountOverlay.hidden = false;
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) setSignedInUser(session.user);
-    });
-  } catch (error) {
-    accountOverlay.hidden = false;
-  }
-} else {
-  accountOverlay.hidden = false;
-}
-document.addEventListener('click', event => {
-  if (!event.target.closest('#profileButton') && !event.target.closest('#profileMenu')) profileMenu.hidden = true;
-});
+})();
 </script>
 </body>
 </html>
