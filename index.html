@@ -1,347 +1,256 @@
+
+ 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eesti Keel Online — Учим эстонский</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  --green: #183c32;
+  --green2: #168064;
+  --green3: #10664f;
+  --mint: #eaf5ee;
+  --cream: #f6faf7;
+  --muted: #718078;
+  --line: #e4eee7;
+  --gold: #d5a64b;
 }
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 body {
   font-family: Arial, sans-serif;
-  background: #f6faf7;
-  color: #183c32;
+  background: var(--cream);
+  color: var(--green);
+  min-height: 100vh;
 }
-
+button, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
 header {
-  background: white;
-  padding: 20px 7%;
+  background: #fff;
+  padding: 17px 7%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
-  gap: 15px;
   box-shadow: 0 2px 12px #00000008;
+  position: relative;
+  z-index: 2;
 }
-
-.logo {
-  font-size: 23px;
-  font-weight: bold;
-  color: #168064;
+.logo { font-size: 22px; font-weight: 700; color: var(--green2); }
+nav { display: flex; gap: 23px; align-items: center; flex-wrap: wrap; }
+nav a { color: var(--green); text-decoration: none; font-size: 14px; }
+nav a:hover { color: var(--green2); }
+.nav-actions { display:flex; gap:10px; align-items:center; }
+.small-button {
+  border: 1px solid var(--line); background: white; color: var(--green);
+  border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 700;
 }
-
-nav {
-  display: flex;
-  gap: 25px;
-  flex-wrap: wrap;
+.small-button:hover { border-color: var(--green2); }
+.profile-button {
+  width: 42px; height: 42px; border-radius: 50%; border: 0;
+  background: var(--mint); color: var(--green2); font-size: 19px; cursor:pointer;
 }
-
-nav a {
-  text-decoration: none;
-  color: #183c32;
-  font-size: 15px;
-}
-
-nav a:hover {
-  color: #168064;
-}
-
 .hero {
-  padding: 95px 20px;
-  text-align: center;
+  padding: 82px 20px 88px; text-align: center;
   background: linear-gradient(135deg, #dff5e9, #effaf2);
 }
-
 .tag {
-  display: inline-block;
-  background: white;
-  color: #168064;
-  padding: 9px 18px;
-  border-radius: 30px;
-  font-size: 14px;
-  margin-bottom: 25px;
+  display: inline-block; background: white; color: var(--green2);
+  padding: 9px 18px; border-radius: 30px; font-size: 14px; margin-bottom: 23px;
 }
-
-.hero h1 {
-  font-size: clamp(32px, 5vw, 52px);
-  max-width: 750px;
-  margin: auto;
-  line-height: 1.2;
-}
-
-.hero p {
-  font-size: 18px;
-  color: #60776d;
-  margin: 22px auto 30px;
-  max-width: 550px;
-  line-height: 1.6;
-}
-
+.hero h1 { font-size: clamp(32px, 5vw, 52px); max-width: 750px; margin: auto; line-height: 1.2; }
+.hero p { font-size: 18px; color: #60776d; margin: 20px auto 28px; max-width: 570px; line-height: 1.6; }
 .button {
-  display: inline-block;
-  background: #168064;
-  color: white;
-  padding: 16px 30px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.2s;
+  display: inline-block; background: var(--green2); color: white; padding: 15px 27px;
+  border-radius: 12px; text-decoration: none; font-weight: 700; border: 0; cursor:pointer;
+  transition: .2s;
 }
-
-.button:hover {
-  background: #10664f;
-  transform: translateY(-2px);
-}
-
-section {
-  padding: 65px 7%;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-.section-description {
-  text-align: center;
-  color: #75877e;
-  margin-bottom: 35px;
-  line-height: 1.5;
-}
-
+.button:hover { background: var(--green3); transform: translateY(-2px); }
+.button.secondary { background: white; color: var(--green2); border: 1px solid var(--line); }
+.button.secondary:hover { background: #f5faf6; }
+.button.full { width:100%; text-align:center; }
+section { padding: 62px 7%; }
+.section-title { text-align:center; font-size:32px; margin-bottom:12px; }
+.section-description { text-align:center; color:#75877e; margin-bottom:34px; line-height:1.5; }
 .levels {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 22px;
-  max-width: 1100px;
-  margin: auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:22px; max-width:1100px; margin:auto;
 }
-
 .level {
-  background: white;
-  padding: 30px 23px;
-  border-radius: 18px;
-  box-shadow: 0 5px 20px #00000008;
-  border: 1px solid #e8f0ea;
-  transition: 0.2s;
+  background:white; padding:28px 23px; border-radius:18px; border:1px solid var(--line);
+  box-shadow:0 5px 20px #00000008; transition:.2s;
 }
-
-.level:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px #00000012;
-}
-
-.level h3 {
-  font-size: 32px;
-  color: #168064;
-  margin-bottom: 12px;
-}
-
-.level p {
-  color: #718078;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-.level a {
-  color: #168064;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.features {
-  background: #eaf5ee;
-}
-
+.level:hover { transform:translateY(-4px); box-shadow:0 10px 25px #00000012; }
+.level h3 { font-size:32px; color:var(--green2); margin-bottom:10px; }
+.level p { color:var(--muted); line-height:1.5; margin-bottom:18px; }
+.level a { color:var(--green2); text-decoration:none; font-weight:700; }
+.features { background:var(--mint); }
 .feature-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  max-width: 1000px;
-  margin: auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px; max-width:1000px; margin:auto;
 }
+.feature { background:white; padding:27px; border-radius:16px; text-align:center; }
+.feature .emoji { font-size:32px; margin-bottom:13px; }
+.feature h3 { margin-bottom:9px; }
+.feature p { color:var(--muted); line-height:1.5; }
+.about { text-align:center; max-width:750px; margin:auto; }
+.about p { color:var(--muted); line-height:1.7; margin-top:17px; }
+footer { background:var(--green); color:white; padding:30px 15px; text-align:center; }
+footer p { color:#c1d5cb; margin-top:10px; font-size:14px; }
 
-.feature {
-  background: white;
-  padding: 28px;
-  border-radius: 16px;
-  text-align: center;
+/* Welcome / account screens */
+.screen-overlay {
+  position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center;
+  padding:18px; background:rgba(18,48,38,.48); backdrop-filter:blur(5px);
 }
-
-.feature .emoji {
-  font-size: 35px;
-  margin-bottom: 15px;
+.account-card {
+  width:min(100%,440px); background:#fff; border:1px solid var(--line);
+  border-radius:22px; padding:30px; box-shadow:0 24px 70px #102d231f;
 }
-
-.feature h3 {
-  margin-bottom: 10px;
+.account-logo { color:var(--green2); font-size:19px; font-weight:800; margin-bottom:24px; }
+.account-card h2 { font-size:27px; margin-bottom:9px; }
+.account-subtitle { color:var(--muted); line-height:1.5; margin-bottom:22px; }
+.account-actions { display:grid; gap:11px; }
+.account-actions .button { text-align:center; }
+.text-button {
+  border:0; background:transparent; color:var(--green2); font-weight:700;
+  padding:10px; cursor:pointer;
 }
-
-.feature p {
-  color: #718078;
-  line-height: 1.5;
+.text-button:hover { text-decoration:underline; }
+.form-field { display:grid; gap:7px; margin:14px 0; }
+.form-field label { font-size:13px; font-weight:700; color:#425c50; }
+.form-field input {
+  width:100%; border:1px solid #dce8df; border-radius:10px; padding:13px 14px;
+  outline:none; color:var(--green); background:#fbfdfb;
 }
-
-.about {
-  text-align: center;
-  max-width: 750px;
-  margin: auto;
+.form-field input:focus { border-color:var(--green2); box-shadow:0 0 0 3px #16806418; }
+.demo-note {
+  background:#f1f7f2; border-radius:11px; padding:12px 13px; color:#63766b;
+  font-size:12px; line-height:1.5; margin-top:15px;
 }
-
-.about p {
-  color: #718078;
-  line-height: 1.7;
-  margin-top: 18px;
+.back-button {
+  border:0; background:transparent; color:var(--muted); cursor:pointer;
+  padding:0 0 17px; font-size:13px;
 }
-
-footer {
-  background: #183c32;
-  color: white;
-  padding: 30px 15px;
-  text-align: center;
+.form-message { color:#9a6820; font-size:13px; line-height:1.5; margin-top:12px; min-height:18px; }
+.guest-label {
+  display:inline-block; background:#edf6ef; color:#397354; border-radius:30px;
+  padding:7px 12px; font-size:12px; font-weight:700; margin-bottom:13px;
 }
-
-footer p {
-  color: #c1d5cb;
-  margin-top: 10px;
-  font-size: 14px;
+.path-promo {
+  background:#fff; border:1px solid var(--line); border-radius:18px; padding:25px;
+  max-width:1100px; margin:0 auto 45px; display:flex; align-items:center;
+  justify-content:space-between; gap:20px; flex-wrap:wrap;
 }
-
-@media(max-width: 600px) {
-  header {
-    justify-content: center;
-    text-align: center;
-  }
-
-  nav {
-    justify-content: center;
-    gap: 16px;
-  }
-
-  .hero {
-    padding: 70px 20px;
-  }
-
-  section {
-    padding: 50px 20px;
-  }
-
-  .section-title {
-    font-size: 27px;
-  }
+.path-promo h2 { margin-bottom:8px; font-size:25px; }
+.path-promo p { color:var(--muted); line-height:1.5; max-width:570px; }
+.path-promo .button { white-space:nowrap; }
+.profile-menu {
+  position:absolute; right:7%; top:72px; width:220px; background:white;
+  border:1px solid var(--line); border-radius:14px; padding:9px;
+  box-shadow:0 12px 30px #00000014; z-index:4;
+}
+.profile-menu button {
+  width:100%; text-align:left; border:0; background:white; color:var(--green);
+  border-radius:9px; padding:11px; cursor:pointer;
+}
+.profile-menu button:hover { background:#f1f7f2; }
+@media(max-width:650px) {
+  header { justify-content:center; text-align:center; padding:16px 18px; }
+  nav { justify-content:center; gap:13px; }
+  .nav-actions { width:100%; justify-content:center; }
+  .hero { padding:62px 20px; }
+  section { padding:48px 20px; }
+  .section-title { font-size:27px; }
+  .account-card { padding:24px 21px; }
+  .profile-menu { right:18px; top:125px; }
 }
 </style>
 </head>
-
 <body>
 
 <header>
   <div class="logo">🇪🇪 Eesti Keel Online</div>
-
   <nav>
     <a href="#home">Главная</a>
     <a href="#lessons">Уроки</a>
     <a href="#features">Преимущества</a>
     <a href="#about">О проекте</a>
   </nav>
+  <div class="nav-actions">
+    <button class="small-button" id="pathTopButton">Твой путь</button>
+    <button class="profile-button" id="profileButton" aria-label="Профиль">♙</button>
+  </div>
+  <div class="profile-menu" id="profileMenu" hidden>
+    <button id="profileStatus">Гостевой режим</button>
+    <button id="menuLogin">Войти / регистрация</button>
+  </div>
 </header>
 
-<div class="hero" id="home">
-  <div class="tag">🇪🇪 Учим эстонский вместе</div>
-
-  <h1>Эстонский язык становится проще!</h1>
-
-  <p>
-    Изучай грамматику, расширяй словарный запас
-    и проверяй свои знания в удобном формате.
-  </p>
-
-  <a href="#lessons" class="button">Начать обучение →</a>
-</div>
-
-<section id="lessons">
-  <h2 class="section-title">Выбери свой уровень</h2>
-
-  <p class="section-description">
-    Начни с подходящего уровня и двигайся вперёд!
-  </p>
-
-  <div class="levels">
-
-    <div class="level">
-      <h3>A1</h3>
-      <p>Начальный уровень. Первые слова, простые предложения и основы грамматики.</p>
-      <a href="a1.html">Начать →</a>
-    </div>
-
-    <div class="level">
-      <h3>A2</h3>
-      <p>Базовый уровень. Повседневные разговоры и новые грамматические правила.</p>
-      <a href="a2.html">Скоро →</a>
-    </div>
-
-    <div class="level">
-      <h3>B1</h3>
-      <p>Средний уровень. Более сложные предложения и свободное общение.</p>
-      <a href="b1.html">Скоро →</a>
-    </div>
-
-    <div class="level">
-      <h3>B2</h3>
-      <p>Продвинутый уровень. Уверенное владение эстонским языком.</p>
-      <a href="b2.html">Скоро →</a>
-    </div>
-
+<main>
+  <div class="hero" id="home">
+    <div class="tag">🇪🇪 Учим эстонский вместе</div>
+    <h1>Эстонский язык становится проще!</h1>
+    <p>Изучай грамматику, расширяй словарный запас и проверяй свои знания в удобном формате.</p>
+    <a href="#lessons" class="button">Начать обучение →</a>
   </div>
-</section>
 
-<section class="features" id="features">
-  <h2 class="section-title">Почему мы?</h2>
+  <section id="lessons">
+    <h2 class="section-title">Выбери свой уровень</h2>
+    <p class="section-description">Начни с подходящего уровня и двигайся вперёд!</p>
 
-  <p class="section-description">
-    Всё необходимое для комфортного обучения.
-  </p>
-
-  <div class="feature-list">
-
-    <div class="feature">
-      <div class="emoji">📚</div>
-      <h3>Понятные уроки</h3>
-      <p>Простые объяснения грамматики с примерами.</p>
+    <div class="path-promo">
+      <div>
+        <h2>Твой путь</h2>
+        <p>Проходи тесты по порядку, двигайся по тропе, собирай XP и монеты. Для сохранения пути понадобится аккаунт.</p>
+      </div>
+      <button class="button" id="pathMainButton">Открыть свой путь →</button>
     </div>
 
-    <div class="feature">
-      <div class="emoji">✍️</div>
-      <h3>Практика</h3>
-      <p>Упражнения для закрепления новых знаний.</p>
+    <div class="levels">
+      <div class="level">
+        <h3>A1</h3>
+        <p>Начальный уровень. Первые слова, простые предложения и основы грамматики.</p>
+        <a href="a1.html">Начать →</a>
+      </div>
+      <div class="level">
+        <h3>A2</h3>
+        <p>Базовый уровень. Повседневные разговоры и новые грамматические правила.</p>
+        <a href="a2.html">Открыть →</a>
+      </div>
+      <div class="level">
+        <h3>B1</h3>
+        <p>Средний уровень. Более сложные предложения и свободное общение.</p>
+        <a href="b1.html">Открыть →</a>
+      </div>
+      <div class="level">
+        <h3>B2</h3>
+        <p>Продвинутый уровень. Уверенное владение эстонским языком.</p>
+        <a href="b2.html">Открыть →</a>
+      </div>
     </div>
+  </section>
 
-    <div class="feature">
-      <div class="emoji">🌍</div>
-      <h3>Доступность</h3>
-      <p>Учись с телефона или компьютера в удобное время.</p>
+  <section class="features" id="features">
+    <h2 class="section-title">Почему мы?</h2>
+    <p class="section-description">Всё необходимое для комфортного обучения.</p>
+    <div class="feature-list">
+      <div class="feature"><div class="emoji">📚</div><h3>Понятные уроки</h3><p>Простые объяснения грамматики с примерами.</p></div>
+      <div class="feature"><div class="emoji">✍️</div><h3>Практика</h3><p>Упражнения для закрепления новых знаний.</p></div>
+      <div class="feature"><div class="emoji">🌍</div><h3>Доступность</h3><p>Учись с телефона или компьютера в удобное время.</p></div>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<section id="about">
-  <div class="about">
-    <h2 class="section-title">О Eesti Keel Online</h2>
-    <p>
-      Мы создали эту платформу, чтобы сделать изучение
-      эстонского языка доступным, интересным и понятным
-      для каждого. Наша цель — помочь тебе уверенно
-      освоить эстонский язык от A1 до B2.
-    </p>
-  </div>
-</section>
+  <section id="about">
+    <div class="about">
+      <h2 class="section-title">О Eesti Keel Online</h2>
+      <p>Мы создали эту платформу, чтобы сделать изучение эстонского языка доступным, интересным и понятным для каждого. Наша цель — помочь тебе уверенно освоить эстонский язык от A1 до B2.</p>
+    </div>
+  </section>
+</main>
 
 <footer>
   <strong>🇪🇪 Eesti Keel Online</strong>
@@ -349,7 +258,111 @@ footer p {
   <p>© 2026 Eesti Keel Online</p>
 </footer>
 
+<!-- Первый экран выбора: регистрация, вход или гостевой режим -->
+<div class="screen-overlay" id="accountOverlay">
+  <div class="account-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="account-logo">🇪🇪 Eesti Keel Online</div>
+    <div id="welcomeScreen">
+      <h2 id="welcomeTitle">Tere tulemast!</h2>
+      <p class="account-subtitle">Создай свой аккаунт, чтобы сохранять путь, награды и персонажа. Или пока просто изучай эстонский.</p>
+      <div class="account-actions">
+        <button class="button full" id="showRegister">Создать аккаунт</button>
+        <button class="button secondary full" id="showLogin">У меня уже есть аккаунт</button>
+        <button class="text-button" id="continueGuest">Продолжить без аккаунта</button>
+      </div>
+    </div>
+
+    <div id="registerScreen" hidden>
+      <button class="back-button" data-back>← Назад</button>
+      <h2>Создать аккаунт</h2>
+      <p class="account-subtitle">Придумай имя пользователя и пароль. Почту можно будет добавить позже.</p>
+      <form id="registerForm">
+        <div class="form-field"><label for="newUsername">Имя пользователя</label><input id="newUsername" autocomplete="username" placeholder="Например, EestiLearner"></div>
+        <div class="form-field"><label for="newPassword">Пароль</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="Придумай пароль"></div>
+        <button class="button full" type="submit">Зарегистрироваться</button>
+      </form>
+      <div class="demo-note">Регистрация пока показана как макет. Не вводи настоящий пароль: серверная авторизация ещё не подключена.</div>
+      <div class="form-message" id="registerMessage" aria-live="polite"></div>
+    </div>
+
+    <div id="loginScreen" hidden>
+      <button class="back-button" data-back>← Назад</button>
+      <h2>С возвращением!</h2>
+      <p class="account-subtitle">Войди в свой аккаунт Eesti Keel Online.</p>
+      <form id="loginForm">
+        <div class="form-field"><label for="loginUsername">Имя пользователя</label><input id="loginUsername" autocomplete="username" placeholder="Имя пользователя"></div>
+        <div class="form-field"><label for="loginPassword">Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Пароль"></div>
+        <button class="button full" type="submit">Войти</button>
+      </form>
+      <div class="demo-note">Вход пока не подключён к базе данных. Не вводи настоящий пароль.</div>
+      <div class="form-message" id="loginMessage" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen-overlay" id="pathOverlay" hidden>
+  <div class="account-card" role="dialog" aria-modal="true" aria-labelledby="pathTitle">
+    <div class="account-logo">🇪🇪 Eesti Keel Online</div>
+    <h2 id="pathTitle">Твой путь ждёт тебя!</h2>
+    <p class="account-subtitle">Чтобы проходить тесты, получать монеты и XP и сохранять своего пиксельного персонажа, сначала создай аккаунт или войди.</p>
+    <div class="account-actions">
+      <button class="button full" id="pathRegister">Создать аккаунт</button>
+      <button class="button secondary full" id="pathLogin">Войти в аккаунт</button>
+      <button class="text-button" id="pathClose">Вернуться к урокам</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const accountOverlay = document.getElementById('accountOverlay');
+const pathOverlay = document.getElementById('pathOverlay');
+const welcomeScreen = document.getElementById('welcomeScreen');
+const registerScreen = document.getElementById('registerScreen');
+const loginScreen = document.getElementById('loginScreen');
+const profileMenu = document.getElementById('profileMenu');
+let isGuest = true;
+
+function showAccountScreen(screen) {
+  accountOverlay.hidden = false;
+  welcomeScreen.hidden = screen !== 'welcome';
+  registerScreen.hidden = screen !== 'register';
+  loginScreen.hidden = screen !== 'login';
+  pathOverlay.hidden = true;
+  profileMenu.hidden = true;
+}
+function enterGuestMode() {
+  isGuest = true;
+  accountOverlay.hidden = true;
+  pathOverlay.hidden = true;
+  document.getElementById('profileStatus').textContent = 'Гостевой режим';
+  document.getElementById('profileButton').textContent = '♙';
+}
+function openPathGate() {
+  if (isGuest) pathOverlay.hidden = false;
+  else pathOverlay.hidden = false; // До подключения аккаунтов путь пока находится в разработке.
+}
+document.getElementById('showRegister').addEventListener('click', () => showAccountScreen('register'));
+document.getElementById('showLogin').addEventListener('click', () => showAccountScreen('login'));
+document.getElementById('continueGuest').addEventListener('click', enterGuestMode);
+document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => showAccountScreen('welcome')));
+document.getElementById('registerForm').addEventListener('submit', event => {
+  event.preventDefault();
+  document.getElementById('registerMessage').textContent = 'Макет готов. Настоящее создание аккаунта подключим после настройки безопасной авторизации.';
+});
+document.getElementById('loginForm').addEventListener('submit', event => {
+  event.preventDefault();
+  document.getElementById('loginMessage').textContent = 'Вход пока не подключён. Сначала настроим серверную авторизацию.';
+});
+document.getElementById('pathTopButton').addEventListener('click', openPathGate);
+document.getElementById('pathMainButton').addEventListener('click', openPathGate);
+document.getElementById('pathClose').addEventListener('click', () => pathOverlay.hidden = true);
+document.getElementById('pathRegister').addEventListener('click', () => showAccountScreen('register'));
+document.getElementById('pathLogin').addEventListener('click', () => showAccountScreen('login'));
+document.getElementById('profileButton').addEventListener('click', () => profileMenu.hidden = !profileMenu.hidden);
+document.getElementById('menuLogin').addEventListener('click', () => showAccountScreen('welcome'));
+document.addEventListener('click', event => {
+  if (!event.target.closest('#profileButton') && !event.target.closest('#profileMenu')) profileMenu.hidden = true;
+});
+</script>
 </body>
 </html>
-
- 
