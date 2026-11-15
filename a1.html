@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -956,12 +957,16 @@ main {
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ------------------------------
    СОХРАНЕНИЕ ПРОГРЕССА
 -------------------------------- */
 
 const STORAGE_KEY = "eestiA1Progress";
+const SUPABASE_URL = "https://wcjhxlagvtlardiehrcc.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2H4KigWMbxn72_GX3FTNEQ_lHlty28m";
+const LEVEL_COLUMN = "a1";
 
 function getDefaultProgress() {
   return {
@@ -975,33 +980,181 @@ function getDefaultProgress() {
   };
 }
 
-function loadProgress() {
-  try {
-    const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY));
-    if (!saved) return getDefaultProgress();
+function normalizeProgress(saved) {
+  const defaults = getDefaultProgress();
+  if (!saved || typeof saved !== "object") return defaults;
+  return {
+    ...defaults,
+    ...saved,
+    completedLessons: Array.isArray(saved.completedLessons) ? saved.completedLessons : [],
+    learnedWords: Array.isArray(saved.learnedWords) ? saved.learnedWords : [],
+    completedPractice: Array.isArray(saved.completedPractice) ? saved.completedPractice : [],
+    completedPracticeTopics: Array.isArray(saved.completedPracticeTopics) ? saved.completedPracticeTopics : [],
+    completedTests: Array.isArray(saved.completedTests) ? saved.completedTests : [],
+    bestScores: saved.bestScores && typeof saved.bestScores === "object" ? saved.bestScores : {},
+    unlockedTest: Number.isFinite(Number(saved.unlockedTest)) ? Math.max(1, Number(saved.unlockedTest)) : 1
+  };
+}
 
-    return {
-      ...getDefaultProgress(),
-      ...saved,
-      completedLessons: saved.completedLessons || [],
-      learnedWords: saved.learnedWords || [],
-      completedPractice: saved.completedPractice || [],
-      completedPracticeTopics: saved.completedPracticeTopics || [],
-      completedTests: saved.completedTests || [],
-      bestScores: saved.bestScores || {}
-    };
+function readGuestProgress() {
+  try {
+    return normalizeProgress(JSON.parse(sessionStorage.getItem(STORAGE_KEY)));
   } catch {
     return getDefaultProgress();
   }
 }
 
-let progress = loadProgress();
+function mergeProgress(first, second) {
+  const a = normalizeProgress(first);
+  const b = normalizeProgress(second);
+  const mergedScores = {...a.bestScores};
+  Object.entries(b.bestScores).forEach(([key, value]) => {
+    mergedScores[key] = Math.max(Number(mergedScores[key]) || 0, Number(value) || 0);
+  });
+  return {
+    completedLessons: [...new Set([...a.completedLessons, ...b.completedLessons])],
+    learnedWords: [...new Set([...a.learnedWords, ...b.learnedWords])],
+    completedPractice: [...new Set([...a.completedPractice, ...b.completedPractice])],
+    completedPracticeTopics: [...new Set([...a.completedPracticeTopics, ...b.completedPracticeTopics])],
+    completedTests: [...new Set([...a.completedTests, ...b.completedTests])],
+    bestScores: mergedScores,
+    unlockedTest: Math.max(a.unlockedTest, b.unlockedTest)
+  };
+}
+
+let progress = readGuestProgress();
+let supabaseClient = null;
+let authenticatedUser = null;
+let progressSyncReady = false;
+let progressSaveChain = Promise.resolve();
+let authInitializationFinished = false;
+let accountLoadPromise = null;
+let accountLoadUserId = null;
 
 function saveProgress() {
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  progress = normalizeProgress(progress);
+  if (!authenticatedUser || !progressSyncReady) {
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch (error) {
+      console.warn("Не удалось сохранить гостевой прогресс в sessionStorage:", error);
+    }
+  } else {
+    // Serialize writes so quick consecutive answers cannot arrive out of order.
+    const snapshot = JSON.parse(JSON.stringify(progress));
+    progressSaveChain = progressSaveChain
+      .then(() => writeAccountProgress(snapshot))
+      .catch(error => console.error("Ошибка сохранения прогресса Supabase:", error));
+  }
   updateProgress();
 }
 
+async function writeAccountProgress(snapshot) {
+  if (!supabaseClient || !authenticatedUser) return;
+  const userId = authenticatedUser.id;
+  const {data: existing, error: selectError} = await supabaseClient
+    .from("user_progress")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (selectError) throw selectError;
+
+  let result;
+  if (existing) {
+    result = await supabaseClient.from("user_progress")
+      .update({[LEVEL_COLUMN]: snapshot, updated_at: new Date().toISOString()})
+      .eq("user_id", userId);
+  } else {
+    result = await supabaseClient.from("user_progress")
+      .insert({user_id: userId, [LEVEL_COLUMN]: snapshot, updated_at: new Date().toISOString()});
+  }
+  if (result.error) throw result.error;
+}
+
+async function loadAccountProgress(user) {
+  if (!supabaseClient || !user) return;
+  if (accountLoadPromise && accountLoadUserId === user.id) return accountLoadPromise;
+
+  accountLoadUserId = user.id;
+  accountLoadPromise = (async () => {
+  progressSyncReady = false;
+  authenticatedUser = user;
+
+  const {data, error} = await supabaseClient
+    .from("user_progress")
+    .select(LEVEL_COLUMN)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Не удалось загрузить прогресс аккаунта:", error);
+    // Keep local progress available; do not overwrite the database after a failed read.
+    progressSyncReady = false;
+    return;
+  }
+
+  const accountProgress = data && data[LEVEL_COLUMN]
+    ? normalizeProgress(data[LEVEL_COLUMN])
+    : getDefaultProgress();
+
+  // Merge current in-memory progress too, so activity during the network request is retained.
+  progress = mergeProgress(accountProgress, progress);
+  progressSyncReady = true;
+
+  try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
+  await writeAccountProgress(progress);
+  renderLessons();
+  renderVocabulary();
+  renderPracticeTopics();
+  updateProgress();
+  })();
+  try {
+    await accountLoadPromise;
+  } finally {
+    accountLoadPromise = null;
+    accountLoadUserId = null;
+  }
+}
+
+function initializeProgressSync() {
+  if (!window.supabase || !window.supabase.createClient) {
+    console.error("Библиотека Supabase не загрузилась. Гостевой режим продолжит работать.");
+    return;
+  }
+
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: true}
+  });
+
+  supabaseClient.auth.getSession().then(async ({data, error}) => {
+    if (error) console.error("Ошибка проверки сессии Supabase:", error);
+    const user = data && data.session ? data.session.user : null;
+    if (user) await loadAccountProgress(user);
+    authInitializationFinished = true;
+  }).catch(error => {
+    console.error("Не удалось инициализировать авторизацию Supabase:", error);
+    authInitializationFinished = true;
+  });
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    // Defer database work to avoid doing Supabase queries inside the auth callback.
+    if (event !== "SIGNED_IN" && event !== "SIGNED_OUT") return;
+    setTimeout(async () => {
+      const user = session ? session.user : null;
+      if (user) {
+        if (!authenticatedUser || authenticatedUser.id !== user.id || !progressSyncReady) {
+          await loadAccountProgress(user);
+        }
+      } else {
+        authenticatedUser = null;
+        progressSyncReady = false;
+        progress = readGuestProgress();
+        renderLessons();
+        renderVocabulary();
+        renderPracticeTopics();
+        updateProgress();
+      }
+    }, 0);
+  });
+}
 function updateProgress() {
   const lessonCount = progress.completedLessons.length;
   const testCount = progress.completedTests.length;
@@ -1998,6 +2151,7 @@ renderVocabulary();
 renderPracticeTopics();
 renderTestList();
 updateProgress();
+initializeProgressSync();
 
 </script>
 
